@@ -39,4 +39,8 @@ app.use('/api/forms', formsRoutes)
 app.get('/api/health', (_, res) => res.json({ ok: true }))
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT, '0.0.0.0', () => console.log(`BoostIntake server running on :${PORT}`))
+if (require.main === module) {
+  app.listen(PORT, '0.0.0.0', () => console.log(`BoostIntake server running on :${PORT}`))
+}
+
+module.exports = app
