@@ -6,6 +6,7 @@ import { FormRenderer } from '../../components/forms/FormRenderer'
 import { SignaturePad } from '../../components/forms/SignaturePad'
 import { ProgressBar } from '../../components/ui/ProgressBar'
 import { Button } from '../../components/ui/Button'
+import { API } from '../../lib/api'
 
 export function PatientForms({ isTablet = false, onTabletComplete }) {
   const params = useParams()
@@ -103,7 +104,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
         }
       })
 
-      const res = await fetch('/api/patient/submit', {
+      const res = await fetch(`${API}/api/patient/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

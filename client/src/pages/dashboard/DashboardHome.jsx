@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Card, CardBody } from '../../components/ui/Card'
+import { API } from '../../lib/api'
 
 export function DashboardHome() {
   const [clinic, setClinic] = useState(null)
 
   useEffect(() => {
-    fetch('/api/clinic/settings', {
+    fetch(`${API}/api/clinic/settings`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
     })
       .then((r) => r.json())

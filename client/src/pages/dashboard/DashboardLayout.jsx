@@ -1,5 +1,6 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import { API } from '../../lib/api'
 
 const navItems = [
   { to: '/dashboard', label: 'Home', end: true, icon: (
@@ -33,7 +34,7 @@ export function DashboardLayout() {
     if (!token) { navigate('/login', { replace: true }); return }
 
     // Cache clinic info for tablet mode
-    fetch('/api/clinic/settings', { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`${API}/api/clinic/settings`, { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.ok ? r.json() : null)
       .then((data) => {
         if (!data) return

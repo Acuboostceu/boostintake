@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Card, CardHeader, CardBody } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
+import { API } from '../../lib/api'
 
 export function SendPatient() {
   const [firstName, setFirstName] = useState('')
@@ -19,7 +20,7 @@ export function SendPatient() {
     setResult(null)
 
     try {
-      const res = await fetch('/api/patient/send-link', {
+      const res = await fetch(`${API}/api/patient/send-link`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

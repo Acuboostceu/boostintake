@@ -3,6 +3,7 @@ import { FORM_CATALOG, CATEGORY_COLORS, CATEGORY_ORDER, CATEGORY_META, DEFAULT_F
 import { FormPreviewModal } from '../../components/forms/FormPreviewModal'
 import { CustomFormBuilder } from '../../components/forms/CustomFormBuilder'
 import { Button } from '../../components/ui/Button'
+import { API } from '../../lib/api'
 
 const AUTH = () => ({ Authorization: `Bearer ${localStorage.getItem('bi_token')}` })
 
@@ -18,7 +19,7 @@ export function FormsPage() {
   const saveTimer = useRef(null)
 
   useEffect(() => {
-    fetch('/api/forms', { headers: AUTH() })
+    fetch(`${API}/api/forms`, { headers: AUTH() })
       .then((r) => r.json())
       .then(({ enabled, custom }) => {
         if (enabled.length > 0) setEnabledIds(enabled.map((f) => f.form_id))
@@ -31,7 +32,7 @@ export function FormsPage() {
     setSaveStatus('saving')
     clearTimeout(saveTimer.current)
     saveTimer.current = setTimeout(async () => {
-      const res = await fetch('/api/forms/selection', {
+      const res = await fetch(`${API}/api/forms/selection`, {
         method: 'POST',
         headers: { ...AUTH(), 'Content-Type': 'application/json' },
         body: JSON.stringify({ formIds: newIds }),
@@ -56,7 +57,7 @@ export function FormsPage() {
   }
 
   async function handleCreateCustom(data) {
-    const res = await fetch('/api/forms/custom', {
+    const res = await fetch(`${API}/api/forms/custom`, {
       method: 'POST',
       headers: { ...AUTH(), 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -70,7 +71,7 @@ export function FormsPage() {
   }
 
   async function handleUpdateCustom(data) {
-    const res = await fetch(`/api/forms/custom/${editingCustom.id}`, {
+    const res = await fetch(`${API}/api/forms/custom/${editingCustom.id}`, {
       method: 'PUT',
       headers: { ...AUTH(), 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -84,7 +85,7 @@ export function FormsPage() {
 
   async function handleDeleteCustom(id) {
     if (!confirm('Delete this custom form?')) return
-    await fetch(`/api/forms/custom/${id}`, { method: 'DELETE', headers: AUTH() })
+    await fetch(`${API}/api/forms/custom/${id}`, { method: 'DELETE', headers: AUTH() })
     setCustomForms((f) => f.filter((c) => c.id !== id))
     const newIds = enabledIds.filter((i) => i !== id)
     setEnabledIds(newIds)

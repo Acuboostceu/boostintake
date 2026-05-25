@@ -4,6 +4,7 @@ import { useFormStore } from '../../store/formStore'
 import { PatientForms } from '../patient/PatientForms'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { API } from '../../lib/api'
 
 const TABLET_STATES = {
   IDLE: 'idle',       // Waiting screen — shown to staff
@@ -57,7 +58,7 @@ export function TabletMode() {
     }
 
     try {
-      const res = await fetch('/api/clinic/tablet-verify-pin', {
+      const res = await fetch(`${API}/api/clinic/tablet-verify-pin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clinicId, pin }),

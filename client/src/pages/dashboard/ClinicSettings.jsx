@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Card, CardHeader, CardBody } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
+import { API } from '../../lib/api'
 
 export function ClinicSettings() {
   const navigate = useNavigate()
@@ -26,7 +27,7 @@ export function ClinicSettings() {
   useEffect(() => {
     async function loadSettings() {
       try {
-        const res = await fetch('/api/clinic/settings', {
+        const res = await fetch(`${API}/api/clinic/settings`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
         })
         if (!res.ok) return
@@ -99,7 +100,7 @@ export function ClinicSettings() {
       form.append('pin', settings.pin)
       if (settings.logo) form.append('logo', settings.logo)
 
-      const res = await fetch('/api/clinic/settings', {
+      const res = await fetch(`${API}/api/clinic/settings`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
         body: form,
