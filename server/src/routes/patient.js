@@ -1,5 +1,6 @@
 const express = require('express')
-const { nanoid } = require('nanoid')
+const { randomBytes } = require('crypto')
+const nanoid = (size = 10) => randomBytes(size).toString('base64url').slice(0, size)
 const { requireAuth } = require('../middleware/auth')
 const { supabase } = require('../services/supabase')
 const { sendSMS } = require('../services/sms')
