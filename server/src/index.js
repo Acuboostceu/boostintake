@@ -17,6 +17,7 @@ app.use(cors({
       /^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
       /^http:\/\/10\.\d+\.\d+\.\d+(:\d+)?$/,
       /^http:\/\/172\.(1[6-9]|2\d|3[01])\.\d+\.\d+(:\d+)?$/,
+      /^https:\/\/.*\.vercel\.app$/,
     ]
     if (!origin || allowed.some((a) => typeof a === 'string' ? a === origin : a.test(origin))) {
       callback(null, true)
