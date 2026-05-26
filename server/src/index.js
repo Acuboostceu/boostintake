@@ -15,6 +15,8 @@ app.use(cors({
   origin: (origin, callback) => {
     const allowed = [
       process.env.CLIENT_URL || 'http://localhost:5173',
+      'https://boostintake.com',
+      'https://www.boostintake.com',
       /^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
       /^http:\/\/10\.\d+\.\d+\.\d+(:\d+)?$/,
       /^http:\/\/172\.(1[6-9]|2\d|3[01])\.\d+\.\d+(:\d+)?$/,
