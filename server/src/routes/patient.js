@@ -163,6 +163,8 @@ router.post('/submit', async (req, res) => {
       clinic_id: clinic.id,
       submitted_at: new Date().toISOString(),
       email_sent: emails.length > 0,
+      source: token === 'tablet' ? 'tablet' : 'link',
+      patient_name: patient.name || null,
     })
 
     console.log('[submit] done ✓')
