@@ -10,6 +10,7 @@ export function PatientVerify() {
   const navigate = useNavigate()
   const setPatient = useFormStore((s) => s.setPatient)
   const setClinicInfo = useFormStore((s) => s.setClinicInfo)
+  const setFormData = useFormStore((s) => s.setFormData)
   const lang = useFormStore((s) => s.lang)
   const setLang = useFormStore((s) => s.setLang)
   const tr = useTranslations(lang)
@@ -40,6 +41,8 @@ export function PatientVerify() {
 
       setPatient({ name: `${firstName} ${lastName}`, dob, token })
       setClinicInfo(data.clinic)
+      // Pre-fill patient info form with verified identity
+      setFormData('patient_info', { firstName: firstName.trim(), lastName: lastName.trim(), dob })
       navigate(`/p/${token}/forms`)
     } catch {
       setError(tr.verify.networkError)
