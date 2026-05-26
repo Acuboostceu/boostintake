@@ -13,6 +13,7 @@ import { TabletMode } from './pages/dashboard/TabletMode'
 import { FormsPage } from './pages/dashboard/FormsPage'
 
 import { Login } from './pages/auth/Login'
+import { Landing } from './pages/Landing'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
@@ -38,7 +39,7 @@ export default function App() {
             <Route path="send" element={<SendPatient />} />
           </Route>
 
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<Landing />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

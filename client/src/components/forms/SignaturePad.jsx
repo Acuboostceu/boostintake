@@ -69,7 +69,7 @@ export function SignaturePad({ label, onSave, onDecline, canDecline = false, exi
         <canvas
           ref={canvasRef}
           className={`w-full border-2 rounded-xl touch-none cursor-crosshair
-            ${saved ? 'border-teal-400 bg-teal-50' : 'border-gray-300 bg-white'}`}
+            ${saved ? 'border-blue-400 bg-blue-50' : 'border-gray-300 bg-white'}`}
           style={{ height: 160 }}
         />
         {isEmpty && !saved && (
@@ -78,7 +78,7 @@ export function SignaturePad({ label, onSave, onDecline, canDecline = false, exi
           </div>
         )}
         {saved && (
-          <div className="absolute top-2 right-2 bg-teal-500 text-white text-xs px-2 py-1 rounded-lg flex items-center gap-1">
+          <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-lg flex items-center gap-1">
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>

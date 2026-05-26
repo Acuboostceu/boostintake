@@ -78,7 +78,7 @@ export function CustomFormBuilder({ initial, onSave, onCancel }) {
         <h3 className="font-semibold text-gray-900">Form Settings</h3>
         <Input label="Form Title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g., New Patient Questionnaire" required />
         <label className="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" className="w-4 h-4 rounded text-teal-600" checked={requiresSignature} onChange={(e) => setRequiresSignature(e.target.checked)} />
+          <input type="checkbox" className="w-4 h-4 rounded text-blue-600" checked={requiresSignature} onChange={(e) => setRequiresSignature(e.target.checked)} />
           <span className="text-sm text-gray-700">Require patient signature on this form</span>
         </label>
         {requiresSignature && (
@@ -117,7 +117,7 @@ export function CustomFormBuilder({ initial, onSave, onCancel }) {
 
             <button
               onClick={() => addField(si)}
-              className="flex items-center gap-2 text-sm text-teal-600 font-medium hover:text-teal-700 border-2 border-dashed border-teal-200 rounded-xl px-4 py-3 hover:border-teal-400 transition-colors"
+              className="flex items-center gap-2 text-sm text-blue-600 font-medium hover:text-blue-700 border-2 border-dashed border-blue-200 rounded-xl px-4 py-3 hover:border-blue-400 transition-colors"
             >
               <span className="text-lg leading-none">+</span> Add Field
             </button>
@@ -158,13 +158,13 @@ function FieldEditor({ field, onChange, onRemove, onMoveUp, onMoveDown, isFirst,
         <div className="flex-1 flex flex-col gap-2">
           <div className="flex gap-2">
             <input
-              className="flex-1 px-3 py-2 text-sm rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className="flex-1 px-3 py-2 text-sm rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Field label / question"
               value={field.label}
               onChange={(e) => onChange('label', e.target.value)}
             />
             <select
-              className="px-3 py-2 text-sm rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className="px-3 py-2 text-sm rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={field.type}
               onChange={(e) => onChange('type', e.target.value)}
             >
@@ -174,7 +174,7 @@ function FieldEditor({ field, onChange, onRemove, onMoveUp, onMoveDown, isFirst,
 
           {field.type === 'text' && (
             <input
-              className="px-3 py-2 text-sm rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className="px-3 py-2 text-sm rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Placeholder text (optional)"
               value={field.placeholder || ''}
               onChange={(e) => onChange('placeholder', e.target.value)}
@@ -189,7 +189,7 @@ function FieldEditor({ field, onChange, onRemove, onMoveUp, onMoveDown, isFirst,
           )}
 
           <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer">
-            <input type="checkbox" className="w-3.5 h-3.5 rounded text-teal-600" checked={!!field.required} onChange={(e) => onChange('required', e.target.checked)} />
+            <input type="checkbox" className="w-3.5 h-3.5 rounded text-blue-600" checked={!!field.required} onChange={(e) => onChange('required', e.target.checked)} />
             Required field
           </label>
         </div>
@@ -212,7 +212,7 @@ function OptionsEditor({ options, onChange }) {
       {options.map((opt, i) => (
         <div key={i} className="flex gap-1.5">
           <input
-            className="flex-1 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-1 focus:ring-teal-400"
+            className="flex-1 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400"
             placeholder={`Option ${i + 1}`}
             value={opt}
             onChange={(e) => update(i, e.target.value)}
@@ -220,7 +220,7 @@ function OptionsEditor({ options, onChange }) {
           <button onClick={() => remove(i)} className="text-red-400 hover:text-red-600 text-sm px-1">×</button>
         </div>
       ))}
-      <button onClick={add} className="text-xs text-teal-600 hover:underline self-start">+ Add option</button>
+      <button onClick={add} className="text-xs text-blue-600 hover:underline self-start">+ Add option</button>
     </div>
   )
 }

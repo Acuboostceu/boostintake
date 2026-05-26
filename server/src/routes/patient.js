@@ -11,7 +11,7 @@ const router = express.Router()
 
 // Staff sends intake link to patient
 router.post('/send-link', requireAuth, async (req, res) => {
-  const { firstName, lastName, phone, dob } = req.body
+  const { firstName, lastName, phone, dob, customMessage } = req.body
   if (!firstName || !lastName || !phone || !dob) {
     return res.status(400).json({ message: 'All fields required' })
   }
@@ -35,17 +35,24 @@ router.post('/send-link', requireAuth, async (req, res) => {
 
   const link = `${process.env.APP_URL}/p/${token}`
 
-  // Get clinic name for SMS
+  // Get clinic info for SMS fallback
   const { data: clinic } = await supabase
     .from('clinics')
-    .select('name')
+    .select('name, sms_template')
     .eq('id', req.user.clinicId)
     .single()
 
-  await sendSMS(
-    phone.replace(/\D/g, ''),
-    `${clinic?.name || 'Your clinic'}: Hi ${firstName}! Please complete your intake forms before your visit: ${link} (expires in 24 hours)`
-  )
+  // Build SMS body — always replace {link} on server since token is generated here
+  const rawTemplate = customMessage
+    || clinic?.sms_template
+    || 'Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link}'
+
+  const smsBody = rawTemplate
+    .replace('{firstName}', firstName)
+    .replace('{clinicName}', clinic?.name || 'your clinic')
+    .replace('{link}', link)
+
+  await sendSMS(phone.replace(/\D/g, ''), smsBody)
 
   res.json({ link, phone: phone.replace(/\D/g, '') })
 })

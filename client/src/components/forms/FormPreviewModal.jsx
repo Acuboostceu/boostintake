@@ -47,7 +47,7 @@ export function FormPreviewModal({ formId, customForm, onClose }) {
           <div>
             <h2 className="font-bold text-gray-900">{form.title}</h2>
             {form.requiresSignature && (
-              <span className="text-xs text-teal-600 font-medium">✍️ Requires signature</span>
+              <span className="text-xs text-blue-600 font-medium">✍️ Requires signature</span>
             )}
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500">✕</button>
@@ -66,7 +66,7 @@ export function FormPreviewModal({ formId, customForm, onClose }) {
           {sections.map((section, si) => (
             <div key={si}>
               {section.title && (
-                <h3 className="text-sm font-semibold text-teal-700 mb-3 pb-1.5 border-b border-teal-100">
+                <h3 className="text-sm font-semibold text-blue-700 mb-3 pb-1.5 border-b border-blue-100">
                   {section.title}
                 </h3>
               )}

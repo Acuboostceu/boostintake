@@ -9,7 +9,7 @@ export function FormRenderer({ form, data, onChange }) {
       {sections.map((section, si) => (
         <div key={si}>
           {section.title && (
-            <h3 className="text-base font-semibold text-teal-700 mb-4 pb-2 border-b border-teal-100">
+            <h3 className="text-base font-semibold text-blue-700 mb-4 pb-2 border-b border-blue-100">
               {section.title}
             </h3>
           )}
@@ -118,7 +118,7 @@ function FormField({ field, value, onChange }) {
             value={value || ''}
             onChange={(e) => onChange(formatDob(e.target.value))}
             placeholder="MM/DD/YYYY"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-900 text-lg tracking-widest font-mono"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 text-lg tracking-widest font-mono"
             required={field.required}
           />
         </div>
@@ -152,8 +152,8 @@ function FormField({ field, value, onChange }) {
                 onClick={() => onChange(opt)}
                 className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all
                   ${value === opt
-                    ? 'bg-teal-600 text-white border-teal-600'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-teal-300'
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300'
                   }`}
               >
                 {opt}
@@ -177,13 +177,13 @@ function FormField({ field, value, onChange }) {
                   key={opt}
                   className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all
                     ${checked
-                      ? 'bg-teal-50 border-teal-300 text-teal-800'
-                      : 'bg-white border-gray-200 text-gray-700 hover:border-teal-200'
+                      ? 'bg-blue-50 border-blue-300 text-blue-800'
+                      : 'bg-white border-gray-200 text-gray-700 hover:border-blue-200'
                     }`}
                 >
                   <input
                     type="checkbox"
-                    className="w-4 h-4 rounded text-teal-600 border-gray-300 focus:ring-teal-500"
+                    className="w-4 h-4 rounded text-blue-600 border-gray-300 focus:ring-blue-500"
                     checked={checked}
                     onChange={(e) => {
                       const current = Array.isArray(value) ? value : []
@@ -207,7 +207,7 @@ function FormField({ field, value, onChange }) {
         <label className="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
-            className="w-5 h-5 mt-0.5 rounded text-teal-600 border-gray-300 focus:ring-teal-500"
+            className="w-5 h-5 mt-0.5 rounded text-blue-600 border-gray-300 focus:ring-blue-500"
             checked={!!value}
             onChange={(e) => onChange(e.target.checked)}
           />

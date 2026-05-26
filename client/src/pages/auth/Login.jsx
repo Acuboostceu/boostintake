@@ -33,12 +33,10 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-dvh bg-teal-50 flex items-center justify-center p-4">
+    <div className="min-h-dvh bg-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-xl">B</span>
-          </div>
+          <img src="/logo.png" alt="BoostIntake" className="w-20 h-20 mx-auto mb-2 object-contain" />
           <h1 className="text-2xl font-bold text-gray-900">BoostIntake</h1>
           <p className="text-gray-500 text-sm mt-1">Clinic Dashboard</p>
         </div>

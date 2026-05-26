@@ -138,7 +138,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
     : null
 
   return (
-    <div className="min-h-dvh bg-teal-50 flex flex-col">
+    <div className="min-h-dvh bg-blue-50 flex flex-col">
       {/* Header */}
       <header className="bg-white border-b border-gray-100 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-lg mx-auto">
@@ -174,7 +174,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
 
               {/* Form intro */}
               {form.intro && (
-                <p className="text-sm text-gray-600 bg-teal-50 rounded-xl px-4 py-3 mb-6">
+                <p className="text-sm text-gray-600 bg-blue-50 rounded-xl px-4 py-3 mb-6">
                   {form.intro}
                 </p>
               )}
@@ -207,7 +207,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
                     <span className="text-sm text-gray-600 italic">You declined to sign this form.</span>
                     <button
                       type="button"
-                      className="text-sm text-teal-600 font-medium hover:underline"
+                      className="text-sm text-blue-600 font-medium hover:underline"
                       onClick={() => setDeclined(form.id, false)}
                     >
                       Undo
@@ -271,7 +271,7 @@ function FormattedContent({ text }) {
         }
         // Bullet points
         if (line.startsWith('•')) {
-          return <p key={i} className="flex gap-2"><span className="text-teal-500 flex-shrink-0">•</span><span>{parseBold(line.slice(1).trim())}</span></p>
+          return <p key={i} className="flex gap-2"><span className="text-blue-500 flex-shrink-0">•</span><span>{parseBold(line.slice(1).trim())}</span></p>
         }
         return <p key={i}>{parseBold(line)}</p>
       })}

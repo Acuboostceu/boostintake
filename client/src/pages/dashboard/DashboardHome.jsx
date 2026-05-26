@@ -52,10 +52,10 @@ export function DashboardHome() {
       {/* Quick actions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link to="/dashboard/send">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer border-teal-100 hover:border-teal-300">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer border-blue-100 hover:border-blue-300">
             <CardBody className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                <svg className="w-6 h-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
               </div>
@@ -68,10 +68,10 @@ export function DashboardHome() {
         </Link>
 
         <Link to="/tablet">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer border-teal-100 hover:border-teal-300">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer border-blue-100 hover:border-blue-300">
             <CardBody className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                <svg className="w-6 h-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
               </div>
@@ -106,13 +106,13 @@ export function DashboardHome() {
         <CardBody>
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-gray-900">Setup Checklist</h2>
-            <span className="text-sm text-teal-600 font-medium">{doneCount}/{checklist.length} complete</span>
+            <span className="text-sm text-blue-600 font-medium">{doneCount}/{checklist.length} complete</span>
           </div>
 
           {/* Progress bar */}
           <div className="h-1.5 bg-gray-100 rounded-full mb-5 overflow-hidden">
             <div
-              className="h-full bg-teal-500 rounded-full transition-all duration-500"
+              className="h-full bg-blue-500 rounded-full transition-all duration-500"
               style={{ width: `${(doneCount / checklist.length) * 100}%` }}
             />
           </div>
@@ -122,8 +122,8 @@ export function DashboardHome() {
               <Link key={label} to={to} className="flex items-center gap-3 group">
                 <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all
                   ${done
-                    ? 'bg-teal-500 border-teal-500'
-                    : 'border-gray-300 group-hover:border-teal-400'
+                    ? 'bg-blue-500 border-blue-500'
+                    : 'border-gray-300 group-hover:border-blue-400'
                   }`}>
                   {done && (
                     <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -131,11 +131,11 @@ export function DashboardHome() {
                     </svg>
                   )}
                 </div>
-                <span className={`text-sm flex-1 ${done ? 'text-gray-500' : 'text-gray-700 group-hover:text-teal-700'}`}>
+                <span className={`text-sm flex-1 ${done ? 'text-gray-500' : 'text-gray-700 group-hover:text-blue-700'}`}>
                   {label}
                 </span>
                 {!done && (
-                  <svg className="w-4 h-4 text-gray-400 ml-auto group-hover:text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4 text-gray-400 ml-auto group-hover:text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 )}

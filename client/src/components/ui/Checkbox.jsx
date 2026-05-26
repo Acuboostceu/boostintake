@@ -4,7 +4,7 @@ export function Checkbox({ label, description, error, className = '', ...props }
       <div className="flex-shrink-0 mt-0.5">
         <input
           type="checkbox"
-          className="w-5 h-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
+          className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
           {...props}
         />
       </div>
@@ -26,7 +26,7 @@ export function RadioGroup({ label, options, value, onChange, error }) {
           <label key={opt.value} className="flex items-center gap-3 cursor-pointer">
             <input
               type="radio"
-              className="w-4 h-4 text-teal-600 border-gray-300 focus:ring-teal-500"
+              className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
               checked={value === opt.value}
               onChange={() => onChange(opt.value)}
             />

@@ -49,6 +49,7 @@ export function DashboardLayout() {
           cancelHours: data.cancel_hours,
           noShowFee: data.no_show_fee,
           checkFee: data.check_fee,
+          smsTemplate: data.sms_template || '',
         }))
       })
       .catch(() => {})
@@ -59,9 +60,7 @@ export function DashboardLayout() {
       {/* Top nav */}
       <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">B</span>
-          </div>
+          <img src="/logo.png" alt="BoostIntake" className="w-8 h-8 object-contain" />
           <span className="font-semibold text-gray-900">BoostIntake</span>
         </div>
         <button
@@ -83,7 +82,7 @@ export function DashboardLayout() {
               end={end}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
-                ${isActive ? 'bg-teal-50 text-teal-700' : 'text-gray-600 hover:bg-gray-100'}`
+                ${isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`
               }
             >
               {icon}
@@ -94,7 +93,7 @@ export function DashboardLayout() {
           <div className="mt-auto pt-4 border-t border-gray-100">
             <NavLink
               to="/tablet"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-teal-600 hover:bg-teal-50 transition-colors"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -119,7 +118,7 @@ export function DashboardLayout() {
             end={end}
             className={({ isActive }) =>
               `flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium transition-colors
-              ${isActive ? 'text-teal-600' : 'text-gray-500'}`
+              ${isActive ? 'text-blue-600' : 'text-gray-500'}`
             }
           >
             {icon}

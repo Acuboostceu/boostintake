@@ -96,7 +96,7 @@ export function FormsPage() {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <button onClick={() => setView('list')} className="text-teal-600 hover:underline text-sm">← Back to Forms</button>
+          <button onClick={() => setView('list')} className="text-blue-600 hover:underline text-sm">← Back to Forms</button>
           <h1 className="text-xl font-bold text-gray-900">Create Custom Form</h1>
         </div>
         <CustomFormBuilder onSave={handleCreateCustom} onCancel={() => setView('list')} />
@@ -108,7 +108,7 @@ export function FormsPage() {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <button onClick={() => { setView('list'); setEditingCustom(null) }} className="text-teal-600 hover:underline text-sm">← Back to Forms</button>
+          <button onClick={() => { setView('list'); setEditingCustom(null) }} className="text-blue-600 hover:underline text-sm">← Back to Forms</button>
           <h1 className="text-xl font-bold text-gray-900">Edit: {editingCustom.title}</h1>
         </div>
         <CustomFormBuilder initial={editingCustom} onSave={handleUpdateCustom} onCancel={() => { setView('list'); setEditingCustom(null) }} />
@@ -132,16 +132,16 @@ export function FormsPage() {
         </div>
         <div className="text-sm font-medium">
           {saveStatus === 'saving' && <span className="text-gray-400">Saving...</span>}
-          {saveStatus === 'saved' && <span className="text-teal-600">✓ Saved</span>}
+          {saveStatus === 'saved' && <span className="text-blue-600">✓ Saved</span>}
         </div>
       </div>
 
       {/* Active count */}
-      <div className="bg-teal-50 border border-teal-200 rounded-xl px-4 py-3 flex items-center justify-between">
-        <p className="text-sm text-teal-800">
+      <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-center justify-between">
+        <p className="text-sm text-blue-800">
           <strong>{enabledIds.length} forms</strong> will be sent to patients
         </p>
-        <span className="text-xs text-teal-600">
+        <span className="text-xs text-blue-600">
           {enabledIds.filter((id) => {
             const b = FORM_CATALOG.find((f) => f.id === id)
             const c = customForms.find((f) => f.id === id)
@@ -180,7 +180,7 @@ export function FormsPage() {
             <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Custom Forms</span>
             <span className="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-medium">Your forms</span>
           </div>
-          <button onClick={() => setView('builder')} className="text-sm text-teal-600 font-medium hover:underline">
+          <button onClick={() => setView('builder')} className="text-sm text-blue-600 font-medium hover:underline">
             + Create new
           </button>
         </div>
@@ -217,7 +217,7 @@ export function FormsPage() {
                 onDelete={() => handleDeleteCustom(cf.id)}
               />
             ))}
-            <button onClick={() => setView('builder')} className="text-sm text-teal-600 font-medium hover:underline px-1 py-2 self-start">
+            <button onClick={() => setView('builder')} className="text-sm text-blue-600 font-medium hover:underline px-1 py-2 self-start">
               + Create another
             </button>
           </div>
@@ -241,7 +241,7 @@ export function FormsPage() {
                     <span className="text-xs bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full">Coming Soon</span>
                   )}
                   {!meta.comingSoon && (
-                    <span className="text-xs bg-teal-50 text-teal-600 px-2 py-0.5 rounded-full">
+                    <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
                       {enabledIds.filter((id) => forms.some((f) => f.id === id)).length}/{forms.length} active
                     </span>
                   )}
@@ -292,13 +292,13 @@ export function FormsPage() {
 function FormRow({ title, description, enabled, required, requiresSignature, optional, comingSoon, isCustom, onToggle, onPreview, showPreview, onEdit, onDelete }) {
   return (
     <div className={`rounded-xl border shadow-sm px-4 py-3 flex items-center gap-3 transition-all
-      ${comingSoon ? 'opacity-60 border-gray-100 bg-white' : enabled ? (isCustom ? 'border-purple-200 bg-purple-50/30' : 'border-teal-200 bg-white') : 'border-gray-100 bg-white'}`}>
+      ${comingSoon ? 'opacity-60 border-gray-100 bg-white' : enabled ? (isCustom ? 'border-purple-200 bg-purple-50/30' : 'border-blue-200 bg-white') : 'border-gray-100 bg-white'}`}>
       <button
         onClick={onToggle}
         disabled={required || comingSoon}
         className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-all
           ${required || comingSoon ? 'cursor-not-allowed' : 'cursor-pointer'}
-          ${enabled && !comingSoon ? 'bg-teal-500 border-teal-500' : 'border-gray-300 hover:border-teal-400'}`}
+          ${enabled && !comingSoon ? 'bg-blue-500 border-blue-500' : 'border-gray-300 hover:border-blue-400'}`}
       >
         {enabled && !comingSoon && (
           <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -312,14 +312,14 @@ function FormRow({ title, description, enabled, required, requiresSignature, opt
           <span className="text-sm font-medium text-gray-900">{title}</span>
           {required && <span className="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Required</span>}
           {optional && <span className="text-xs bg-amber-50 text-amber-600 border border-amber-200 px-1.5 py-0.5 rounded">Optional</span>}
-          {requiresSignature && !comingSoon && <span className="text-xs text-teal-600">✍️ Signature</span>}
+          {requiresSignature && !comingSoon && <span className="text-xs text-blue-600">✍️ Signature</span>}
         </div>
         <p className="text-xs text-gray-500 mt-0.5 truncate">{description}</p>
       </div>
 
       <div className="flex items-center gap-1 flex-shrink-0">
         {showPreview && !comingSoon && (
-          <button onClick={onPreview} className="text-xs text-gray-400 hover:text-teal-600 px-2 py-1 rounded-lg hover:bg-teal-50 transition-colors">
+          <button onClick={onPreview} className="text-xs text-gray-400 hover:text-blue-600 px-2 py-1 rounded-lg hover:bg-blue-50 transition-colors">
             Preview
           </button>
         )}

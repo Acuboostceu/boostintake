@@ -1,6 +1,6 @@
 const PDFDocument = require('pdfkit')
 
-const TEAL = '#0D9488'
+const TEAL = '#2563EB'
 const DARK = '#1F2937'
 const GRAY = '#6B7280'
 const PAGE_MARGIN = 36
@@ -71,7 +71,7 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
       doc.moveDown(0.5)
 
       // ── Form title ───────────────────────────────────────────────
-      doc.fontSize(13).font('Helvetica-Bold').fillColor(TEAL).text(getFormTitle(formId))
+      doc.fontSize(13).font('Helvetica-Bold').fillColor(TEAL).text(getFormTitle(formId), { width: contentWidth })
       doc.moveDown(0.4)
 
       // ── Form content text ────────────────────────────────────────
@@ -80,15 +80,19 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
         const plain = contentText.replace(/\*\*/g, '')
         const paragraphs = plain.split(/\n\n+/)
         const isHipaa = formId === 'hipaa'
-        doc.fontSize(isHipaa ? 7 : 8.5).fillColor(DARK)
+        const isCompact = isHipaa || formId === 'arbitration'
+        const fontSize = isHipaa ? 7 : isCompact ? 8 : 8.5
+        const lineGap = isCompact ? 0.3 : 1
+        const paraGap = isCompact ? 0.1 : 0.25
+        doc.fontSize(fontSize).fillColor(DARK)
         for (const para of paragraphs) {
           const trimmed = para.trim()
           if (!trimmed) continue
           const isHeader = trimmed.length < 60 && !trimmed.endsWith('.') && !trimmed.startsWith('•')
           doc
             .font(isHeader ? 'Helvetica-Bold' : 'Helvetica')
-            .text(trimmed, { lineGap: isHipaa ? 0.5 : 1 })
-          doc.moveDown(isHipaa ? 0.15 : 0.25)
+            .text(trimmed, { lineGap, width: contentWidth, align: isHeader ? 'left' : 'justify' })
+          doc.moveDown(paraGap)
         }
         doc.moveDown(0.3)
         drawDivider(doc, contentWidth)
@@ -174,12 +178,12 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
 }
 
 function drawHeader(doc, clinic, contentWidth, patient) {
-  doc.fontSize(16).font('Helvetica-Bold').fillColor(TEAL).text(clinic?.name || 'BoostIntake Clinic')
+  doc.fontSize(16).font('Helvetica-Bold').fillColor(TEAL).text(clinic?.name || 'BoostIntake Clinic', { width: contentWidth })
 
   let subLine = ''
   if (clinic?.address) subLine += clinic.address
   if (clinic?.phone) subLine += (subLine ? ' · ' : '') + clinic.phone
-  if (subLine) doc.fontSize(9).font('Helvetica').fillColor(GRAY).text(subLine)
+  if (subLine) doc.fontSize(9).font('Helvetica').fillColor(GRAY).text(subLine, { width: contentWidth })
 }
 
 function drawDivider(doc, contentWidth) {

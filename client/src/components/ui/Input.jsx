@@ -9,7 +9,7 @@ export function Input({ label, error, className = '', required, ...props }) {
       <input
         required={required}
         className={`w-full px-4 py-3 rounded-xl border text-gray-900 placeholder-gray-400
-          focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
           ${error ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white'}
           ${className}`}
         {...props}
@@ -30,7 +30,7 @@ export function Textarea({ label, error, className = '', required, ...props }) {
       <textarea
         required={required}
         className={`w-full px-4 py-3 rounded-xl border text-gray-900 placeholder-gray-400
-          focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none
           ${error ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white'}
           ${className}`}
         rows={3}

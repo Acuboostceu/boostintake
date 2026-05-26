@@ -5,6 +5,8 @@ import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
 
+const DEFAULT_SMS_TEMPLATE = `Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link}`
+
 export function ClinicSettings() {
   const navigate = useNavigate()
   const [settings, setSettings] = useState({
@@ -18,6 +20,7 @@ export function ClinicSettings() {
     pin: '',
     logo: null,
     logoPreview: null,
+    smsTemplate: '',
   })
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -42,6 +45,7 @@ export function ClinicSettings() {
           noShowFee: data.no_show_fee ?? 50,
           checkFee: data.check_fee ?? 35,
           logoPreview: data.logo_url || null,
+          smsTemplate: data.sms_template || '',
         }))
       } finally {
         setLoading(false)
@@ -98,6 +102,7 @@ export function ClinicSettings() {
       form.append('noShowFee', settings.noShowFee)
       form.append('checkFee', settings.checkFee)
       form.append('pin', settings.pin)
+      form.append('smsTemplate', settings.smsTemplate)
       if (settings.logo) form.append('logo', settings.logo)
 
       const res = await fetch(`${API}/api/clinic/settings`, {
@@ -115,6 +120,12 @@ export function ClinicSettings() {
     }
   }
 
+  // Preview with placeholder values
+  const templatePreview = (settings.smsTemplate || DEFAULT_SMS_TEMPLATE)
+    .replace('{firstName}', 'Jane')
+    .replace('{clinicName}', settings.clinicName || 'Your Clinic')
+    .replace('{link}', 'https://boostintake.com/p/abc123')
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -129,7 +140,7 @@ export function ClinicSettings() {
           <CardBody>
             <div className="flex items-center gap-4">
               <div
-                className="w-20 h-20 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-teal-400 overflow-hidden bg-gray-50"
+                className="w-20 h-20 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-blue-400 overflow-hidden bg-gray-50"
                 onClick={() => fileRef.current?.click()}
               >
                 {settings.logoPreview
@@ -138,7 +149,7 @@ export function ClinicSettings() {
                 }
               </div>
               <div>
-                <button type="button" className="text-sm text-teal-600 font-medium hover:underline" onClick={() => fileRef.current?.click()}>
+                <button type="button" className="text-sm text-blue-600 font-medium hover:underline" onClick={() => fileRef.current?.click()}>
                   {settings.logoPreview ? 'Change logo' : 'Upload logo'}
                 </button>
                 <p className="text-xs text-gray-500 mt-1">PNG, JPG up to 5MB. Recommended: 400×400px.</p>
@@ -155,6 +166,29 @@ export function ClinicSettings() {
             <Input label="Clinic Name" value={settings.clinicName} onChange={(e) => update('clinicName', e.target.value)} placeholder="Sunrise Acupuncture Clinic" required />
             <Input label="Address" value={settings.address} onChange={(e) => update('address', e.target.value)} placeholder="123 Main St, Los Angeles, CA 90001" />
             <Input label="Phone Number" type="tel" value={settings.phone} onChange={(e) => update('phone', formatPhone(e.target.value))} placeholder="(555) 000-0000" />
+          </CardBody>
+        </Card>
+
+        {/* SMS Template */}
+        <Card>
+          <CardHeader title="SMS Message Template" subtitle="Customize the text sent to patients with their intake link" />
+          <CardBody className="flex flex-col gap-3">
+            <div>
+              <textarea
+                rows={4}
+                value={settings.smsTemplate}
+                onChange={(e) => update('smsTemplate', e.target.value)}
+                placeholder={DEFAULT_SMS_TEMPLATE}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 text-sm resize-none"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Variables: <code className="bg-gray-100 px-1 rounded">{'{firstName}'}</code> <code className="bg-gray-100 px-1 rounded">{'{clinicName}'}</code> <code className="bg-gray-100 px-1 rounded">{'{link}'}</code>
+              </p>
+            </div>
+            <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
+              <p className="text-xs font-medium text-blue-600 mb-1">PREVIEW</p>
+              <p className="text-sm text-gray-700">{templatePreview}</p>
+            </div>
           </CardBody>
         </Card>
 
@@ -176,7 +210,7 @@ export function ClinicSettings() {
                 )}
               </div>
             ))}
-            <button type="button" onClick={addEmail} className="text-sm text-teal-600 font-medium hover:underline self-start">
+            <button type="button" onClick={addEmail} className="text-sm text-blue-600 font-medium hover:underline self-start">
               + Add another email
             </button>
           </CardBody>
@@ -196,7 +230,7 @@ export function ClinicSettings() {
                     max={72}
                     value={settings.cancelHours}
                     onChange={(e) => update('cancelHours', parseInt(e.target.value))}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-900"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
                   <span className="text-gray-500 text-sm whitespace-nowrap">hours</span>
                 </div>
@@ -210,7 +244,7 @@ export function ClinicSettings() {
                     min={0}
                     value={settings.noShowFee}
                     onChange={(e) => update('noShowFee', parseInt(e.target.value))}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-900"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
                 </div>
               </div>
@@ -224,7 +258,7 @@ export function ClinicSettings() {
                   min={0}
                   value={settings.checkFee}
                   onChange={(e) => update('checkFee', parseInt(e.target.value))}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-900"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
               </div>
             </div>

@@ -14,8 +14,8 @@ export default defineConfig({
         name: 'BoostIntake',
         short_name: 'BoostIntake',
         description: 'Digital intake forms for medical clinics',
-        theme_color: '#0D9488',
-        background_color: '#F0FDFA',
+        theme_color: '#2563EB',
+        background_color: '#EFF6FF',
         display: 'standalone',
         orientation: 'portrait',
         icons: [

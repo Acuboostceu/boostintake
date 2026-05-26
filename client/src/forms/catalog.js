@@ -128,7 +128,7 @@ export const FORM_CATALOG = [
 export const CATEGORY_ORDER = ['common', 'acupuncture', 'chiropractic', 'massage']
 export const CATEGORY_COLORS = {
   common: 'bg-blue-50 text-blue-700 border-blue-200',
-  acupuncture: 'bg-teal-50 text-teal-700 border-teal-200',
+  acupuncture: 'bg-blue-50 text-blue-700 border-blue-200',
   chiropractic: 'bg-orange-50 text-orange-700 border-orange-200',
   massage: 'bg-pink-50 text-pink-700 border-pink-200',
   custom: 'bg-purple-50 text-purple-700 border-purple-200',
