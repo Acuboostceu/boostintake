@@ -52,7 +52,11 @@ router.post('/send-link', requireAuth, async (req, res) => {
     .replace('{clinicName}', clinic?.name || 'your clinic')
     .replace('{link}', link)
 
-  await sendSMS(phone.replace(/\D/g, ''), smsBody)
+  try {
+    await sendSMS(phone.replace(/\D/g, ''), smsBody)
+  } catch (smsErr) {
+    console.error('[send-link] SMS failed:', smsErr?.message)
+  }
 
   res.json({ link, phone: phone.replace(/\D/g, '') })
 })
