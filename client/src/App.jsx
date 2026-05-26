@@ -16,6 +16,8 @@ import { Billing } from './pages/dashboard/Billing'
 import { Login } from './pages/auth/Login'
 import { Register } from './pages/auth/Register'
 import { Landing } from './pages/Landing'
+import { Privacy } from './pages/Privacy'
+import { Terms } from './pages/Terms'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
@@ -44,6 +46,8 @@ export default function App() {
           </Route>
 
           <Route path="/" element={<Landing />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
