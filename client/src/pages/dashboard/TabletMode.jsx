@@ -5,6 +5,7 @@ import { PatientForms } from '../patient/PatientForms'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { API } from '../../lib/api'
+import { LANGUAGES, useTranslations } from '../../i18n/translations'
 
 const TABLET_STATES = {
   IDLE: 'idle',       // Waiting screen — shown to staff
@@ -14,7 +15,8 @@ const TABLET_STATES = {
 
 export function TabletMode() {
   const navigate = useNavigate()
-  const { setPatient, setClinicInfo, setFormData, reset } = useFormStore()
+  const { setPatient, setClinicInfo, setFormData, setLang, lang, reset } = useFormStore()
+  const tr = useTranslations(lang)
   const [state, setState] = useState(TABLET_STATES.IDLE)
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -125,19 +127,37 @@ export function TabletMode() {
   return (
     <div className="min-h-dvh bg-blue-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm">
+
+        {/* Language selector */}
+        <div className="flex justify-center gap-2 mb-6">
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => setLang(l.code)}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                lang === l.code
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-gray-500 border border-gray-200 hover:border-blue-300 hover:text-blue-600'
+              }`}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
+
         <div className="text-center mb-8">
           <img src="/logo.png" alt="BoostIntake" className="w-24 h-24 mx-auto mb-2 object-contain" />
-          <h1 className="text-2xl font-bold text-gray-900">Welcome!</h1>
-          <p className="text-gray-500 mt-1 text-sm">Please enter your information to begin your intake forms</p>
+          <h1 className="text-2xl font-bold text-gray-900">{tr.verify.title}</h1>
+          <p className="text-gray-500 mt-1 text-sm">{tr.verify.subtitle}</p>
         </div>
 
         <form onSubmit={handleStart} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col gap-4">
           <div className="flex gap-3">
-            <Input label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First" required className="flex-1" autoFocus />
-            <Input label="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last" required className="flex-1" />
+            <Input label={tr.verify.firstName} value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First" required className="flex-1" autoFocus />
+            <Input label={tr.verify.lastName} value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last" required className="flex-1" />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700 block mb-1">Date of Birth</label>
+            <label className="text-sm font-medium text-gray-700 block mb-1">{tr.verify.dob}</label>
             <input
               type="text"
               inputMode="numeric"
@@ -150,7 +170,7 @@ export function TabletMode() {
           </div>
 
           <Button type="submit" size="lg" disabled={!firstName || !lastName || !isDobComplete(dob)}>
-            Begin Intake Forms →
+            {tr.verify.submit}
           </Button>
         </form>
 
@@ -169,17 +189,5 @@ export function TabletMode() {
 
 // Wrapper that intercepts form completion in tablet mode
 function TabletPatientWrapper({ onComplete }) {
-  // We need to override the navigate call in PatientForms
-  // Simplest approach: render PatientForms but watch for the /complete route
-  // Since tablet uses token='tablet', we hook into the submit via a custom approach
-
-  // For tablet mode, override submit to call onComplete instead of navigating
-  const store = useFormStore()
-
-  // Patch: override patient token to 'tablet' so PatientForms can be reused
-  // The submit handler in PatientForms already calls /api/patient/submit
-  // For tablet, we replace the navigate in PatientForms by listening to store
-  // This is handled by PatientForms checking token === 'tablet' on the server
-
   return <PatientForms isTablet onTabletComplete={onComplete} />
 }
