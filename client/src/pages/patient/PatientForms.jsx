@@ -7,18 +7,20 @@ import { SignaturePad } from '../../components/forms/SignaturePad'
 import { ProgressBar } from '../../components/ui/ProgressBar'
 import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
+import { useTranslations } from '../../i18n/translations'
 
 export function PatientForms({ isTablet = false, onTabletComplete }) {
   const params = useParams()
   const token = isTablet ? 'tablet' : params.token
   const navigate = useNavigate()
   const {
-    patient, clinicInfo,
+    patient, clinicInfo, lang,
     currentFormIndex, formData, signatures, declinedForms,
     setFormData, setSignature, setDeclined, nextForm, prevForm,
   } = useFormStore()
+  const tr = useTranslations(lang)
 
-  const forms = getAcupunctureForms(clinicInfo || {})
+  const forms = getAcupunctureForms(clinicInfo || {}, lang)
   const form = forms[currentFormIndex]
   const [submitting, setSubmitting] = useState(false)
   const [validationError, setValidationError] = useState('')
@@ -48,12 +50,12 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
 
     for (const field of allFields) {
       if (field.required && !formData[form.id]?.[field.id]) {
-        return `Please complete: "${field.label}"`
+        return `${tr.forms.fieldRequired}"${field.label}"`
       }
     }
 
     if (form.requiresSignature && !currentSig && !isDeclined) {
-      return 'Please provide your signature or choose to decline.'
+      return tr.forms.signatureRequired
     }
 
     return null
@@ -125,7 +127,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
         navigate(`/p/${token}/complete`)
       }
     } catch (e) {
-      setValidationError('Submission failed. Please try again.')
+      setValidationError(tr.forms.submitError)
     } finally {
       setSubmitting(false)
     }
@@ -159,7 +161,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
               <h2 className="text-xl font-bold text-gray-900">{form.title}</h2>
               {form.optional && (
                 <span className="inline-block mt-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
-                  Optional
+                  {tr.forms.optional}
                 </span>
               )}
             </div>
@@ -204,13 +206,13 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
               {isDeclined && (
                 <div className="mt-6 pt-6 border-t border-gray-100">
                   <div className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-4 flex items-center justify-between">
-                    <span className="text-sm text-gray-600 italic">You declined to sign this form.</span>
+                    <span className="text-sm text-gray-600 italic">{tr.forms.declined}</span>
                     <button
                       type="button"
                       className="text-sm text-blue-600 font-medium hover:underline"
                       onClick={() => setDeclined(form.id, false)}
                     >
-                      Undo
+                      {tr.forms.undo}
                     </button>
                   </div>
                 </div>
@@ -234,7 +236,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
                 onClick={() => { setValidationError(''); prevForm(); window.scrollTo({ top: 0 }) }}
                 className="flex-1"
               >
-                ← Back
+                {tr.forms.back}
               </Button>
             )}
             <Button
@@ -245,12 +247,12 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
               className="flex-1"
             >
               {submitting
-                ? 'Submitting...'
+                ? tr.forms.submitting
                 : isLastForm
-                ? 'Submit Forms'
+                ? tr.forms.submit
                 : currentFormIndex === forms.length - 2
-                ? 'Sign & Finish →'
-                : 'Sign & Continue →'}
+                ? tr.forms.finish
+                : tr.forms.next}
             </Button>
           </div>
         </div>

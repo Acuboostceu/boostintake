@@ -5,6 +5,9 @@ export const useFormStore = create((set, get) => ({
   patient: null,         // { name, dob, token }
   clinicInfo: null,      // { name, address, phone, logo, cancelHours, noShowFee }
 
+  // Language
+  lang: 'en',            // 'en' | 'ko' | 'es'
+
   // Form state
   currentFormIndex: 0,
   formData: {},          // { [formId]: { fields... } }
@@ -13,6 +16,7 @@ export const useFormStore = create((set, get) => ({
 
   setPatient: (patient) => set({ patient }),
   setClinicInfo: (clinicInfo) => set({ clinicInfo }),
+  setLang: (lang) => set({ lang }),
 
   setFormData: (formId, data) =>
     set((state) => ({
@@ -38,6 +42,7 @@ export const useFormStore = create((set, get) => ({
   reset: () =>
     set({
       patient: null,
+      lang: 'en',
       currentFormIndex: 0,
       formData: {},
       signatures: {},

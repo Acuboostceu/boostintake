@@ -3,12 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useFormStore } from '../../store/formStore'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { LANGUAGES, useTranslations } from '../../i18n/translations'
 
 export function PatientVerify() {
   const { token } = useParams()
   const navigate = useNavigate()
   const setPatient = useFormStore((s) => s.setPatient)
   const setClinicInfo = useFormStore((s) => s.setClinicInfo)
+  const lang = useFormStore((s) => s.lang)
+  const setLang = useFormStore((s) => s.setLang)
+  const tr = useTranslations(lang)
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -30,7 +34,7 @@ export function PatientVerify() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.message || 'Verification failed. Please check your information.')
+        setError(data.message || tr.verify.error)
         return
       }
 
@@ -38,7 +42,7 @@ export function PatientVerify() {
       setClinicInfo(data.clinic)
       navigate(`/p/${token}/forms`)
     } catch {
-      setError('Unable to connect. Please try again.')
+      setError(tr.verify.networkError)
     } finally {
       setLoading(false)
     }
@@ -47,6 +51,24 @@ export function PatientVerify() {
   return (
     <div className="min-h-dvh bg-blue-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm">
+
+        {/* Language selector */}
+        <div className="flex justify-center gap-2 mb-6">
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => setLang(l.code)}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                lang === l.code
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-gray-500 border border-gray-200 hover:border-blue-300 hover:text-blue-600'
+              }`}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
+
         {/* Logo / Header */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -54,33 +76,33 @@ export function PatientVerify() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Patient Intake Form</h1>
-          <p className="text-gray-500 mt-1 text-sm">Please verify your identity to begin</p>
+          <h1 className="text-2xl font-bold text-gray-900">{tr.verify.title}</h1>
+          <p className="text-gray-500 mt-1 text-sm">{tr.verify.subtitle}</p>
         </div>
 
         {/* Verify form */}
         <form onSubmit={handleVerify} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col gap-4">
           <div className="flex gap-3">
             <Input
-              label="First Name"
+              label={tr.verify.firstName}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              placeholder="First"
+              placeholder={tr.verify.firstPlaceholder}
               required
               autoFocus
               className="flex-1"
             />
             <Input
-              label="Last Name"
+              label={tr.verify.lastName}
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              placeholder="Last"
+              placeholder={tr.verify.lastPlaceholder}
               required
               className="flex-1"
             />
           </div>
           <Input
-            label="Date of Birth"
+            label={tr.verify.dob}
             type="date"
             value={dob}
             onChange={(e) => setDob(e.target.value)}
@@ -94,12 +116,12 @@ export function PatientVerify() {
           )}
 
           <Button type="submit" size="lg" disabled={loading || !firstName || !lastName || !dob}>
-            {loading ? 'Verifying...' : 'Begin Intake Forms →'}
+            {loading ? tr.verify.submitting : tr.verify.submit}
           </Button>
         </form>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          Secured by BoostIntake · HIPAA compliant
+          {tr.verify.footer}
         </p>
       </div>
     </div>
