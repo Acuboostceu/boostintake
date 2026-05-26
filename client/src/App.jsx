@@ -11,8 +11,10 @@ import { ClinicSettings } from './pages/dashboard/ClinicSettings'
 import { SendPatient } from './pages/dashboard/SendPatient'
 import { TabletMode } from './pages/dashboard/TabletMode'
 import { FormsPage } from './pages/dashboard/FormsPage'
+import { Billing } from './pages/dashboard/Billing'
 
 import { Login } from './pages/auth/Login'
+import { Register } from './pages/auth/Register'
 import { Landing } from './pages/Landing'
 
 const queryClient = new QueryClient({
@@ -31,12 +33,14 @@ export default function App() {
           <Route path="/tablet" element={<TabletMode />} />
 
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="forms" element={<FormsPage />} />
             <Route path="settings" element={<ClinicSettings />} />
             <Route path="send" element={<SendPatient />} />
+            <Route path="billing" element={<Billing />} />
           </Route>
 
           <Route path="/" element={<Landing />} />

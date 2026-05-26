@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { API } from '../../lib/api'
 
 const navItems = [
@@ -28,6 +28,7 @@ const navItems = [
 
 export function DashboardLayout() {
   const navigate = useNavigate()
+  const [billing, setBilling] = useState(null)
 
   useEffect(() => {
     const token = localStorage.getItem('bi_token')
@@ -53,10 +54,39 @@ export function DashboardLayout() {
         }))
       })
       .catch(() => {})
+
+    // Load billing status for trial banner
+    fetch(`${API}/api/billing/status`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.ok ? r.json() : null)
+      .then(setBilling)
+      .catch(() => {})
   }, [])
+
+  const showTrialBanner = billing?.trialActive && billing?.trialDaysLeft <= 7
+  const showExpiredBanner = billing && !billing.isActive
 
   return (
     <div className="min-h-dvh bg-gray-50 flex flex-col">
+      {/* Trial expiring banner */}
+      {showTrialBanner && (
+        <div className="bg-blue-600 text-white text-center text-sm py-2 px-4">
+          ⏳ Your free trial ends in <strong>{billing.trialDaysLeft} day{billing.trialDaysLeft !== 1 ? 's' : ''}</strong>.{' '}
+          <button onClick={() => navigate('/dashboard/billing')} className="underline font-semibold hover:text-blue-200">
+            Subscribe now →
+          </button>
+        </div>
+      )}
+
+      {/* Expired banner */}
+      {showExpiredBanner && (
+        <div className="bg-red-500 text-white text-center text-sm py-2 px-4">
+          🔒 Your trial has expired.{' '}
+          <button onClick={() => navigate('/dashboard/billing')} className="underline font-semibold hover:text-red-200">
+            Subscribe to continue →
+          </button>
+        </div>
+      )}
+
       {/* Top nav */}
       <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -90,7 +120,19 @@ export function DashboardLayout() {
             </NavLink>
           ))}
 
-          <div className="mt-auto pt-4 border-t border-gray-100">
+          <div className="mt-auto pt-4 border-t border-gray-100 flex flex-col gap-1">
+            <NavLink
+              to="/dashboard/billing"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
+                ${isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`
+              }
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+              Billing
+            </NavLink>
             <NavLink
               to="/tablet"
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"

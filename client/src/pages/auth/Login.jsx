@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { API } from '../../lib/api'
@@ -53,6 +53,12 @@ export function Login() {
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-blue-600 font-medium hover:underline">
+            Start free trial
+          </Link>
+        </p>
       </div>
     </div>
   )

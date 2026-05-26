@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth')
 const clinicRoutes = require('./routes/clinic')
 const patientRoutes = require('./routes/patient')
 const formsRoutes = require('./routes/forms')
+const billingRoutes = require('./routes/billing')
 
 const app = express()
 
@@ -28,6 +29,9 @@ app.use(cors({
   credentials: true,
 }))
 
+// Webhook needs raw body — must be before express.json()
+app.use('/api/billing/webhook', express.raw({ type: 'application/json' }))
+
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true }))
 app.use((req, _res, next) => { console.log(`→ ${req.method} ${req.path}`) ; next() })
@@ -36,6 +40,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/clinic', clinicRoutes)
 app.use('/api/patient', patientRoutes)
 app.use('/api/forms', formsRoutes)
+app.use('/api/billing', billingRoutes)
 
 app.get('/api/health', (_, res) => res.json({ ok: true }))
 

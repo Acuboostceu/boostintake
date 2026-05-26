@@ -37,9 +37,17 @@ router.post('/register', async (req, res) => {
 
   const hash = await bcrypt.hash(password, 12)
 
+  const trialEndsAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
+
   const { data, error } = await supabase
     .from('clinics')
-    .insert({ email: email.toLowerCase(), password_hash: hash, name: clinicName })
+    .insert({
+      email: email.toLowerCase(),
+      password_hash: hash,
+      name: clinicName,
+      trial_ends_at: trialEndsAt,
+      subscription_status: 'trial',
+    })
     .select('id')
     .single()
 
