@@ -128,6 +128,28 @@ export function TabletMode() {
     <div className="min-h-dvh bg-blue-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm">
 
+        {/* Clinic name — top, large */}
+        {(() => {
+          const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
+          return saved.name ? (
+            <div className="text-center mb-4">
+              <p className="text-xl font-bold text-gray-900">{saved.name}</p>
+            </div>
+          ) : null
+        })()}
+
+        {/* Logo */}
+        <div className="flex justify-center mb-4">
+          {(() => {
+            const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
+            return saved.logoUrl ? (
+              <img src={saved.logoUrl} alt={saved.name || 'Clinic'} className="w-24 h-24 object-contain rounded-2xl" />
+            ) : (
+              <img src="/logo.png" alt="BoostIntake" className="w-24 h-24 object-contain" />
+            )
+          })()}
+        </div>
+
         {/* Language selector */}
         <div className="flex justify-center gap-2 mb-6">
           {LANGUAGES.map((l) => (
@@ -145,21 +167,8 @@ export function TabletMode() {
           ))}
         </div>
 
-        <div className="text-center mb-8">
-          {(() => {
-            const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
-            return saved.logoUrl ? (
-              <img src={saved.logoUrl} alt={saved.name || 'Clinic'} className="w-24 h-24 mx-auto mb-3 object-contain rounded-2xl" />
-            ) : (
-              <img src="/logo.png" alt="BoostIntake" className="w-24 h-24 mx-auto mb-2 object-contain" />
-            )
-          })()}
-          {(() => {
-            const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
-            return saved.name ? (
-              <p className="text-lg font-bold text-gray-900 mb-1">{saved.name}</p>
-            ) : null
-          })()}
+        {/* Form header */}
+        <div className="text-center mb-6">
           <h1 className="text-xl font-semibold text-gray-700">{tr.verify.title}</h1>
           <p className="text-gray-500 mt-1 text-sm">{tr.verify.subtitle}</p>
         </div>
