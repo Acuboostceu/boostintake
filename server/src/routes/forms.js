@@ -74,9 +74,21 @@ router.put('/custom/:id', requireAuth, async (req, res) => {
 
 // Delete custom form
 router.delete('/custom/:id', requireAuth, async (req, res) => {
-  await supabase.from('custom_forms').delete()
-    .eq('id', req.params.id)
-    .eq('clinic_id', req.user.clinicId)
+  const { id } = req.params
+  const clinicId = req.user.clinicId
+
+  // Remove from enabled list first (avoid FK constraint issues)
+  await supabase.from('clinic_forms')
+    .delete()
+    .eq('clinic_id', clinicId)
+    .eq('form_id', id)
+
+  const { error } = await supabase.from('custom_forms')
+    .delete()
+    .eq('id', id)
+    .eq('clinic_id', clinicId)
+
+  if (error) { console.error(error); return res.status(500).json({ message: 'Failed to delete' }) }
   res.json({ ok: true })
 })
 
