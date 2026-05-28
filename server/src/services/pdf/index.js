@@ -98,7 +98,7 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
       doc.moveDown(0.5)
 
       // ── Form title ───────────────────────────────────────────────
-      doc.fontSize(13).font('Helvetica-Bold').fillColor(TEAL).text(getFormTitle(formId), { width: contentWidth })
+      doc.fontSize(13).font('Helvetica-Bold').fillColor(DARK).text(getFormTitle(formId), { width: contentWidth })
       doc.moveDown(0.4)
 
       // ── Form content text ────────────────────────────────────────
@@ -207,7 +207,7 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
 }
 
 function drawHeader(doc, clinic, contentWidth, patient) {
-  doc.fontSize(16).font('Helvetica-Bold').fillColor(TEAL).text(clinic?.name || 'BoostIntake Clinic', { width: contentWidth })
+  doc.fontSize(11).font('Helvetica-Bold').fillColor(DARK).text(clinic?.name || 'BoostIntake Clinic', { width: contentWidth })
 
   let subLine = ''
   if (clinic?.address) subLine += clinic.address

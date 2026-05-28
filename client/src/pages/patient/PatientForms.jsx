@@ -12,8 +12,14 @@ import { API } from '../../lib/api'
 import { useTranslations } from '../../i18n/translations'
 
 function buildAllForms(clinicInfo, lang) {
-  const getFormsFn = clinicInfo?.specialty === 'chiropractic' ? getChiropracticForms : getAcupunctureForms
-  return [...getFormsFn(clinicInfo || {}, lang), ...getPIForms(lang)]
+  const acu = getAcupunctureForms(clinicInfo || {}, lang)
+  const chiro = getChiropracticForms(clinicInfo || {}, lang)
+  const pi = getPIForms(lang)
+  const byId = new Map()
+  for (const f of [...acu, ...chiro, ...pi]) {
+    if (!byId.has(f.id)) byId.set(f.id, f)
+  }
+  return Array.from(byId.values())
 }
 
 function filterForms(allForms, selectedFormIds) {

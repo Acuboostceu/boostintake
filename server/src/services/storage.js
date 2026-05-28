@@ -22,7 +22,7 @@ async function uploadLogo(clinicId, file) {
   }
 
   const ext = file.mimetype.split('/')[1] || 'png'
-  const key = `logos/${clinicId}.${ext}`
+  const key = `logos/${clinicId}-${Date.now()}.${ext}`
   const bucket = process.env.AWS_S3_BUCKET
   const region = process.env.AWS_REGION || 'us-east-2'
 
