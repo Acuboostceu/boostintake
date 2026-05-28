@@ -23,6 +23,8 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
   const forms = getAcupunctureForms(clinicInfo || {}, lang)       // patient sees (translated)
   const formsEn = getAcupunctureForms(clinicInfo || {}, 'en')    // PDF always English
   const form = forms[currentFormIndex]
+  // DEBUG — remove after confirming translation works
+  console.log('[PatientForms] lang:', lang, '| form:', form?.id, '| hipaa section[0] content start:', forms.find(f => f.id === 'hipaa')?.sections?.[0]?.content?.slice(0, 30))
   const [submitting, setSubmitting] = useState(false)
   const [validationError, setValidationError] = useState('')
 
