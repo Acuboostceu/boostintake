@@ -30,25 +30,9 @@ export function TabletMode() {
   const [selectedFormIds, setSelectedFormIdsLocal] = useState(DEFAULT_FORM_IDS)
   const [availableForms, setAvailableForms] = useState([])
 
-  // Load available forms once on mount
+  // All catalog forms are available for per-send selection
   useEffect(() => {
-    fetch(`${API}/api/forms`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        const enabled = data?.enabled || []
-        const custom = data?.custom || []
-        const ids = new Set([
-          ...enabled.map((f) => f.form_id),
-          ...custom.map((f) => f.id),
-        ])
-        const forms = FORM_CATALOG.filter((f) => ids.has(f.id) && !f.comingSoon)
-        setAvailableForms(forms.length > 0 ? forms : FORM_CATALOG.filter((f) => !f.comingSoon))
-      })
-      .catch(() => {
-        setAvailableForms(FORM_CATALOG.filter((f) => !f.comingSoon))
-      })
+    setAvailableForms(FORM_CATALOG.filter((f) => !f.comingSoon))
   }, [])
 
   function handleDobInput(raw) {
