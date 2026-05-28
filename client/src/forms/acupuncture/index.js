@@ -7,7 +7,14 @@ import { ACUPUNCTURE_CONSENT_FORM } from './acupunctureConsent'
 import { HEALTH_HISTORY_FORM } from './healthHistory'
 import { REVIEW_OF_SYSTEMS_FORM } from './reviewOfSystems'
 import { t } from '../../i18n/translations'
-import { ACUPUNCTURE_CONSENT_CONTENT, REVIEW_OF_SYSTEMS_CONTENT } from '../../i18n/formContent'
+import {
+  ACUPUNCTURE_CONSENT_CONTENT,
+  REVIEW_OF_SYSTEMS_CONTENT,
+  HIPAA_CONTENT,
+  FINANCIAL_POLICY_CONTENT,
+  AOB_CONTENT,
+  ARBITRATION_CONTENT,
+} from '../../i18n/formContent'
 
 // Map of field ID → translation key in formCheckboxes
 const CHECKBOX_LABEL_MAP = {
@@ -164,6 +171,43 @@ function buildReviewOfSystems(lang) {
   }
 }
 
+function buildHipaaForm(lang) {
+  const c = HIPAA_CONTENT[lang]
+  if (!c) return HIPAA_FORM // English — use original
+  const tr = t[lang] || t.en
+  return translateForm({
+    ...HIPAA_FORM,
+    sections: c.sections,
+  }, tr)
+}
+
+function buildFinancialPolicyForm(clinicInfo, lang) {
+  const getTextFn = FINANCIAL_POLICY_CONTENT[lang] || FINANCIAL_POLICY_CONTENT.en
+  const tr = t[lang] || t.en
+  return translateForm({
+    ...FINANCIAL_POLICY_FORM,
+    content: getTextFn(clinicInfo),
+  }, tr)
+}
+
+function buildAOBForm(clinicInfo, lang) {
+  const getTextFn = AOB_CONTENT[lang] || AOB_CONTENT.en
+  const tr = t[lang] || t.en
+  return translateForm({
+    ...ASSIGNMENT_OF_BENEFITS_FORM,
+    content: getTextFn(clinicInfo),
+  }, tr)
+}
+
+function buildArbitrationForm(lang) {
+  const content = ARBITRATION_CONTENT[lang]
+  const tr = t[lang] || t.en
+  return translateForm({
+    ...ARBITRATION_FORM,
+    content: content || ARBITRATION_FORM.content,
+  }, tr)
+}
+
 export function getAcupunctureForms(clinicInfo = {}, lang = 'en') {
   const tr = t[lang] || t.en
 
@@ -172,12 +216,9 @@ export function getAcupunctureForms(clinicInfo = {}, lang = 'en') {
     buildAcupunctureConsent(lang),
     translateForm(HEALTH_HISTORY_FORM, tr),
     buildReviewOfSystems(lang),
-    translateForm(HIPAA_FORM, tr),
-    translateForm({
-      ...FINANCIAL_POLICY_FORM,
-      content: FINANCIAL_POLICY_FORM.getText(clinicInfo),
-    }, tr),
-    translateForm(ASSIGNMENT_OF_BENEFITS_FORM, tr),
-    translateForm(ARBITRATION_FORM, tr),
+    buildHipaaForm(lang),
+    buildFinancialPolicyForm(clinicInfo, lang),
+    buildAOBForm(clinicInfo, lang),
+    buildArbitrationForm(lang),
   ]
 }
