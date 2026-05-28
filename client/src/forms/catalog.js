@@ -120,13 +120,32 @@ export const FORM_CATALOG = [
     required: false,
     comingSoon: true,
   },
+  {
+    id: 'pi_auto_accident',
+    title: 'Auto Accident / PI Intake',
+    category: 'pi',
+    categoryLabel: 'Personal Injury',
+    description: 'Detailed accident information: vehicle details, impact, symptoms, prior history, attorney and insurance information.',
+    requiresSignature: false,
+    required: false,
+  },
+  {
+    id: 'pi_medical_lien',
+    title: 'Medical Lien Agreement',
+    category: 'pi',
+    categoryLabel: 'Personal Injury',
+    description: 'Patient assigns rights to collect treatment fees from settlement or judgment proceeds.',
+    requiresSignature: true,
+    required: false,
+  },
 ]
 
-export const CATEGORY_ORDER = ['common', 'acupuncture', 'chiropractic', 'massage']
+export const CATEGORY_ORDER = ['common', 'acupuncture', 'chiropractic', 'pi', 'massage']
 export const CATEGORY_COLORS = {
   common: 'bg-blue-50 text-blue-700 border-blue-200',
   acupuncture: 'bg-blue-50 text-blue-700 border-blue-200',
   chiropractic: 'bg-orange-50 text-orange-700 border-orange-200',
+  pi: 'bg-amber-50 text-amber-700 border-amber-200',
   massage: 'bg-pink-50 text-pink-700 border-pink-200',
   custom: 'bg-purple-50 text-purple-700 border-purple-200',
 }
@@ -135,6 +154,7 @@ export const CATEGORY_META = {
   common:        { label: 'Common — All Clinics', collapsible: false, comingSoon: false },
   acupuncture:   { label: 'Acupuncture',          collapsible: true,  comingSoon: false },
   chiropractic:  { label: 'Chiropractic',         collapsible: true,  comingSoon: false },
+  pi:            { label: 'Personal Injury',      collapsible: true,  comingSoon: false },
   massage:       { label: 'Massage Therapy',      collapsible: true,  comingSoon: true  },
 }
 

@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react'
 import { Card, CardHeader, CardBody } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
+import { FormSelector } from '../../components/forms/FormSelector'
+import { FORM_CATALOG } from '../../forms/catalog'
 import { API } from '../../lib/api'
 
 const DEFAULT_TEMPLATE = `Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link}`
+
+const LOCKED_FORM_IDS = ['patient_info', 'hipaa', 'financial_policy', 'assignment_of_benefits', 'arbitration']
 
 export function SendPatient() {
   const [firstName, setFirstName] = useState('')
@@ -16,10 +20,31 @@ export function SendPatient() {
   const [error, setError] = useState('')
   const [clinicInfo, setClinicInfo] = useState({ name: '', template: '' })
   const [customMessage, setCustomMessage] = useState('')
+  const [selectedFormIds, setSelectedFormIds] = useState(LOCKED_FORM_IDS)
+  const [availableForms, setAvailableForms] = useState([])
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
     setClinicInfo({ name: saved.name || '', template: saved.smsTemplate || '' })
+
+    // Load available forms for this clinic
+    fetch(`${API}/api/forms`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        const enabled = data?.enabled || []
+        const custom = data?.custom || []
+        const ids = new Set([
+          ...enabled.map((f) => f.form_id),
+          ...custom.map((f) => f.id),
+        ])
+        const forms = FORM_CATALOG.filter((f) => ids.has(f.id) && !f.comingSoon)
+        setAvailableForms(forms.length > 0 ? forms : FORM_CATALOG.filter((f) => !f.comingSoon))
+      })
+      .catch(() => {
+        setAvailableForms(FORM_CATALOG.filter((f) => !f.comingSoon))
+      })
   }, [])
 
   // Build live preview (link shown as placeholder until sent)
@@ -44,13 +69,21 @@ export function SendPatient() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('bi_token')}`,
         },
-        body: JSON.stringify({ firstName, lastName, phone, dob, customMessage: customMessage || template }),
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          phone,
+          dob,
+          customMessage: customMessage || template,
+          formIds: selectedFormIds,
+        }),
       })
       const data = await res.json()
       if (!res.ok) { setError(data.message || 'Failed to send'); return }
       setResult(data)
       setFirstName(''); setLastName(''); setPhone(''); setDob('')
       setCustomMessage('')
+      setSelectedFormIds(LOCKED_FORM_IDS)
     } catch {
       setError('Connection error. Please try again.')
     } finally {
@@ -64,6 +97,8 @@ export function SendPatient() {
     if (digits.length <= 6) return `(${digits.slice(0,3)}) ${digits.slice(3)}`
     return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`
   }
+
+  const nonLockedSelected = selectedFormIds.filter((id) => !LOCKED_FORM_IDS.includes(id))
 
   return (
     <div className="flex flex-col gap-6">
@@ -113,6 +148,22 @@ export function SendPatient() {
               </div>
               <Input label="Date of Birth" type="date" value={dob} onChange={(e) => setDob(e.target.value)} required />
               <Input label="Mobile Phone Number" type="tel" value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} placeholder="(555) 000-0000" required />
+            </CardBody>
+          </Card>
+
+          {/* Form Selection */}
+          <Card>
+            <CardHeader
+              title="Forms for This Patient"
+              subtitle={`${selectedFormIds.length} form${selectedFormIds.length !== 1 ? 's' : ''} selected (${LOCKED_FORM_IDS.length} required + ${nonLockedSelected.length} optional)`}
+            />
+            <CardBody>
+              <FormSelector
+                availableForms={availableForms}
+                selectedIds={selectedFormIds}
+                onChange={setSelectedFormIds}
+                lockedIds={LOCKED_FORM_IDS}
+              />
             </CardBody>
           </Card>
 

@@ -1,28 +1,56 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useFormStore } from '../../store/formStore'
 import { PatientForms } from '../patient/PatientForms'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { FormSelector } from '../../components/forms/FormSelector'
+import { FORM_CATALOG } from '../../forms/catalog'
 import { API } from '../../lib/api'
 import { LANGUAGES, useTranslations } from '../../i18n/translations'
 
 const TABLET_STATES = {
-  IDLE: 'idle',       // Waiting screen — shown to staff
-  PATIENT: 'patient', // Patient fills forms
+  SETUP: 'setup',       // Staff selects forms
+  IDLE: 'idle',         // Patient enters name/DOB
+  PATIENT: 'patient',   // Patient fills forms
   COMPLETE: 'complete', // Done — PIN lock screen
 }
 
+const LOCKED_FORM_IDS = ['patient_info', 'hipaa', 'financial_policy', 'assignment_of_benefits', 'arbitration']
+
 export function TabletMode() {
   const navigate = useNavigate()
-  const { setPatient, setClinicInfo, setFormData, setLang, lang, reset } = useFormStore()
+  const { setPatient, setClinicInfo, setFormData, setLang, setSelectedFormIds, lang, reset } = useFormStore()
   const tr = useTranslations(lang)
-  const [state, setState] = useState(TABLET_STATES.IDLE)
+  const [state, setState] = useState(TABLET_STATES.SETUP)
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [dob, setDob] = useState('')       // display: MM/DD/YYYY
   const [pin, setPin] = useState('')
   const [pinError, setPinError] = useState('')
+  const [selectedFormIds, setSelectedFormIdsLocal] = useState(LOCKED_FORM_IDS)
+  const [availableForms, setAvailableForms] = useState([])
+
+  // Load available forms once on mount
+  useEffect(() => {
+    fetch(`${API}/api/forms`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        const enabled = data?.enabled || []
+        const custom = data?.custom || []
+        const ids = new Set([
+          ...enabled.map((f) => f.form_id),
+          ...custom.map((f) => f.id),
+        ])
+        const forms = FORM_CATALOG.filter((f) => ids.has(f.id) && !f.comingSoon)
+        setAvailableForms(forms.length > 0 ? forms : FORM_CATALOG.filter((f) => !f.comingSoon))
+      })
+      .catch(() => {
+        setAvailableForms(FORM_CATALOG.filter((f) => !f.comingSoon))
+      })
+  }, [])
 
   function handleDobInput(raw) {
     const digits = raw.replace(/\D/g, '').slice(0, 8)
@@ -34,6 +62,12 @@ export function TabletMode() {
 
   function isDobComplete(val) {
     return /^\d{2}\/\d{2}\/\d{4}$/.test(val)
+  }
+
+  function handleSetupContinue() {
+    // Store selected form IDs in the global store so PatientForms filters correctly
+    setSelectedFormIds(selectedFormIds)
+    setState(TABLET_STATES.IDLE)
   }
 
   function handleStart(e) {
@@ -70,7 +104,8 @@ export function TabletMode() {
         reset()
         setFirstName(''); setLastName(''); setDob(''); setPin('')
         setPinError('')
-        setState(TABLET_STATES.IDLE)
+        setSelectedFormIdsLocal(LOCKED_FORM_IDS)
+        setState(TABLET_STATES.SETUP)
       } else {
         setPinError('Incorrect PIN')
         setPin('')
@@ -79,6 +114,54 @@ export function TabletMode() {
       setPinError('Connection error. Try again.')
       setPin('')
     }
+  }
+
+  // SETUP state — staff selects forms
+  if (state === TABLET_STATES.SETUP) {
+    return (
+      <div className="min-h-dvh bg-gray-50 flex flex-col">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
+          <div className="max-w-xl mx-auto">
+            <h1 className="text-lg font-bold text-gray-900">Select Forms for This Patient</h1>
+            <p className="text-sm text-gray-500 mt-0.5">Choose which forms this patient needs to complete.</p>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 px-4 py-6 overflow-y-auto">
+          <div className="max-w-xl mx-auto">
+            <FormSelector
+              availableForms={availableForms}
+              selectedIds={selectedFormIds}
+              onChange={setSelectedFormIdsLocal}
+              lockedIds={LOCKED_FORM_IDS}
+            />
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="bg-white border-t border-gray-200 px-6 py-4">
+          <div className="max-w-xl mx-auto flex items-center justify-between gap-4">
+            <p className="text-sm text-gray-500">
+              {selectedFormIds.length} form{selectedFormIds.length !== 1 ? 's' : ''} selected
+            </p>
+            <Button size="md" onClick={handleSetupContinue}>
+              Continue →
+            </Button>
+          </div>
+        </div>
+
+        <div className="text-center pb-4">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="text-xs text-gray-400 hover:text-gray-600 underline"
+          >
+            Staff: Return to Dashboard
+          </button>
+        </div>
+      </div>
+    )
   }
 
   if (state === TABLET_STATES.PATIENT) {
@@ -123,7 +206,7 @@ export function TabletMode() {
     )
   }
 
-  // IDLE state
+  // IDLE state — patient enters name/DOB
   return (
     <div className="min-h-dvh bg-blue-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm">
@@ -189,10 +272,10 @@ export function TabletMode() {
 
         <div className="mt-6 text-center">
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => setState(TABLET_STATES.SETUP)}
             className="text-xs text-gray-400 hover:text-gray-600 underline"
           >
-            Staff: Return to Dashboard
+            Back to form selection
           </button>
         </div>
       </div>

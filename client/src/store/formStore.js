@@ -13,6 +13,7 @@ export const useFormStore = create((set, get) => ({
   formData: {},          // { [formId]: { fields... } }
   signatures: {},        // { [formId]: dataURL }
   declinedForms: {},     // { [formId]: true }
+  selectedFormIds: null, // array of form IDs to show, or null = show all
 
   setPatient: (patient) => set({ patient }),
   setClinicInfo: (clinicInfo) => set({ clinicInfo }),
@@ -33,6 +34,8 @@ export const useFormStore = create((set, get) => ({
       declinedForms: { ...state.declinedForms, [formId]: declined },
     })),
 
+  setSelectedFormIds: (ids) => set({ selectedFormIds: ids }),
+
   nextForm: () =>
     set((state) => ({ currentFormIndex: state.currentFormIndex + 1 })),
 
@@ -47,5 +50,6 @@ export const useFormStore = create((set, get) => ({
       formData: {},
       signatures: {},
       declinedForms: {},
+      selectedFormIds: null,
     }),
 }))

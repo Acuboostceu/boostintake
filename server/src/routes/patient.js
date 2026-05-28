@@ -24,13 +24,16 @@ router.get('/clinic-info/:token', async (req, res) => {
 
 // Staff sends intake link to patient
 router.post('/send-link', requireAuth, async (req, res) => {
-  const { firstName, lastName, phone, dob, customMessage } = req.body
+  const { firstName, lastName, phone, dob, customMessage, formIds } = req.body
   if (!firstName || !lastName || !phone || !dob) {
     return res.status(400).json({ message: 'All fields required' })
   }
 
   const token = nanoid(10)
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+
+  // NOTE: the intake_tokens table needs a form_ids jsonb column:
+  //   ALTER TABLE intake_tokens ADD COLUMN form_ids jsonb;
 
   // Store token with patient identity for verification
   const { error } = await supabase.from('intake_tokens').insert({
@@ -42,6 +45,7 @@ router.post('/send-link', requireAuth, async (req, res) => {
     phone: phone.replace(/\D/g, ''),
     expires_at: expiresAt,
     used: false,
+    ...(formIds && formIds.length > 0 ? { form_ids: formIds } : {}),
   })
 
   if (error) return res.status(500).json({ message: 'Failed to create link' })
@@ -114,6 +118,7 @@ router.post('/verify', async (req, res) => {
       noShowFee: clinic.no_show_fee,
       specialty: clinic.specialty || 'acupuncture',
     },
+    formIds: record.form_ids || null,
   })
 })
 

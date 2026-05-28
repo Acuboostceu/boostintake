@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useFormStore } from '../../store/formStore'
 import { getAcupunctureForms } from '../../forms/acupuncture'
 import { getChiropracticForms } from '../../forms/chiropractic'
+import { PI_AUTO_ACCIDENT_FORM } from '../../forms/pi/piAutoAccident'
+import { PI_MEDICAL_LIEN_FORM } from '../../forms/pi/piMedicalLien'
 import { FormRenderer } from '../../components/forms/FormRenderer'
 import { SignaturePad } from '../../components/forms/SignaturePad'
 import { ProgressBar } from '../../components/ui/ProgressBar'
@@ -10,20 +12,37 @@ import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
 import { useTranslations } from '../../i18n/translations'
 
+// All PI forms (no translation needed)
+const PI_FORMS_ALL = [PI_AUTO_ACCIDENT_FORM, PI_MEDICAL_LIEN_FORM]
+
+function buildAllForms(clinicInfo, lang) {
+  const getFormsFn = clinicInfo?.specialty === 'chiropractic' ? getChiropracticForms : getAcupunctureForms
+  return [...getFormsFn(clinicInfo || {}, lang), ...PI_FORMS_ALL]
+}
+
+function filterForms(allForms, selectedFormIds) {
+  if (!selectedFormIds) return allForms
+  // Preserve order from selectedFormIds
+  return selectedFormIds
+    .map((id) => allForms.find((f) => f.id === id))
+    .filter(Boolean)
+}
+
 export function PatientForms({ isTablet = false, onTabletComplete }) {
   const params = useParams()
   const token = isTablet ? 'tablet' : params.token
   const navigate = useNavigate()
   const {
-    patient, clinicInfo, lang,
+    patient, clinicInfo, lang, selectedFormIds,
     currentFormIndex, formData, signatures, declinedForms,
     setFormData, setSignature, setDeclined, nextForm, prevForm,
   } = useFormStore()
   const tr = useTranslations(lang)
 
-  const getFormsFn = clinicInfo?.specialty === 'chiropractic' ? getChiropracticForms : getAcupunctureForms
-  const forms = getFormsFn(clinicInfo || {}, lang)       // patient sees (translated)
-  const formsEn = getFormsFn(clinicInfo || {}, 'en')    // PDF always English
+  const allForms = buildAllForms(clinicInfo, lang)
+  const allFormsEn = buildAllForms(clinicInfo, 'en')
+  const forms = filterForms(allForms, selectedFormIds)       // patient sees (translated, filtered)
+  const formsEn = filterForms(allFormsEn, selectedFormIds)  // PDF always English, filtered
   const form = forms[currentFormIndex]
   const [submitting, setSubmitting] = useState(false)
   const [validationError, setValidationError] = useState('')
