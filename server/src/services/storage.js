@@ -23,16 +23,18 @@ async function uploadLogo(clinicId, file) {
 
   const ext = file.mimetype.split('/')[1] || 'png'
   const key = `logos/${clinicId}.${ext}`
+  const bucket = process.env.AWS_S3_BUCKET
+  const region = process.env.AWS_REGION || 'us-east-2'
 
   await getClient().send(new PutObjectCommand({
-    Bucket: process.env.AWS_S3_BUCKET,
+    Bucket: bucket,
     Key: key,
     Body: file.buffer,
     ContentType: file.mimetype,
-    // No public access — serve via CloudFront or signed URL
   }))
 
-  return key
+  // Return public URL
+  return `https://${bucket}.s3.${region}.amazonaws.com/${key}`
 }
 
 module.exports = { uploadLogo }
