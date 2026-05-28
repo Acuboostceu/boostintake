@@ -20,7 +20,8 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
   } = useFormStore()
   const tr = useTranslations(lang)
 
-  const forms = getAcupunctureForms(clinicInfo || {}, lang)
+  const forms = getAcupunctureForms(clinicInfo || {}, lang)       // patient sees (translated)
+  const formsEn = getAcupunctureForms(clinicInfo || {}, 'en')    // PDF always English
   const form = forms[currentFormIndex]
   const [submitting, setSubmitting] = useState(false)
   const [validationError, setValidationError] = useState('')
@@ -81,10 +82,10 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
         ? JSON.parse(localStorage.getItem('bi_clinic') || '{}').clinicId
         : undefined
 
-      // Collect form content texts for PDF generation
+      // Collect form content texts for PDF generation — always English
       const formContents = {}
       const formFields = {}
-      forms.forEach((form) => {
+      formsEn.forEach((form) => {
         if (form.content) {
           formContents[form.id] = form.content
         } else if (form.getText) {
@@ -96,7 +97,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
             .join('\n\n')
           if (text) formContents[form.id] = text
         }
-        // Collect field definitions (label + id) for blank-line rendering
+        // Collect field definitions (label + id) for blank-line rendering — English labels
         const fields = [
           ...(form.sections?.flatMap((s) => s.fields || []) || []),
           ...(form.fields || []),
