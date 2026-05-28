@@ -16,7 +16,6 @@ const TABLET_STATES = {
   COMPLETE: 'complete', // Done — PIN lock screen
 }
 
-const DEFAULT_FORM_IDS = ['patient_info', 'hipaa', 'financial_policy', 'assignment_of_benefits', 'arbitration']
 
 export function TabletMode() {
   const navigate = useNavigate()
