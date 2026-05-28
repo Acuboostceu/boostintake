@@ -4,9 +4,15 @@ import { HIPAA_FORM } from '../../forms/common/hipaa'
 import { FINANCIAL_POLICY_FORM } from '../../forms/common/financialPolicy'
 import { ASSIGNMENT_OF_BENEFITS_FORM } from '../../forms/common/assignmentOfBenefits'
 import { ARBITRATION_FORM } from '../../forms/common/arbitration'
+import { INFORMATION_RELEASE_FORM } from '../../forms/common/informationRelease'
 import { ACUPUNCTURE_CONSENT_FORM } from '../../forms/acupuncture/acupunctureConsent'
 import { HEALTH_HISTORY_FORM } from '../../forms/acupuncture/healthHistory'
 import { REVIEW_OF_SYSTEMS_FORM } from '../../forms/acupuncture/reviewOfSystems'
+import { CHIROPRACTIC_CONSENT_FORM } from '../../forms/chiropractic/chiropracticConsent'
+import { CHIRO_HISTORY_FORM } from '../../forms/chiropractic/chiroHistory'
+import { CHIRO_PAIN_DIAGRAM_FORM } from '../../forms/chiropractic/chiroPainDiagram'
+import { PI_AUTO_ACCIDENT_FORM } from '../../forms/pi/piAutoAccident'
+import { PI_MEDICAL_LIEN_FORM } from '../../forms/pi/piMedicalLien'
 
 const BUILT_IN_FORMS = {
   patient_info: PATIENT_INFO_FORM,
@@ -14,9 +20,15 @@ const BUILT_IN_FORMS = {
   financial_policy: FINANCIAL_POLICY_FORM,
   assignment_of_benefits: ASSIGNMENT_OF_BENEFITS_FORM,
   arbitration: ARBITRATION_FORM,
+  information_release: INFORMATION_RELEASE_FORM,
   acupuncture_consent: ACUPUNCTURE_CONSENT_FORM,
   health_history: HEALTH_HISTORY_FORM,
   review_of_systems: REVIEW_OF_SYSTEMS_FORM,
+  chiro_consent: CHIROPRACTIC_CONSENT_FORM,
+  chiro_history: CHIRO_HISTORY_FORM,
+  chiro_pain_diagram: CHIRO_PAIN_DIAGRAM_FORM,
+  pi_auto_accident: PI_AUTO_ACCIDENT_FORM,
+  pi_medical_lien: PI_MEDICAL_LIEN_FORM,
 }
 
 export function FormPreviewModal({ formId, customForm, onClose }) {
