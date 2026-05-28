@@ -6,11 +6,15 @@ import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
 import { HEALTH_HISTORY_FORM } from '../../forms/acupuncture/healthHistory'
 import { REVIEW_OF_SYSTEMS_FORM } from '../../forms/acupuncture/reviewOfSystems'
+import { CHIRO_HISTORY_FORM } from '../../forms/chiropractic/chiroHistory'
+import { CHIRO_PAIN_DIAGRAM_FORM } from '../../forms/chiropractic/chiroPainDiagram'
 
 // Specialty forms that can be customized (maps formId → base form structure)
 const CUSTOMIZABLE_SPECIALTY_FORMS = {
   health_history: HEALTH_HISTORY_FORM,
   review_of_systems: REVIEW_OF_SYSTEMS_FORM,
+  chiro_history: CHIRO_HISTORY_FORM,
+  chiro_pain_diagram: CHIRO_PAIN_DIAGRAM_FORM,
 }
 
 // Field types supported by CustomFormBuilder
