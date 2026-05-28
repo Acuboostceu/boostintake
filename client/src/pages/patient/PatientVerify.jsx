@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useFormStore } from '../../store/formStore'
 import { Button } from '../../components/ui/Button'
@@ -20,6 +20,15 @@ export function PatientVerify() {
   const [dob, setDob] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [branding, setBranding] = useState({ clinicName: null, logoUrl: null })
+
+  // Fetch clinic branding from token on mount
+  useEffect(() => {
+    fetch(`/api/patient/clinic-info/${token}`)
+      .then((r) => r.json())
+      .then((d) => { if (d.clinicName) setBranding(d) })
+      .catch(() => {})
+  }, [token])
 
   async function handleVerify(e) {
     e.preventDefault()
@@ -41,7 +50,6 @@ export function PatientVerify() {
 
       setPatient({ name: `${firstName} ${lastName}`, dob, token })
       setClinicInfo(data.clinic)
-      // Pre-fill patient info form with verified identity
       setFormData('patient_info', { firstName: firstName.trim(), lastName: lastName.trim(), dob })
       navigate(`/p/${token}/forms`)
     } catch {
@@ -74,12 +82,23 @@ export function PatientVerify() {
 
         {/* Logo / Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <svg className="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">{tr.verify.title}</h1>
+          {branding.logoUrl ? (
+            <img
+              src={branding.logoUrl}
+              alt={branding.clinicName || 'Clinic'}
+              className="w-24 h-24 mx-auto mb-3 object-contain rounded-2xl"
+            />
+          ) : (
+            <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+          )}
+          {branding.clinicName && (
+            <p className="text-lg font-bold text-gray-900 mb-1">{branding.clinicName}</p>
+          )}
+          <h1 className="text-xl font-semibold text-gray-700">{tr.verify.title}</h1>
           <p className="text-gray-500 mt-1 text-sm">{tr.verify.subtitle}</p>
         </div>
 
@@ -90,7 +109,7 @@ export function PatientVerify() {
               label={tr.verify.firstName}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              placeholder={tr.verify.firstPlaceholder}
+              placeholder="First"
               required
               autoFocus
               className="flex-1"
@@ -99,7 +118,7 @@ export function PatientVerify() {
               label={tr.verify.lastName}
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              placeholder={tr.verify.lastPlaceholder}
+              placeholder="Last"
               required
               className="flex-1"
             />

@@ -9,6 +9,19 @@ const { sendEmail } = require('../services/email')
 
 const router = express.Router()
 
+// Get clinic branding from token (public — no PHI exposed)
+router.get('/clinic-info/:token', async (req, res) => {
+  const { data, error } = await supabase
+    .from('intake_tokens')
+    .select('clinics(name, logo_url)')
+    .eq('token', req.params.token)
+    .single()
+
+  if (error || !data) return res.status(404).json({ message: 'Not found' })
+  const clinic = data.clinics
+  res.json({ clinicName: clinic?.name || null, logoUrl: clinic?.logo_url || null })
+})
+
 // Staff sends intake link to patient
 router.post('/send-link', requireAuth, async (req, res) => {
   const { firstName, lastName, phone, dob, customMessage } = req.body

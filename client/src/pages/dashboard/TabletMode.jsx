@@ -146,8 +146,21 @@ export function TabletMode() {
         </div>
 
         <div className="text-center mb-8">
-          <img src="/logo.png" alt="BoostIntake" className="w-24 h-24 mx-auto mb-2 object-contain" />
-          <h1 className="text-2xl font-bold text-gray-900">{tr.verify.title}</h1>
+          {(() => {
+            const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
+            return saved.logoUrl ? (
+              <img src={saved.logoUrl} alt={saved.name || 'Clinic'} className="w-24 h-24 mx-auto mb-3 object-contain rounded-2xl" />
+            ) : (
+              <img src="/logo.png" alt="BoostIntake" className="w-24 h-24 mx-auto mb-2 object-contain" />
+            )
+          })()}
+          {(() => {
+            const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
+            return saved.name ? (
+              <p className="text-lg font-bold text-gray-900 mb-1">{saved.name}</p>
+            ) : null
+          })()}
+          <h1 className="text-xl font-semibold text-gray-700">{tr.verify.title}</h1>
           <p className="text-gray-500 mt-1 text-sm">{tr.verify.subtitle}</p>
         </div>
 
