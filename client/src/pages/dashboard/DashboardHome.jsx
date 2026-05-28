@@ -223,24 +223,27 @@ export function DashboardHome() {
               ) : list.length === 0 ? (
                 <p className="text-sm text-gray-400 text-center py-8">No records found</p>
               ) : (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col">
                   {list.map((item, i) => (
-                    <div key={i} className="flex items-center justify-between py-3 border-b border-gray-50">
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
+                    <div key={i} className="flex items-center justify-between py-3 border-b border-gray-50 gap-3">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">
                           {panel.type === 'sent'
                             ? `${item.first_name} ${item.last_name}`
                             : item.patient_name || 'Patient'
                           }
                         </p>
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          {panel.type === 'sent'
-                            ? item.used ? '✓ Completed' : '⏳ Pending'
-                            : item.source === 'tablet' ? '🖥 Tablet' : '📱 SMS'
-                          }
-                        </p>
+                        {panel.type === 'sent' ? (
+                          item.used
+                            ? <span className="flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full bg-green-50 text-green-700">Completed</span>
+                            : <span className="flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full bg-red-50 text-red-600">Waiting</span>
+                        ) : (
+                          item.source === 'tablet'
+                            ? <span className="flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">Tablet</span>
+                            : <span className="flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">SMS</span>
+                        )}
                       </div>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-gray-400 flex-shrink-0">
                         {timeAgo(panel.type === 'sent' ? item.created_at : item.submitted_at)}
                       </p>
                     </div>
