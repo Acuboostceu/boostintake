@@ -134,7 +134,7 @@ export function TabletMode() {
           return (
             <div className="text-center mb-5">
               {saved.name && (
-                <p className="text-2xl font-bold text-gray-900 mb-3">{saved.name}</p>
+                <p className="text-2xl font-bold text-gray-700 mb-3">{saved.name}</p>
               )}
               {saved.logoUrl ? (
                 <img src={saved.logoUrl} alt={saved.name || 'Clinic'} className="w-20 h-20 object-contain rounded-2xl mx-auto mb-3" />
