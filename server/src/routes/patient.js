@@ -83,7 +83,7 @@ router.post('/verify', async (req, res) => {
 
   const { data: record, error } = await supabase
     .from('intake_tokens')
-    .select('*, clinics(name, address, phone, logo_url, cancel_hours, no_show_fee)')
+    .select('*, clinics(name, address, phone, logo_url, cancel_hours, no_show_fee, specialty)')
     .eq('token', token)
     .single()
 
@@ -112,6 +112,7 @@ router.post('/verify', async (req, res) => {
       logoUrl: clinic.logo_url,
       cancelHours: clinic.cancel_hours,
       noShowFee: clinic.no_show_fee,
+      specialty: clinic.specialty || 'acupuncture',
     },
   })
 })

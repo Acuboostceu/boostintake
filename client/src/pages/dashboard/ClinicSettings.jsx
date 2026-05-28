@@ -21,6 +21,7 @@ export function ClinicSettings() {
     logo: null,
     logoPreview: null,
     smsTemplate: '',
+    specialty: 'acupuncture',
   })
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -46,6 +47,7 @@ export function ClinicSettings() {
           checkFee: data.check_fee ?? 35,
           logoPreview: data.logo_url || null,
           smsTemplate: data.sms_template || '',
+          specialty: data.specialty || 'acupuncture',
         }))
       } finally {
         setLoading(false)
@@ -103,6 +105,7 @@ export function ClinicSettings() {
       form.append('checkFee', settings.checkFee)
       form.append('pin', settings.pin)
       form.append('smsTemplate', settings.smsTemplate)
+      form.append('specialty', settings.specialty)
       if (settings.logo) form.append('logo', settings.logo)
 
       const res = await fetch(`${API}/api/clinic/settings`, {
@@ -166,6 +169,29 @@ export function ClinicSettings() {
             <Input label="Clinic Name" value={settings.clinicName} onChange={(e) => update('clinicName', e.target.value)} placeholder="Sunrise Acupuncture Clinic" required />
             <Input label="Address" value={settings.address} onChange={(e) => update('address', e.target.value)} placeholder="123 Main St, Los Angeles, CA 90001" />
             <Input label="Phone Number" type="tel" value={settings.phone} onChange={(e) => update('phone', formatPhone(e.target.value))} placeholder="(555) 000-0000" />
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-2">Specialty</label>
+              <div className="flex gap-3">
+                {[
+                  { value: 'acupuncture', label: 'Acupuncture' },
+                  { value: 'chiropractic', label: 'Chiropractic' },
+                ].map(({ value, label }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => update('specialty', value)}
+                    className={`flex-1 py-3 rounded-xl border-2 text-sm font-medium transition-colors ${
+                      settings.specialty === value
+                        ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-400 mt-1.5">Determines which intake forms are sent to patients.</p>
+            </div>
           </CardBody>
         </Card>
 

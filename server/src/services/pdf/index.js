@@ -23,7 +23,7 @@ function pickFont(doc, text, bold = false) {
   }
 }
 
-const SHOW_BLANK_FIELDS = new Set(['patient_info', 'health_history', 'review_of_systems'])
+const SHOW_BLANK_FIELDS = new Set(['patient_info', 'health_history', 'review_of_systems', 'chiro_history', 'chiro_pain_diagram'])
 
 async function generatePDF({ patient, formData, signatures, declinedForms, clinic, formContents, formFields }) {
   console.log('[PDF] formContents keys:', Object.keys(formContents || {}))
@@ -42,9 +42,15 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
     // Ordered form list
     const FORM_ORDER = [
       'patient_info',
+      // Acupuncture
       'acupuncture_consent',
       'health_history',
       'review_of_systems',
+      // Chiropractic
+      'chiro_consent',
+      'chiro_history',
+      'chiro_pain_diagram',
+      // Common
       'hipaa',
       'financial_policy',
       'assignment_of_benefits',
@@ -241,6 +247,9 @@ function getFormTitle(formId) {
     acupuncture_consent: 'Acupuncture Informed Consent',
     health_history: 'Health History & Chief Complaint',
     review_of_systems: 'Review of Systems',
+    chiro_consent: 'Chiropractic Informed Consent',
+    chiro_history: 'Back & Neck Pain Questionnaire',
+    chiro_pain_diagram: 'Pain Location & Symptoms',
   }
   return titles[formId] || formId.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }

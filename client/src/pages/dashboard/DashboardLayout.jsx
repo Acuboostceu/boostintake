@@ -51,6 +51,7 @@ export function DashboardLayout() {
           noShowFee: data.no_show_fee,
           checkFee: data.check_fee,
           smsTemplate: data.sms_template || '',
+          specialty: data.specialty || 'acupuncture',
         }))
       })
       .catch(() => {})

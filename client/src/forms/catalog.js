@@ -81,27 +81,24 @@ export const FORM_CATALOG = [
     description: 'Risks, benefits, and consent for chiropractic adjustments and related treatments.',
     requiresSignature: true,
     required: false,
-    comingSoon: true,
   },
   {
     id: 'chiro_pain_diagram',
-    title: 'Pain Location & Diagram',
+    title: 'Pain Location & Symptoms',
     category: 'chiropractic',
     categoryLabel: 'Chiropractic',
-    description: 'Body diagram for marking pain locations, severity, and type.',
+    description: 'Pain region selection, symptom type checklist, and functional impact scale.',
     requiresSignature: false,
     required: false,
-    comingSoon: true,
   },
   {
     id: 'chiro_history',
     title: 'Back & Neck Pain Questionnaire',
     category: 'chiropractic',
     categoryLabel: 'Chiropractic',
-    description: 'Detailed intake for back/neck pain, prior injuries, and functional limitations.',
+    description: 'Chief complaint, mechanism of injury, pain quality, functional impact, and medical history.',
     requiresSignature: false,
     required: false,
-    comingSoon: true,
   },
   {
     id: 'massage_consent',
@@ -137,7 +134,7 @@ export const CATEGORY_COLORS = {
 export const CATEGORY_META = {
   common:        { label: 'Common — All Clinics', collapsible: false, comingSoon: false },
   acupuncture:   { label: 'Acupuncture',          collapsible: true,  comingSoon: false },
-  chiropractic:  { label: 'Chiropractic',         collapsible: true,  comingSoon: true  },
+  chiropractic:  { label: 'Chiropractic',         collapsible: true,  comingSoon: false },
   massage:       { label: 'Massage Therapy',      collapsible: true,  comingSoon: true  },
 }
 

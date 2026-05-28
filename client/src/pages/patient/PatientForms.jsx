@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useFormStore } from '../../store/formStore'
 import { getAcupunctureForms } from '../../forms/acupuncture'
+import { getChiropracticForms } from '../../forms/chiropractic'
 import { FormRenderer } from '../../components/forms/FormRenderer'
 import { SignaturePad } from '../../components/forms/SignaturePad'
 import { ProgressBar } from '../../components/ui/ProgressBar'
@@ -20,8 +21,9 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
   } = useFormStore()
   const tr = useTranslations(lang)
 
-  const forms = getAcupunctureForms(clinicInfo || {}, lang)       // patient sees (translated)
-  const formsEn = getAcupunctureForms(clinicInfo || {}, 'en')    // PDF always English
+  const getFormsFn = clinicInfo?.specialty === 'chiropractic' ? getChiropracticForms : getAcupunctureForms
+  const forms = getFormsFn(clinicInfo || {}, lang)       // patient sees (translated)
+  const formsEn = getFormsFn(clinicInfo || {}, 'en')    // PDF always English
   const form = forms[currentFormIndex]
   const [submitting, setSubmitting] = useState(false)
   const [validationError, setValidationError] = useState('')

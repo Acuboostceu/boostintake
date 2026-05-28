@@ -28,7 +28,7 @@ router.post('/tablet-verify-pin', async (req, res) => {
 router.get('/settings', requireAuth, async (req, res) => {
   const { data, error } = await supabase
     .from('clinics')
-    .select('name, address, phone, emails, cancel_hours, no_show_fee, check_fee, pin_hash, logo_url, sms_template')
+    .select('name, address, phone, emails, cancel_hours, no_show_fee, check_fee, pin_hash, logo_url, sms_template, specialty')
     .eq('id', req.user.clinicId)
     .single()
 
@@ -37,7 +37,7 @@ router.get('/settings', requireAuth, async (req, res) => {
 })
 
 router.post('/settings', requireAuth, upload.single('logo'), async (req, res) => {
-  const { clinicName, address, phone, emails, cancelHours, noShowFee, checkFee, pin, smsTemplate } = req.body
+  const { clinicName, address, phone, emails, cancelHours, noShowFee, checkFee, pin, smsTemplate, specialty } = req.body
 
   let logoUrl
   if (req.file) {
@@ -58,6 +58,7 @@ router.post('/settings', requireAuth, upload.single('logo'), async (req, res) =>
     no_show_fee: parseInt(noShowFee),
     check_fee: parseInt(checkFee) || 35,
     sms_template: smsTemplate || null,
+    specialty: specialty || 'acupuncture',
     updated_at: new Date().toISOString(),
   }
 
