@@ -66,7 +66,7 @@ export function PatientVerify() {
         {/* Header: clinic name + logo + subtitle */}
         <div className="text-center mb-5">
           {branding.clinicName && (
-            <p className="text-2xl font-bold text-gray-700 mb-3">{branding.clinicName}</p>
+            <p className="text-2xl font-bold text-gray-600 mb-3">{branding.clinicName}</p>
           )}
           {branding.logoUrl ? (
             <img

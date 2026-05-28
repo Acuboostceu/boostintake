@@ -8,7 +8,7 @@ export const t = {
   en: {
     // PatientVerify
     verify: {
-      title: 'Patient Intake Form',
+      title: 'First Visit Intake Form',
       subtitle: 'Please verify your identity to begin',
       firstName: 'First Name',
       lastName: 'Last Name',
@@ -145,7 +145,7 @@ export const t = {
 
   ko: {
     verify: {
-      title: '환자 접수 양식',
+      title: '초진 접수 양식',
       subtitle: '시작하기 전에 본인 확인을 해주세요',
       firstName: '이름',
       lastName: '성',
@@ -275,7 +275,7 @@ export const t = {
 
   es: {
     verify: {
-      title: 'Formulario de Admisión',
+      title: 'Formulario de Primera Visita',
       subtitle: 'Por favor verifique su identidad para comenzar',
       firstName: 'Nombre',
       lastName: 'Apellido',
