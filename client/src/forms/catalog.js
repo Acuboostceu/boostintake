@@ -47,6 +47,15 @@ export const FORM_CATALOG = [
     optional: true,
   },
   {
+    id: 'information_release',
+    title: 'Authorization to Release Medical Information',
+    category: 'common',
+    categoryLabel: 'Common — All Clinics',
+    description: 'Authorizes release of medical records to attorneys, insurance companies, and other treating providers.',
+    requiresSignature: true,
+    required: false,
+  },
+  {
     id: 'acupuncture_consent',
     title: 'Acupuncture Informed Consent',
     category: 'acupuncture',

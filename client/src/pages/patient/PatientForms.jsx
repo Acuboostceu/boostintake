@@ -5,6 +5,7 @@ import { getAcupunctureForms } from '../../forms/acupuncture'
 import { getChiropracticForms } from '../../forms/chiropractic'
 import { PI_AUTO_ACCIDENT_FORM } from '../../forms/pi/piAutoAccident'
 import { PI_MEDICAL_LIEN_FORM } from '../../forms/pi/piMedicalLien'
+import { INFORMATION_RELEASE_FORM } from '../../forms/common/informationRelease'
 import { FormRenderer } from '../../components/forms/FormRenderer'
 import { SignaturePad } from '../../components/forms/SignaturePad'
 import { ProgressBar } from '../../components/ui/ProgressBar'
@@ -12,12 +13,12 @@ import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
 import { useTranslations } from '../../i18n/translations'
 
-// All PI forms (no translation needed)
-const PI_FORMS_ALL = [PI_AUTO_ACCIDENT_FORM, PI_MEDICAL_LIEN_FORM]
+// Extra forms available across all specialties (no translation needed)
+const EXTRA_FORMS = [PI_AUTO_ACCIDENT_FORM, PI_MEDICAL_LIEN_FORM, INFORMATION_RELEASE_FORM]
 
 function buildAllForms(clinicInfo, lang) {
   const getFormsFn = clinicInfo?.specialty === 'chiropractic' ? getChiropracticForms : getAcupunctureForms
-  return [...getFormsFn(clinicInfo || {}, lang), ...PI_FORMS_ALL]
+  return [...getFormsFn(clinicInfo || {}, lang), ...EXTRA_FORMS]
 }
 
 function filterForms(allForms, selectedFormIds) {

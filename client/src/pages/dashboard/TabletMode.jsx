@@ -4,7 +4,7 @@ import { useFormStore } from '../../store/formStore'
 import { PatientForms } from '../patient/PatientForms'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
-import { FormSelector } from '../../components/forms/FormSelector'
+import { FormSelector, DEFAULT_FORM_IDS } from '../../components/forms/FormSelector'
 import { FORM_CATALOG } from '../../forms/catalog'
 import { API } from '../../lib/api'
 import { LANGUAGES, useTranslations } from '../../i18n/translations'
@@ -16,7 +16,7 @@ const TABLET_STATES = {
   COMPLETE: 'complete', // Done — PIN lock screen
 }
 
-const LOCKED_FORM_IDS = ['patient_info', 'hipaa', 'financial_policy', 'assignment_of_benefits', 'arbitration']
+const DEFAULT_FORM_IDS = ['patient_info', 'hipaa', 'financial_policy', 'assignment_of_benefits', 'arbitration']
 
 export function TabletMode() {
   const navigate = useNavigate()
@@ -28,7 +28,7 @@ export function TabletMode() {
   const [dob, setDob] = useState('')       // display: MM/DD/YYYY
   const [pin, setPin] = useState('')
   const [pinError, setPinError] = useState('')
-  const [selectedFormIds, setSelectedFormIdsLocal] = useState(LOCKED_FORM_IDS)
+  const [selectedFormIds, setSelectedFormIdsLocal] = useState(DEFAULT_FORM_IDS)
   const [availableForms, setAvailableForms] = useState([])
 
   // Load available forms once on mount
@@ -104,7 +104,7 @@ export function TabletMode() {
         reset()
         setFirstName(''); setLastName(''); setDob(''); setPin('')
         setPinError('')
-        setSelectedFormIdsLocal(LOCKED_FORM_IDS)
+        setSelectedFormIdsLocal(DEFAULT_FORM_IDS)
         setState(TABLET_STATES.SETUP)
       } else {
         setPinError('Incorrect PIN')
@@ -135,7 +135,6 @@ export function TabletMode() {
               availableForms={availableForms}
               selectedIds={selectedFormIds}
               onChange={setSelectedFormIdsLocal}
-              lockedIds={LOCKED_FORM_IDS}
             />
           </div>
         </div>

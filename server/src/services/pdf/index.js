@@ -53,7 +53,8 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
       // Personal Injury
       'pi_auto_accident',
       'pi_medical_lien',
-      // Common
+      // Common (continued)
+      'information_release',
       'hipaa',
       'financial_policy',
       'assignment_of_benefits',
@@ -255,6 +256,7 @@ function getFormTitle(formId) {
     chiro_pain_diagram: 'Pain Location & Symptoms',
     pi_auto_accident: 'Auto Accident / Personal Injury Intake',
     pi_medical_lien: 'Medical Lien Agreement',
+    information_release: 'Authorization to Release Medical Information',
   }
   return titles[formId] || formId.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }

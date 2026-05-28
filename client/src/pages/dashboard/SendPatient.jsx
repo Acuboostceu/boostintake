@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react'
 import { Card, CardHeader, CardBody } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
-import { FormSelector } from '../../components/forms/FormSelector'
+import { FormSelector, DEFAULT_FORM_IDS } from '../../components/forms/FormSelector'
 import { FORM_CATALOG } from '../../forms/catalog'
 import { API } from '../../lib/api'
 
 const DEFAULT_TEMPLATE = `Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link}`
 
-const LOCKED_FORM_IDS = ['patient_info', 'hipaa', 'financial_policy', 'assignment_of_benefits', 'arbitration']
 
 export function SendPatient() {
   const [firstName, setFirstName] = useState('')
@@ -20,7 +19,7 @@ export function SendPatient() {
   const [error, setError] = useState('')
   const [clinicInfo, setClinicInfo] = useState({ name: '', template: '' })
   const [customMessage, setCustomMessage] = useState('')
-  const [selectedFormIds, setSelectedFormIds] = useState(LOCKED_FORM_IDS)
+  const [selectedFormIds, setSelectedFormIds] = useState(DEFAULT_FORM_IDS)
   const [availableForms, setAvailableForms] = useState([])
 
   useEffect(() => {
@@ -83,7 +82,7 @@ export function SendPatient() {
       setResult(data)
       setFirstName(''); setLastName(''); setPhone(''); setDob('')
       setCustomMessage('')
-      setSelectedFormIds(LOCKED_FORM_IDS)
+      setSelectedFormIds(DEFAULT_FORM_IDS)
     } catch {
       setError('Connection error. Please try again.')
     } finally {
@@ -98,7 +97,7 @@ export function SendPatient() {
     return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`
   }
 
-  const nonLockedSelected = selectedFormIds.filter((id) => !LOCKED_FORM_IDS.includes(id))
+  const extraSelected = selectedFormIds.filter((id) => !DEFAULT_FORM_IDS.includes(id))
 
   return (
     <div className="flex flex-col gap-6">
@@ -155,14 +154,13 @@ export function SendPatient() {
           <Card>
             <CardHeader
               title="Forms for This Patient"
-              subtitle={`${selectedFormIds.length} form${selectedFormIds.length !== 1 ? 's' : ''} selected (${LOCKED_FORM_IDS.length} required + ${nonLockedSelected.length} optional)`}
+              subtitle={`${selectedFormIds.length} form${selectedFormIds.length !== 1 ? 's' : ''} selected`}
             />
             <CardBody>
               <FormSelector
                 availableForms={availableForms}
                 selectedIds={selectedFormIds}
                 onChange={setSelectedFormIds}
-                lockedIds={LOCKED_FORM_IDS}
               />
             </CardBody>
           </Card>
