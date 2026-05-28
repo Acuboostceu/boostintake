@@ -78,7 +78,7 @@ router.post('/settings', requireAuth, upload.single('logo'), async (req, res) =>
     console.error('Save settings error:', error)
     return res.status(500).json({ message: 'Failed to save settings' })
   }
-  res.json({ ok: true })
+  res.json({ ok: true, logoUrl: logoUrl || null })
 })
 
 // Stats: sent + completed counts

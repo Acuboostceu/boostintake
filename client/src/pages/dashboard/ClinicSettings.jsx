@@ -114,6 +114,20 @@ export function ClinicSettings() {
         body: form,
       })
       if (!res.ok) throw new Error()
+      const data = await res.json()
+      // Update bi_clinic in localStorage so tablet mode picks up new logo immediately
+      const existing = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
+      localStorage.setItem('bi_clinic', JSON.stringify({
+        ...existing,
+        name: settings.clinicName,
+        address: settings.address,
+        phone: settings.phone,
+        specialty: settings.specialty,
+        cancelHours: settings.cancelHours,
+        noShowFee: settings.noShowFee,
+        checkFee: settings.checkFee,
+        ...(data.logoUrl ? { logoUrl: data.logoUrl } : {}),
+      }))
       setSaved(true)
       setTimeout(() => navigate('/dashboard'), 1000)
     } catch {
