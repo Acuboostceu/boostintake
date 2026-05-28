@@ -1,10 +1,27 @@
 const PDFDocument = require('pdfkit')
+const path = require('path')
 
 const TEAL = '#2563EB'
 const DARK = '#1F2937'
 const GRAY = '#6B7280'
 const PAGE_MARGIN = 36
 const PAGE_WIDTH = 595
+
+const KOREAN_FONT_PATH = path.join(__dirname, 'fonts', 'NotoSansKR-Regular.otf')
+
+// Returns true if the string contains any CJK (Korean/Chinese/Japanese) characters
+function hasCJK(str) {
+  return /[ᄀ-ᇿ가-힯ㄱ-ㆎ]/.test(String(str))
+}
+
+// Pick the right font — use Korean font if text contains CJK, else Helvetica variant
+function pickFont(doc, text, bold = false) {
+  if (hasCJK(text)) {
+    doc.font(KOREAN_FONT_PATH)
+  } else {
+    doc.font(bold ? 'Helvetica-Bold' : 'Helvetica')
+  }
+}
 
 const SHOW_BLANK_FIELDS = new Set(['patient_info', 'health_history', 'review_of_systems'])
 
@@ -125,7 +142,8 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
             if (typeof value === 'boolean') display = value ? '✓ Yes' : 'No'
             else if (Array.isArray(value)) display = value.join(', ')
             else display = String(value)
-            doc.fontSize(10).font('Helvetica').fillColor(DARK).text(display).moveDown(0.35)
+            pickFont(doc, display)
+            doc.fontSize(10).fillColor(DARK).text(display).moveDown(0.35)
           }
         }
       } else if (Object.keys(data).length > 0) {
@@ -141,7 +159,8 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
           else display = String(value)
 
           doc.fontSize(8).font('Helvetica-Bold').fillColor(GRAY).text(label.toUpperCase())
-          doc.fontSize(10).font('Helvetica').fillColor(DARK).text(display).moveDown(0.35)
+          pickFont(doc, display)
+          doc.fontSize(10).fillColor(DARK).text(display).moveDown(0.35)
         }
       }
 
