@@ -4,6 +4,34 @@ import { FormPreviewModal } from '../../components/forms/FormPreviewModal'
 import { CustomFormBuilder } from '../../components/forms/CustomFormBuilder'
 import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
+import { HEALTH_HISTORY_FORM } from '../../forms/acupuncture/healthHistory'
+import { REVIEW_OF_SYSTEMS_FORM } from '../../forms/acupuncture/reviewOfSystems'
+
+// Specialty forms that can be customized (maps formId → base form structure)
+const CUSTOMIZABLE_SPECIALTY_FORMS = {
+  health_history: HEALTH_HISTORY_FORM,
+  review_of_systems: REVIEW_OF_SYSTEMS_FORM,
+}
+
+// Field types supported by CustomFormBuilder
+const BUILDER_FIELD_TYPES = new Set(['text', 'textarea', 'radio', 'multicheck', 'checkbox', 'date'])
+
+function getSpecialtyFormInitial(form) {
+  return {
+    title: form.title,
+    sections: (form.sections || []).map((s) => ({
+      title: s.title || '',
+      fields: (s.fields || []).map((f) => ({
+        ...f,
+        label: f.label || '',
+        // Convert unsupported field types (e.g. pain-slider) to text
+        type: BUILDER_FIELD_TYPES.has(f.type) ? f.type : 'text',
+      })),
+    })),
+    requires_signature: form.requiresSignature || false,
+    signature_label: form.signatureLabel || 'Signature',
+  }
+}
 
 const AUTH = () => ({ Authorization: `Bearer ${localStorage.getItem('bi_token')}` })
 
@@ -13,6 +41,7 @@ export function FormsPage() {
   const [previewForm, setPreviewForm] = useState(null)
   const [view, setView] = useState('list')
   const [editingCustom, setEditingCustom] = useState(null)
+  const [editingSpecialty, setEditingSpecialty] = useState(null) // { id, initial }
   const [saveStatus, setSaveStatus] = useState('idle') // 'idle' | 'saving' | 'saved'
   const [loading, setLoading] = useState(true)
   const [openCategories, setOpenCategories] = useState({ acupuncture: false, chiropractic: false, massage: false })
@@ -92,6 +121,23 @@ export function FormsPage() {
     autoSave(newIds)
   }
 
+  async function handleSaveSpecialtyCustom(data) {
+    const res = await fetch(`${API}/api/forms/custom`, {
+      method: 'POST',
+      headers: { ...AUTH(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    const created = await res.json()
+    setCustomForms((f) => [...f, created])
+    // Remove the original specialty form from enabled, add the new custom form
+    const withoutOriginal = enabledIds.filter((i) => i !== editingSpecialty.id)
+    const newIds = [...withoutOriginal, created.id]
+    setEnabledIds(newIds)
+    autoSave(newIds)
+    setView('list')
+    setEditingSpecialty(null)
+  }
+
   if (view === 'builder') {
     return (
       <div className="flex flex-col gap-4">
@@ -112,6 +158,25 @@ export function FormsPage() {
           <h1 className="text-xl font-bold text-gray-900">Edit: {editingCustom.title}</h1>
         </div>
         <CustomFormBuilder initial={editingCustom} onSave={handleUpdateCustom} onCancel={() => { setView('list'); setEditingCustom(null) }} />
+      </div>
+    )
+  }
+
+  if (view === 'edit-specialty' && editingSpecialty) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-3">
+          <button onClick={() => { setView('list'); setEditingSpecialty(null) }} className="text-blue-600 hover:underline text-sm">← Back to Forms</button>
+          <h1 className="text-xl font-bold text-gray-900">Customize: {editingSpecialty.initial.title}</h1>
+        </div>
+        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800">
+          💡 Customizing this form saves it to your <strong>Custom Forms</strong> section and replaces the default template. You can always delete it to restore the default.
+        </div>
+        <CustomFormBuilder
+          initial={editingSpecialty.initial}
+          onSave={handleSaveSpecialtyCustom}
+          onCancel={() => { setView('list'); setEditingSpecialty(null) }}
+        />
       </div>
     )
   }
@@ -269,6 +334,12 @@ export function FormsPage() {
                       onToggle={() => toggleForm(form.id)}
                       onPreview={() => !form.comingSoon && setPreviewForm({ formId: form.id })}
                       showPreview={!form.comingSoon}
+                      onEdit={!form.comingSoon && CUSTOMIZABLE_SPECIALTY_FORMS[form.id]
+                        ? () => {
+                            setEditingSpecialty({ id: form.id, initial: getSpecialtyFormInitial(CUSTOMIZABLE_SPECIALTY_FORMS[form.id]) })
+                            setView('edit-specialty')
+                          }
+                        : undefined}
                     />
                   ))}
                 </div>
