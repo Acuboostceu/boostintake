@@ -222,8 +222,7 @@ export function TabletMode() {
               ) : (
                 <img src="/logo.png" alt="BoostIntake" className="w-20 h-20 object-contain mx-auto mb-3" />
               )}
-              <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{tr.verify.title}</p>
-              <p className="text-gray-400 mt-0.5 text-xs">{tr.verify.subtitle}</p>
+              <p className="text-sm text-gray-500">{tr.verify.subtitle}</p>
             </div>
           )
         })()}
