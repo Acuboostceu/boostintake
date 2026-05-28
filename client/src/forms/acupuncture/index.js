@@ -9,17 +9,39 @@ import { REVIEW_OF_SYSTEMS_FORM } from './reviewOfSystems'
 import { t } from '../../i18n/translations'
 import { ACUPUNCTURE_CONSENT_CONTENT, REVIEW_OF_SYSTEMS_CONTENT } from '../../i18n/formContent'
 
+// Map of field ID → translation key in formCheckboxes
+const CHECKBOX_LABEL_MAP = {
+  hipaaAcknowledge: 'hipaaAcknowledge',
+  financialAgreement: 'financialAgree',
+  aobAgreement: 'aobAuthorize',
+  arbitrationConsent: 'arbitrationAgree',
+}
+
+function translateTopLevelFields(fields, tr) {
+  if (!fields) return fields
+  return fields.map((field) => {
+    const key = CHECKBOX_LABEL_MAP[field.id]
+    if (key && tr.formCheckboxes?.[key]) {
+      return { ...field, label: tr.formCheckboxes[key] }
+    }
+    return field
+  })
+}
+
 function translateForm(form, tr) {
   if (!tr) return form
   const title = tr.formTitles?.[form.id] || form.title
-  if (!form.sections) return { ...form, title }
+  const signatureLabel = tr.signatureLabels?.[form.id] || form.signatureLabel
+  const fields = translateTopLevelFields(form.fields, tr)
+
+  if (!form.sections) return { ...form, title, signatureLabel, fields }
 
   const sections = form.sections.map((section) => {
     const sectionTitle = translateSectionTitle(section.title, tr)
-    const fields = section.fields?.map((field) => translateField(form.id, field, tr)) || []
-    return { ...section, title: sectionTitle, fields }
+    const sectionFields = section.fields?.map((field) => translateField(form.id, field, tr)) || []
+    return { ...section, title: sectionTitle, fields: sectionFields }
   })
-  return { ...form, title, sections }
+  return { ...form, title, signatureLabel, fields, sections }
 }
 
 function translateSectionTitle(title, tr) {

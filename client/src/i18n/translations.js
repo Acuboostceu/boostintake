@@ -46,6 +46,21 @@ export const t = {
       assignment_of_benefits: 'Assignment of Benefits',
       arbitration: 'Arbitration Agreement',
     },
+    // Signature labels
+    signatureLabels: {
+      acupuncture_consent: 'Acupuncture Informed Consent',
+      hipaa: 'Acknowledgment of Receipt',
+      financial_policy: 'Financial Policy Agreement',
+      assignment_of_benefits: 'Assignment of Benefits',
+      arbitration: 'Arbitration Agreement',
+    },
+    // Form checkbox labels
+    formCheckboxes: {
+      hipaaAcknowledge: 'I acknowledge that I have received and had the opportunity to review the Notice of Privacy Practices.',
+      financialAgree: 'I have read and agree to the Financial Policy.',
+      aobAuthorize: 'I authorize assignment of benefits directly to this clinic.',
+      arbitrationAgree: 'I have read and understand the above Arbitration Agreement and voluntarily agree to its terms.',
+    },
     // Section titles
     sections: {
       personal: 'Personal Information',
@@ -166,6 +181,19 @@ export const t = {
       assignment_of_benefits: '보험 혜택 양도',
       arbitration: '중재 합의서',
     },
+    signatureLabels: {
+      acupuncture_consent: '침술 동의서',
+      hipaa: '수령 확인',
+      financial_policy: '재정 정책 동의',
+      assignment_of_benefits: '보험 혜택 양도',
+      arbitration: '중재 합의서',
+    },
+    formCheckboxes: {
+      hipaaAcknowledge: '개인정보 보호 고지를 수령하고 검토할 기회가 있었음을 확인합니다.',
+      financialAgree: '재정 정책을 읽고 동의합니다.',
+      aobAuthorize: '보험 혜택을 이 클리닉에 직접 양도하도록 승인합니다.',
+      arbitrationAgree: '위의 중재 합의서를 읽고 이해했으며 자발적으로 동의합니다.',
+    },
     sections: {
       personal: '개인 정보',
       address: '주소',
@@ -282,6 +310,19 @@ export const t = {
       financial_policy: 'Política Financiera',
       assignment_of_benefits: 'Asignación de Beneficios',
       arbitration: 'Acuerdo de Arbitraje',
+    },
+    signatureLabels: {
+      acupuncture_consent: 'Consentimiento Informado de Acupuntura',
+      hipaa: 'Acuse de Recibo',
+      financial_policy: 'Acuerdo de Política Financiera',
+      assignment_of_benefits: 'Asignación de Beneficios',
+      arbitration: 'Acuerdo de Arbitraje',
+    },
+    formCheckboxes: {
+      hipaaAcknowledge: 'Confirmo que he recibido y tuve la oportunidad de revisar el Aviso de Prácticas de Privacidad.',
+      financialAgree: 'He leído y acepto la Política Financiera.',
+      aobAuthorize: 'Autorizo la asignación de beneficios directamente a esta clínica.',
+      arbitrationAgree: 'He leído y entiendo el Acuerdo de Arbitraje anterior y voluntariamente acepto sus términos.',
     },
     sections: {
       personal: 'Información Personal',
