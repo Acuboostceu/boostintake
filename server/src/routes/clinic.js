@@ -41,7 +41,14 @@ router.post('/settings', requireAuth, upload.single('logo'), async (req, res) =>
 
   let logoUrl
   if (req.file) {
-    logoUrl = await uploadLogo(req.user.clinicId, req.file)
+    try {
+      console.log('[settings] uploading logo, size:', req.file.size, 'type:', req.file.mimetype)
+      logoUrl = await uploadLogo(req.user.clinicId, req.file)
+      console.log('[settings] logo uploaded:', logoUrl)
+    } catch (err) {
+      console.error('[settings] logo upload failed:', err.message)
+      return res.status(500).json({ message: 'Logo upload failed: ' + err.message })
+    }
   }
 
   const updates = {
