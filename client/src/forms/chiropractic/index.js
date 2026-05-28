@@ -12,6 +12,7 @@ import {
   FINANCIAL_POLICY_CONTENT,
   AOB_CONTENT,
   ARBITRATION_CONTENT,
+  CHIRO_CONSENT_CONTENT,
 } from '../../i18n/formContent'
 
 const CHECKBOX_LABEL_MAP = {
@@ -19,6 +20,9 @@ const CHECKBOX_LABEL_MAP = {
   financialAgreement: 'financialAgree',
   aobAgreement: 'aobAuthorize',
   arbitrationConsent: 'arbitrationAgree',
+  chiroConsentUnderstood: 'chiroConsentUnderstood',
+  liensUnderstood: 'liensUnderstood',
+  releaseUnderstood: 'releaseUnderstood',
 }
 
 function translateTopLevelFields(fields, tr) {
@@ -72,12 +76,93 @@ function translatePatientInfo(lang) {
   return translateForm(PATIENT_INFO_FORM, tr)
 }
 
+function buildChiroConsent(lang) {
+  const tr = t[lang] || t.en
+  const c = CHIRO_CONSENT_CONTENT[lang]
+
+  // For English (or if no translated content), translate only title/label/checkbox
+  if (!c) {
+    return translateForm(CHIROPRACTIC_CONSENT_FORM, tr)
+  }
+
+  // For KO/ES: replace sections with translated content, translate title/labels
+  return translateForm(
+    {
+      ...CHIROPRACTIC_CONSENT_FORM,
+      sections: c.sections,
+    },
+    tr
+  )
+}
+
+function buildChiroHistory(lang) {
+  const tr = t[lang] || t.en
+  const chTr = tr.chiroHistory || {}
+
+  if (lang === 'en' || !Object.keys(chTr).length) {
+    return translateForm(CHIRO_HISTORY_FORM, tr)
+  }
+
+  // Map of field id → translated option array key in chTr
+  const optionMap = {
+    mechanismOfInjury: chTr.mechanismOptions,
+    painPattern: chTr.painPatternOptions,
+    painQuality: chTr.painQualityOptions,
+    radiating: chTr.yesNo,
+    aggravatingFactors: chTr.aggravatingOptions,
+    relievingFactors: chTr.relievingOptions,
+    activitiesAffected: chTr.activitiesOptions,
+    workStatus: chTr.workStatusOptions,
+    previousTreatments: chTr.treatmentOptions,
+    imagingDone: chTr.imagingOptions,
+    previousChiropractic: chTr.yesNo,
+    medicalConditions: chTr.medicalConditionOptions,
+  }
+
+  const sections = CHIRO_HISTORY_FORM.sections.map((section) => ({
+    ...section,
+    fields: section.fields.map((field) => {
+      const label = chTr[field.id] || field.label
+      const options = optionMap[field.id] || field.options
+      return { ...field, label, options }
+    }),
+  }))
+
+  return translateForm({ ...CHIRO_HISTORY_FORM, sections }, tr)
+}
+
+function buildChiroPainDiagram(lang) {
+  const tr = t[lang] || t.en
+  const pdTr = tr.chiroPainDiagram || {}
+
+  if (lang === 'en' || !Object.keys(pdTr).length) {
+    return translateForm(CHIRO_PAIN_DIAGRAM_FORM, tr)
+  }
+
+  const optionMap = {
+    painRegions: pdTr.painRegionOptions,
+    symptomTypes: pdTr.symptomTypeOptions,
+    worstTimeOfDay: pdTr.worstTimeOptions,
+  }
+
+  const sections = CHIRO_PAIN_DIAGRAM_FORM.sections.map((section) => ({
+    ...section,
+    fields: section.fields.map((field) => {
+      const label = pdTr[field.id] || field.label
+      const options = optionMap[field.id] || field.options
+      return { ...field, label, options }
+    }),
+  }))
+
+  return translateForm({ ...CHIRO_PAIN_DIAGRAM_FORM, sections }, tr)
+}
+
 export function getChiropracticForms(clinicInfo = {}, lang = 'en') {
   return [
     translatePatientInfo(lang),
-    CHIROPRACTIC_CONSENT_FORM,
-    CHIRO_HISTORY_FORM,
-    CHIRO_PAIN_DIAGRAM_FORM,
+    buildChiroConsent(lang),
+    buildChiroHistory(lang),
+    buildChiroPainDiagram(lang),
     buildHipaaForm(lang),
     buildFinancialPolicyForm(clinicInfo, lang),
     buildAOBForm(clinicInfo, lang),

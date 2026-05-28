@@ -3,9 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useFormStore } from '../../store/formStore'
 import { getAcupunctureForms } from '../../forms/acupuncture'
 import { getChiropracticForms } from '../../forms/chiropractic'
-import { PI_AUTO_ACCIDENT_FORM } from '../../forms/pi/piAutoAccident'
-import { PI_MEDICAL_LIEN_FORM } from '../../forms/pi/piMedicalLien'
-import { INFORMATION_RELEASE_FORM } from '../../forms/common/informationRelease'
+import { getPIForms } from '../../forms/pi'
 import { FormRenderer } from '../../components/forms/FormRenderer'
 import { SignaturePad } from '../../components/forms/SignaturePad'
 import { ProgressBar } from '../../components/ui/ProgressBar'
@@ -13,12 +11,9 @@ import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
 import { useTranslations } from '../../i18n/translations'
 
-// Extra forms available across all specialties (no translation needed)
-const EXTRA_FORMS = [PI_AUTO_ACCIDENT_FORM, PI_MEDICAL_LIEN_FORM, INFORMATION_RELEASE_FORM]
-
 function buildAllForms(clinicInfo, lang) {
   const getFormsFn = clinicInfo?.specialty === 'chiropractic' ? getChiropracticForms : getAcupunctureForms
-  return [...getFormsFn(clinicInfo || {}, lang), ...EXTRA_FORMS]
+  return [...getFormsFn(clinicInfo || {}, lang), ...getPIForms(lang)]
 }
 
 function filterForms(allForms, selectedFormIds) {

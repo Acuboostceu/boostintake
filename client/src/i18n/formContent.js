@@ -384,6 +384,233 @@ Al firmar voluntariamente a continuación, muestro que he leído el consentimien
   },
 }
 
+// ─── Chiropractic Consent ─────────────────────────────────────────────────────
+export const CHIRO_CONSENT_CONTENT = {
+  en: null, // uses original CHIROPRACTIC_CONSENT_FORM sections
+
+  ko: {
+    sections: [
+      {
+        title: '',
+        content: `본인은 이 클리닉의 카이로프랙터(들) 및/또는 기타 면허를 소지한 의료 제공자에 의해 이 동의서에 서명하였는지 여부와 관계없이 카이로프랙틱 치료 및 관련 시술의 수행을 요청하고 이에 동의합니다.
+
+**카이로프랙틱 치료의 성격**
+
+카이로프랙틱 치료에는 척추 교정 및 가동화, 사지 교정, 연조직 치료(마사지, 근막이완술, 통증유발점 치료), 치료적 운동 및 스트레칭, 물리적 치료법(초음파, 전기 자극, 온열/냉각, 견인), 그리고 생활 습관 및 영양 상담이 포함될 수 있음을 이해합니다.
+
+**예상되는 효과**
+
+카이로프랙틱 치료는 통증과 불편함을 줄이고, 정상적인 관절 운동과 기능을 회복하며, 자세와 생체역학을 개선하고, 신체의 자연 치유 과정을 지원하기 위한 것입니다. 치료 결과는 보장되지 않으며, 필요한 치료 횟수는 개인에 따라 다를 수 있음을 이해합니다.
+
+**위험 및 가능한 합병증**
+
+카이로프랙틱 치료는 모든 의료 시술과 마찬가지로 일부 위험을 수반함을 이해합니다. 흔한 일시적 부작용으로는 치료 후 근육 통증이나 뻣뻣함이 있으며, 일반적으로 24~48시간 이내에 해소됩니다. 덜 흔한 위험으로는 일시적인 증상 악화, 두통, 또는 피로가 포함됩니다.
+
+드물지만 심각한 위험으로는: 추간판의 악화 또는 탈출; 골다공증이나 골 질환이 있는 개인의 골절; 경추(목) 교정과 관련된 뇌졸중 또는 추골기저동맥 손상(수백만 건의 경추 교정 중 약 1건 발생으로 추정); 그리고 극히 드문 경우 신경 손상 또는 마미증후군이 있습니다.
+
+골다공증, 암, 염증성 관절염, 항응고제 사용, 또는 최근의 외상이나 수술 등 알려진 상태를 카이로프랙터에게 알려주십시오. 이는 치료의 안전성과 방법에 영향을 미칠 수 있습니다.
+
+**치료 대안**
+
+카이로프랙틱 치료의 대안으로 휴식 및 활동 조절, 약물 치료(일반의약품 또는 처방전), 물리치료, 마사지 치료, 침술, 통증 관리 주사, 그리고 수술 등이 있음을 이해합니다. 이러한 대안에 관한 질문을 할 기회가 있었습니다.
+
+**동의 철회 권리**
+
+언제든지 동의를 철회하고 향후 치료를 받을 권리에 영향을 주지 않고 치료를 중단할 수 있음을 이해합니다. 질문할 기회가 있었으며, 제 질문들이 만족스럽게 답변되었습니다.
+
+아래에 서명함으로써 본인은 위의 정보를 읽고 이해하였으며, 카이로프랙틱 치료의 위험과 이점이 설명되었고, 카이로프랙틱 치료에 자발적으로 동의함을 확인합니다.`,
+      },
+    ],
+  },
+
+  es: {
+    sections: [
+      {
+        title: '',
+        content: `Por la presente solicito y doy mi consentimiento para la realización del tratamiento quiropráctico y procedimientos relacionados por el/los quiropráctico(s) y/u otros proveedores de atención médica con licencia en esta clínica, independientemente de si son signatarios de este formulario.
+
+**Naturaleza del Tratamiento Quiropráctico**
+
+Entiendo que la atención quiropráctica puede incluir manipulación y movilización espinal, ajustes de extremidades, terapias de tejidos blandos (masaje, liberación miofascial, terapia de puntos gatillo), ejercicio terapéutico y estiramiento, modalidades físicas (ultrasonido, estimulación eléctrica, calor/hielo, tracción) y asesoramiento sobre estilo de vida y nutrición.
+
+**Beneficios Esperados**
+
+La atención quiropráctica tiene como objetivo reducir el dolor y la incomodidad, restaurar el movimiento y la función articular normal, mejorar la postura y la biomecánica, y apoyar los procesos naturales de curación del cuerpo. Entiendo que los resultados no están garantizados y que el número de tratamientos necesarios varía según el individuo.
+
+**Riesgos y Posibles Complicaciones**
+
+Entiendo que el tratamiento quiropráctico, como todos los procedimientos de atención médica, conlleva cierto riesgo. Los efectos temporales comunes incluyen dolor muscular o rigidez después del tratamiento, que generalmente se resuelve en 24 a 48 horas. Los riesgos menos comunes incluyen aumento temporal de los síntomas, dolor de cabeza o fatiga.
+
+Los riesgos raros pero graves incluyen: agravamiento o herniación de un disco intervertebral; fractura en personas con osteoporosis o patología ósea; accidente cerebrovascular o lesión vertebrobasilar asociada con la manipulación cervical (del cuello) (se estima que ocurre en aproximadamente 1 de varios millones de manipulaciones cervicales); y, en casos extremadamente raros, daño nervioso o síndrome de cauda equina.
+
+Informaré a mi quiropráctico sobre cualquier condición conocida como osteoporosis, cáncer, artritis inflamatoria, uso de anticoagulantes o trauma o cirugía reciente, ya que estos pueden afectar la seguridad y el enfoque del tratamiento.
+
+**Alternativas al Tratamiento**
+
+Entiendo que existen alternativas a la atención quiropráctica, incluyendo reposo y modificación de la actividad, medicación (de venta libre o con receta), fisioterapia, masoterapia, acupuntura, inyecciones para el manejo del dolor y cirugía. He tenido la oportunidad de hacer preguntas sobre estas alternativas.
+
+**Derecho a Retirar el Consentimiento**
+
+Entiendo que puedo retirar mi consentimiento y suspender el tratamiento en cualquier momento sin afectar mi derecho a atención futura. He tenido la oportunidad de hacer preguntas y mis preguntas han sido respondidas a mi satisfacción.
+
+Al firmar a continuación, reconozco que he leído y comprendido la información anterior, que se me han explicado los riesgos y beneficios del tratamiento quiropráctico, y que doy mi consentimiento voluntariamente para la atención quiropráctica.`,
+      },
+    ],
+  },
+}
+
+// ─── PI Medical Lien ─────────────────────────────────────────────────────────
+export const PI_MEDICAL_LIEN_CONTENT = {
+  en: null, // uses original MEDICAL_LIEN_CONTENT
+
+  ko: `의료 유치권 계약서
+
+본 의료 유치권 계약서("계약")는 아래 서명한 환자("환자")와 [클리닉 이름]("제공자") 사이에 체결됩니다.
+
+**치료 승인**
+
+환자는 본 계약서에 기재된 사고 또는 사건 발생일 전후로 사고 또는 사건으로 인해 입은 부상과 관련된 필요한 의료 치료, 서비스 및 물품을 제공하도록 제공자에게 승인합니다.
+
+**보험 혜택 양도 및 유치권**
+
+환자는 제공자가 유치권 방식(후불)으로 환자를 치료하는 것에 동의하는 대가로 다음을 이행합니다:
+
+• 환자의 부상을 야기한 사고 또는 사건으로 인해 발생하는 모든 청구, 소송 원인, 합의금, 판결 또는 수익에 대해 제공자에게 유치권을 양도합니다.
+
+• 환자의 변호사(있는 경우), 보험 회사 또는 기타 관련 당사자가 합의금, 판결 또는 보험 수익에서 제공된 모든 의료 서비스의 합리적인 가치를 제공자에게 직접 지급하도록 승인하고 지시합니다.
+
+• 이 유치권은 제공자의 청구서가 전액 지불되거나 제공자가 서면으로 유치권을 해제할 때까지 유효합니다.
+
+**환자의 책임**
+
+환자는 다음 사항에 동의합니다:
+• 합의 협상 또는 제안이 있을 경우 즉시 제공자에게 통보합니다.
+• 제공자의 유치권이 만족되지 않은 상태에서 청구를 합의하지 않습니다.
+• 환자의 변호사(해당하는 경우)의 이름과 연락처 정보를 제공자에게 제공합니다.
+• 청구 소송에서 제공자 및 환자의 변호사와 완전히 협력합니다.
+
+**지불 조건**
+
+환자는 법적 소송이나 보험 청구 결과와 관계없이 제공된 서비스에 대한 모든 요금에 대해 개인적으로 책임이 있음을 인정합니다. 유치권은 환자의 편의를 위한 것이며 개인적인 재정 책임을 면제하지 않습니다.
+
+**보장 없음**
+
+제공자는 법적 또는 보험 청구 결과에 대해 어떠한 보장도 하지 않습니다. 본 계약은 법적 조언을 구성하지 않습니다.
+
+아래에 서명함으로써, 환자는 본 계약을 읽고 이해하였으며 자발적으로 그 조건에 동의함을 확인합니다.`,
+
+  es: `CONTRATO DE GRAVAMEN MÉDICO
+
+Este Contrato de Gravamen Médico ("Contrato") se celebra entre el paciente abajo firmante ("Paciente") y [Nombre de la Clínica] ("Proveedor").
+
+**Autorización para el Tratamiento**
+
+El Paciente por la presente autoriza al Proveedor a proporcionar el tratamiento médico, servicios y suministros necesarios relacionados con las lesiones sufridas en un accidente o incidente ocurrido aproximadamente en la fecha del accidente aquí referenciada.
+
+**Asignación de Beneficios y Gravamen**
+
+En consideración de que el Proveedor acepta tratar al Paciente en base a gravamen (pago diferido), el Paciente por la presente:
+
+• Asigna al Proveedor un gravamen sobre todos y cada uno de los reclamos, causas de acción, acuerdos, sentencias o ingresos que surjan del accidente o incidente que causó las lesiones del Paciente.
+
+• Autoriza y dirige al abogado del Paciente (si lo hubiera), compañía de seguros, o cualquier otra parte a pagar directamente al Proveedor de cualquier acuerdo, sentencia o ingresos del seguro, el valor razonable de todos los servicios médicos prestados.
+
+• Entiende que este gravamen permanecerá en vigor hasta que la factura del Proveedor sea pagada en su totalidad o hasta que el Proveedor libere el gravamen por escrito.
+
+**Responsabilidades del Paciente**
+
+El Paciente acepta:
+• Notificar al Proveedor inmediatamente de cualquier negociación u oferta de acuerdo.
+• No resolver ningún reclamo sin asegurarse de que el gravamen del Proveedor sea satisfecho.
+• Proporcionar al Proveedor el nombre e información de contacto del abogado del Paciente (si aplica).
+• Cooperar plenamente con el Proveedor y el abogado del Paciente en la tramitación de cualquier reclamo.
+
+**Términos de Pago**
+
+El Paciente reconoce que independientemente del resultado de cualquier acción legal o reclamo de seguro, el Paciente sigue siendo personalmente responsable de todos los cargos por los servicios prestados. El gravamen es una conveniencia para el Paciente y no lo exime de la responsabilidad financiera personal.
+
+**Sin Garantía**
+
+El Proveedor no ofrece ninguna garantía con respecto al resultado de cualquier reclamo legal o de seguro. Este Contrato no constituye asesoramiento legal.
+
+Al firmar a continuación, el Paciente reconoce haber leído y entendido este Contrato y voluntariamente acepta sus términos.`,
+}
+
+// ─── Information Release ─────────────────────────────────────────────────────
+export const INFORMATION_RELEASE_CONTENT = {
+  en: null, // uses original INFORMATION_RELEASE_FORM sections
+
+  ko: {
+    sections: [
+      {
+        title: '',
+        content: `본인은 아래 명시된 당사자들에게 설명된 목적에 따라 본인의 의료 기록, 건강 정보 및 관련 서류의 공개를 승인합니다.
+
+**공개될 정보**
+
+이 승인서는 이 클리닉에서 본인의 치료와 관련된 의료 기록, 치료 노트, 진단 보고서, 영상 검사 결과, 청구 기록 및 기타 모든 건강 정보를 포함합니다.
+
+**공개 목적**
+
+정보는 다음의 목적을 위해 공개될 수 있습니다:
+• 다른 치료 의료 제공자와의 치료 조정
+• 보험 청구 처리 및 청구
+• 본인의 부상 또는 상태와 관련된 법적 절차(개인 상해 청구 포함)
+• 산재 보상 청구
+• 기타 아래 명시된 목적
+
+**수령자**
+
+본인의 기록을 다음에게 공개하도록 승인합니다: 본인의 변호사(들), 보험 회사(들), 기타 치료 의사 및 의료 제공자, 그리고 본인의 치료 또는 법적 대리에 직접 관련된 모든 기타 당사자.
+
+**환자 권리**
+
+본인은 다음을 이해합니다:
+• 이 클리닉에 서면 요청을 제출하여 언제든지 이 승인을 철회할 수 있습니다.
+• 철회는 이 승인에 근거하여 이미 공개된 정보에는 적용되지 않습니다.
+• 본인의 치료는 이 승인서 서명을 조건으로 하지 않습니다.
+• 이 승인에 따라 공개된 정보는 수령자에 의해 재공개될 수 있으며 연방 개인정보 보호 규정에 의해 더 이상 보호되지 않을 수 있습니다.
+• 이 승인은 서면으로 철회되지 않는 한 본인의 치료 및 법적 절차 기간 동안 유효합니다.`,
+      },
+    ],
+  },
+
+  es: {
+    sections: [
+      {
+        title: '',
+        content: `Por la presente autorizo la divulgación de mis registros médicos, información de salud y documentos relacionados a las partes indicadas a continuación, para los propósitos descritos.
+
+**Información a Divulgar**
+
+Esta autorización cubre registros médicos, notas de tratamiento, informes de diagnóstico, resultados de imágenes, registros de facturación y cualquier otra información de salud relacionada con mi atención en esta clínica.
+
+**Propósito de la Divulgación**
+
+La información puede ser divulgada para los siguientes propósitos:
+• Coordinación de la atención con otros proveedores de atención médica tratantes
+• Procesamiento de reclamos de seguro y facturación
+• Procedimientos legales relacionados con mi lesión o condición (incluyendo reclamos de lesiones personales)
+• Reclamos de compensación laboral
+• Cualquier otro propósito que especifique a continuación
+
+**Destinatarios**
+
+Autorizo la divulgación de mis registros a: mi(s) abogado(s), compañía(s) de seguros, otros médicos tratantes y proveedores de atención médica, y cualquier otra parte directamente involucrada en mi atención o representación legal.
+
+**Derechos del Paciente**
+
+Entiendo que:
+• Puedo revocar esta autorización en cualquier momento presentando una solicitud por escrito a esta clínica.
+• La revocación no aplica a la información ya divulgada basándose en esta autorización.
+• Mi tratamiento no está condicionado a la firma de esta autorización.
+• La información divulgada bajo esta autorización puede ser re-divulgada por el destinatario y puede que ya no esté protegida por las regulaciones federales de privacidad.
+• Esta autorización permanecerá en vigor durante la duración de mi tratamiento y procedimientos legales, o hasta que sea revocada por escrito.`,
+      },
+    ],
+  },
+}
+
 export const REVIEW_OF_SYSTEMS_CONTENT = {
   en: {
     intro: 'Please check any symptoms you are currently experiencing or have experienced in the past 3 months.',
