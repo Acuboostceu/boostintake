@@ -63,32 +63,30 @@ export function PatientVerify() {
     <div className="min-h-dvh bg-blue-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm">
 
-        {/* Clinic name — top, large */}
-        <div className="text-center mb-4">
+        {/* Header: clinic name + logo + subtitle */}
+        <div className="text-center mb-5">
           {branding.clinicName && (
-            <p className="text-xl font-bold text-gray-900">{branding.clinicName}</p>
+            <p className="text-2xl font-bold text-gray-900 mb-3">{branding.clinicName}</p>
           )}
-        </div>
-
-        {/* Logo */}
-        <div className="flex justify-center mb-4">
           {branding.logoUrl ? (
             <img
               src={branding.logoUrl}
               alt={branding.clinicName || 'Clinic'}
-              className="w-24 h-24 object-contain rounded-2xl"
+              className="w-20 h-20 object-contain rounded-2xl mx-auto mb-3"
             />
           ) : (
-            <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center">
-              <svg className="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
           )}
+          <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{tr.verify.title}</p>
+          <p className="text-gray-400 mt-0.5 text-xs">{tr.verify.subtitle}</p>
         </div>
 
         {/* Language selector */}
-        <div className="flex justify-center gap-2 mb-6">
+        <div className="flex justify-center gap-2 mb-5">
           {LANGUAGES.map((l) => (
             <button
               key={l.code}
@@ -102,12 +100,6 @@ export function PatientVerify() {
               {l.label}
             </button>
           ))}
-        </div>
-
-        {/* Form header */}
-        <div className="text-center mb-6">
-          <h1 className="text-xl font-semibold text-gray-700">{tr.verify.title}</h1>
-          <p className="text-gray-500 mt-1 text-sm">{tr.verify.subtitle}</p>
         </div>
 
         {/* Verify form */}

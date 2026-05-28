@@ -128,30 +128,27 @@ export function TabletMode() {
     <div className="min-h-dvh bg-blue-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm">
 
-        {/* Clinic name — top, large */}
+        {/* Header: clinic name + logo + subtitle */}
         {(() => {
           const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
-          return saved.name ? (
-            <div className="text-center mb-4">
-              <p className="text-xl font-bold text-gray-900">{saved.name}</p>
+          return (
+            <div className="text-center mb-5">
+              {saved.name && (
+                <p className="text-2xl font-bold text-gray-900 mb-3">{saved.name}</p>
+              )}
+              {saved.logoUrl ? (
+                <img src={saved.logoUrl} alt={saved.name || 'Clinic'} className="w-20 h-20 object-contain rounded-2xl mx-auto mb-3" />
+              ) : (
+                <img src="/logo.png" alt="BoostIntake" className="w-20 h-20 object-contain mx-auto mb-3" />
+              )}
+              <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{tr.verify.title}</p>
+              <p className="text-gray-400 mt-0.5 text-xs">{tr.verify.subtitle}</p>
             </div>
-          ) : null
+          )
         })()}
 
-        {/* Logo */}
-        <div className="flex justify-center mb-4">
-          {(() => {
-            const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
-            return saved.logoUrl ? (
-              <img src={saved.logoUrl} alt={saved.name || 'Clinic'} className="w-24 h-24 object-contain rounded-2xl" />
-            ) : (
-              <img src="/logo.png" alt="BoostIntake" className="w-24 h-24 object-contain" />
-            )
-          })()}
-        </div>
-
         {/* Language selector */}
-        <div className="flex justify-center gap-2 mb-6">
+        <div className="flex justify-center gap-2 mb-5">
           {LANGUAGES.map((l) => (
             <button
               key={l.code}
@@ -165,12 +162,6 @@ export function TabletMode() {
               {l.label}
             </button>
           ))}
-        </div>
-
-        {/* Form header */}
-        <div className="text-center mb-6">
-          <h1 className="text-xl font-semibold text-gray-700">{tr.verify.title}</h1>
-          <p className="text-gray-500 mt-1 text-sm">{tr.verify.subtitle}</p>
         </div>
 
         <form onSubmit={handleStart} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col gap-4">
