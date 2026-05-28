@@ -236,7 +236,9 @@ export function DashboardHome() {
                         {panel.type === 'sent' ? (
                           item.used
                             ? <span className="flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full bg-green-50 text-green-700">Completed</span>
-                            : <span className="flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full bg-red-50 text-red-600">Waiting</span>
+                            : (Date.now() - new Date(item.created_at) > 24 * 60 * 60 * 1000)
+                              ? <span className="flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">Expired</span>
+                              : <span className="flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full bg-red-50 text-red-600">Waiting</span>
                         ) : (
                           item.source === 'tablet'
                             ? <span className="flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">Tablet</span>
