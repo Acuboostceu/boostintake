@@ -10,6 +10,7 @@ import { API } from '../../lib/api'
 import { LANGUAGES, useTranslations } from '../../i18n/translations'
 
 const TABLET_STATES = {
+  LOCATION: 'location', // Staff selects location (if multi-location)
   SETUP: 'setup',       // Staff selects forms
   IDLE: 'idle',         // Patient enters name/DOB
   PATIENT: 'patient',   // Patient fills forms
@@ -21,7 +22,16 @@ export function TabletMode() {
   const navigate = useNavigate()
   const { setPatient, setClinicInfo, setFormData, setLang, setSelectedFormIds, lang, reset } = useFormStore()
   const tr = useTranslations(lang)
-  const [state, setState] = useState(TABLET_STATES.SETUP)
+  const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
+  const secondaryLocations = saved.locations || []
+  const allLocations = [
+    { name: saved.name || 'Main Office', address: saved.address || '' },
+    ...secondaryLocations,
+  ]
+  const hasMultipleLocations = secondaryLocations.length > 0
+
+  const [state, setState] = useState(hasMultipleLocations ? TABLET_STATES.LOCATION : TABLET_STATES.SETUP)
+  const [selectedLocation, setSelectedLocation] = useState(allLocations[0])
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [dob, setDob] = useState('')       // display: MM/DD/YYYY
@@ -72,8 +82,8 @@ export function TabletMode() {
   function handleStart(e) {
     e.preventDefault()
     setPatient({ name: `${firstName} ${lastName}`, dob, token: 'tablet' })
-    const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
-    setClinicInfo(saved)
+    const clinicBase = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
+    setClinicInfo({ ...clinicBase, name: selectedLocation.name, address: selectedLocation.address })
     // Pre-fill patient_info form with the entered name and DOB
     setFormData('patient_info', { firstName, lastName, dob })
     setState(TABLET_STATES.PATIENT)
@@ -104,7 +114,8 @@ export function TabletMode() {
         setFirstName(''); setLastName(''); setDob(''); setPin('')
         setPinError('')
         setSelectedFormIdsLocal(DEFAULT_FORM_IDS)
-        setState(TABLET_STATES.SETUP)
+        setSelectedLocation(allLocations[0])
+        setState(hasMultipleLocations ? TABLET_STATES.LOCATION : TABLET_STATES.SETUP)
       } else {
         setPinError('Incorrect PIN')
         setPin('')
@@ -113,6 +124,39 @@ export function TabletMode() {
       setPinError('Connection error. Try again.')
       setPin('')
     }
+  }
+
+  // LOCATION state — staff selects which location this tablet is at
+  if (state === TABLET_STATES.LOCATION) {
+    return (
+      <div className="min-h-dvh bg-gray-50 flex flex-col">
+        <div className="bg-white border-b border-gray-200 px-6 py-4">
+          <div className="max-w-xl mx-auto">
+            <h1 className="text-lg font-bold text-gray-900">Select Location</h1>
+            <p className="text-sm text-gray-500 mt-0.5">Which office is this tablet at?</p>
+          </div>
+        </div>
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="w-full max-w-sm flex flex-col gap-3">
+            {allLocations.map((loc, i) => (
+              <button
+                key={i}
+                onClick={() => { setSelectedLocation(loc); setState(TABLET_STATES.SETUP) }}
+                className="w-full text-left px-5 py-4 rounded-2xl border-2 border-gray-200 bg-white hover:border-blue-400 hover:bg-blue-50 transition-colors"
+              >
+                <p className="font-semibold text-gray-900">{loc.name}</p>
+                {loc.address && <p className="text-sm text-gray-500 mt-0.5">{loc.address}</p>}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="text-center pb-6">
+          <button onClick={() => navigate('/dashboard')} className="text-xs text-gray-400 hover:text-gray-600 underline">
+            Staff: Return to Dashboard
+          </button>
+        </div>
+      </div>
+    )
   }
 
   // SETUP state — staff selects forms

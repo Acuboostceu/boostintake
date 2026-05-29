@@ -57,6 +57,7 @@ export function DashboardLayout() {
           checkFee: data.check_fee,
           smsTemplate: data.sms_template || '',
           specialty: data.specialty || 'acupuncture',
+          locations: data.locations || [],
         }))
       })
       .catch(() => {})

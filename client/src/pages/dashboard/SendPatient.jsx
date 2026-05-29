@@ -6,7 +6,7 @@ import { FormSelector, DEFAULT_FORM_IDS } from '../../components/forms/FormSelec
 import { FORM_CATALOG } from '../../forms/catalog'
 import { API } from '../../lib/api'
 
-const DEFAULT_TEMPLATE = `Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link}`
+const DEFAULT_TEMPLATE = `Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link} (Link expires in 24 hours)`
 
 
 export function SendPatient() {
@@ -21,10 +21,11 @@ export function SendPatient() {
   const [customMessage, setCustomMessage] = useState('')
   const [selectedFormIds, setSelectedFormIds] = useState(DEFAULT_FORM_IDS)
   const [availableForms, setAvailableForms] = useState([])
+  const [selectedLocation, setSelectedLocation] = useState(null) // null = primary
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
-    setClinicInfo({ name: saved.name || '', template: saved.smsTemplate || '' })
+    setClinicInfo({ name: saved.name || '', template: saved.smsTemplate || '', locations: saved.locations || [] })
 
     // Load available forms for this clinic
     fetch(`${API}/api/forms`, {
@@ -90,6 +91,17 @@ export function SendPatient() {
     }
   }
 
+  function handleDobInput(raw) {
+    const digits = raw.replace(/\D/g, '').slice(0, 8)
+    let formatted = digits
+    if (digits.length > 4) formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`
+    else if (digits.length > 2) formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`
+    setDob(formatted)
+  }
+  function isDobComplete(val) {
+    return /^\d{2}\/\d{2}\/\d{4}$/.test(val)
+  }
+
   function formatPhone(raw) {
     const digits = raw.replace(/\D/g, '').slice(0, 10)
     if (digits.length <= 3) return digits
@@ -138,6 +150,39 @@ export function SendPatient() {
         </Card>
       ) : (
         <form onSubmit={handleSend} className="flex flex-col gap-6">
+          {/* Location selector — only shown if multi-location configured */}
+          {clinicInfo.locations?.length > 0 && (
+            <Card>
+              <CardHeader title="Location" subtitle="Which office is this patient visiting?" />
+              <CardBody>
+                <div className="flex flex-col gap-2">
+                  {[{ name: clinicInfo.name, address: '' }, ...clinicInfo.locations].map((loc, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setSelectedLocation(i === 0 ? null : loc)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-colors ${
+                        (i === 0 && selectedLocation === null) || (i > 0 && selectedLocation?.name === loc.name)
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
+                        (i === 0 && selectedLocation === null) || (i > 0 && selectedLocation?.name === loc.name)
+                          ? 'border-blue-500' : 'border-gray-300'
+                      }`}>
+                        {((i === 0 && selectedLocation === null) || (i > 0 && selectedLocation?.name === loc.name)) && (
+                          <div className="w-2 h-2 rounded-full bg-blue-500" />
+                        )}
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">{loc.name || `Location ${i + 1}`}</span>
+                    </button>
+                  ))}
+                </div>
+              </CardBody>
+            </Card>
+          )}
+
           <Card>
             <CardHeader title="Patient Information" subtitle="Enter the patient's details to generate a unique intake link" />
             <CardBody className="flex flex-col gap-4">
@@ -145,7 +190,18 @@ export function SendPatient() {
                 <Input label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First" required autoFocus className="flex-1" />
                 <Input label="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last" required className="flex-1" />
               </div>
-              <Input label="Date of Birth" type="date" value={dob} onChange={(e) => setDob(e.target.value)} required />
+              <div>
+                <label className="text-sm font-medium text-gray-700 block mb-1">Date of Birth</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={dob}
+                  onChange={(e) => handleDobInput(e.target.value)}
+                  placeholder="MM/DD/YYYY"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 text-lg tracking-widest font-mono"
+                  required
+                />
+              </div>
               <Input label="Mobile Phone Number" type="tel" value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} placeholder="(555) 000-0000" required />
             </CardBody>
           </Card>
@@ -194,7 +250,7 @@ export function SendPatient() {
             <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">{error}</div>
           )}
 
-          <Button type="submit" size="lg" disabled={loading || !firstName || !lastName || !phone || !dob}>
+          <Button type="submit" size="lg" disabled={loading || !firstName || !lastName || !phone || !isDobComplete(dob)}>
             {loading ? 'Sending...' : 'Send Intake Link via SMS →'}
           </Button>
         </form>

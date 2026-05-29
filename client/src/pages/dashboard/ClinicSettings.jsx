@@ -5,7 +5,7 @@ import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
 
-const DEFAULT_SMS_TEMPLATE = `Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link}`
+const DEFAULT_SMS_TEMPLATE = `Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link} (Link expires in 24 hours)`
 
 export function ClinicSettings() {
   const navigate = useNavigate()
@@ -21,7 +21,7 @@ export function ClinicSettings() {
     logo: null,
     logoPreview: null,
     smsTemplate: '',
-    specialty: 'acupuncture',
+    locations: [], // secondary locations [{name, address}]
   })
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -47,7 +47,7 @@ export function ClinicSettings() {
           checkFee: data.check_fee ?? 35,
           logoPreview: data.logo_url || null,
           smsTemplate: data.sms_template || '',
-          specialty: data.specialty || 'acupuncture',
+          locations: data.locations || [],
         }))
       } finally {
         setLoading(false)
@@ -105,7 +105,7 @@ export function ClinicSettings() {
       form.append('checkFee', settings.checkFee)
       form.append('pin', settings.pin)
       form.append('smsTemplate', settings.smsTemplate)
-      form.append('specialty', settings.specialty)
+      form.append('locations', JSON.stringify(settings.locations))
       if (settings.logo) form.append('logo', settings.logo)
 
       const res = await fetch(`${API}/api/clinic/settings`, {
@@ -122,10 +122,10 @@ export function ClinicSettings() {
         name: settings.clinicName,
         address: settings.address,
         phone: settings.phone,
-        specialty: settings.specialty,
         cancelHours: settings.cancelHours,
         noShowFee: settings.noShowFee,
         checkFee: settings.checkFee,
+        locations: settings.locations,
         ...(data.logoUrl ? { logoUrl: data.logoUrl } : {}),
       }))
       setSaved(true)
@@ -183,29 +183,55 @@ export function ClinicSettings() {
             <Input label="Clinic Name" value={settings.clinicName} onChange={(e) => update('clinicName', e.target.value)} placeholder="Sunrise Acupuncture Clinic" required />
             <Input label="Address" value={settings.address} onChange={(e) => update('address', e.target.value)} placeholder="123 Main St, Los Angeles, CA 90001" />
             <Input label="Phone Number" type="tel" value={settings.phone} onChange={(e) => update('phone', formatPhone(e.target.value))} placeholder="(555) 000-0000" />
-            <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">Specialty</label>
-              <div className="flex gap-3">
-                {[
-                  { value: 'acupuncture', label: 'Acupuncture' },
-                  { value: 'chiropractic', label: 'Chiropractic' },
-                ].map(({ value, label }) => (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => update('specialty', value)}
-                    className={`flex-1 py-3 rounded-xl border-2 text-sm font-medium transition-colors ${
-                      settings.specialty === value
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 text-gray-500 hover:border-gray-300'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-              <p className="text-xs text-gray-400 mt-1.5">Determines which intake forms are sent to patients.</p>
+          </CardBody>
+        </Card>
+
+        {/* Locations */}
+        <Card>
+          <CardHeader title="Locations" subtitle="Add a second location if your clinic operates from multiple offices" />
+          <CardBody className="flex flex-col gap-4">
+            {/* Primary location — read from main fields */}
+            <div className="bg-gray-50 rounded-xl px-4 py-3">
+              <p className="text-xs font-medium text-gray-500 mb-0.5">LOCATION 1 (Primary)</p>
+              <p className="text-sm text-gray-800 font-medium">{settings.clinicName || '—'}</p>
+              {settings.address && <p className="text-xs text-gray-500">{settings.address}</p>}
             </div>
+
+            {/* Secondary location */}
+            {settings.locations.length > 0 ? (
+              <div className="flex flex-col gap-3 border border-gray-200 rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-medium text-gray-500">LOCATION 2</p>
+                  <button
+                    type="button"
+                    onClick={() => update('locations', [])}
+                    className="text-xs text-red-400 hover:text-red-600"
+                  >
+                    Remove
+                  </button>
+                </div>
+                <Input
+                  label="Location Name"
+                  value={settings.locations[0]?.name || ''}
+                  onChange={(e) => update('locations', [{ ...settings.locations[0], name: e.target.value }])}
+                  placeholder="Beverly Hills Branch"
+                />
+                <Input
+                  label="Address"
+                  value={settings.locations[0]?.address || ''}
+                  onChange={(e) => update('locations', [{ ...settings.locations[0], address: e.target.value }])}
+                  placeholder="456 Rodeo Dr, Beverly Hills, CA 90210"
+                />
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => update('locations', [{ name: '', address: '' }])}
+                className="text-sm text-blue-600 font-medium hover:underline self-start"
+              >
+                + Add second location
+              </button>
+            )}
           </CardBody>
         </Card>
 
