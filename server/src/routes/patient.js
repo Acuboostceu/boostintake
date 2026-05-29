@@ -114,8 +114,8 @@ router.post('/verify', async (req, res) => {
   res.json({
     ok: true,
     clinic: {
-      name: record.location_name || clinic.name,
-      address: record.location_address || clinic.address,
+      name: clinic.name,
+      address: clinic.address,
       phone: clinic.phone,
       logoUrl: clinic.logo_url,
       cancelHours: clinic.cancel_hours,
