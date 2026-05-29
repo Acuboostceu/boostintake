@@ -35,9 +35,6 @@ router.post('/send-link', requireAuth, async (req, res) => {
   // NOTE: the intake_tokens table needs a form_ids jsonb column:
   //   ALTER TABLE intake_tokens ADD COLUMN form_ids jsonb;
 
-  // Store token with patient identity for verification
-  console.log('[send-link] locationName:', locationName, '| locationAddress:', locationAddress)
-
   const { error } = await supabase.from('intake_tokens').insert({
     token,
     clinic_id: req.user.clinicId,
@@ -131,7 +128,7 @@ router.post('/verify', async (req, res) => {
 
 // Patient submits completed forms
 router.post('/submit', async (req, res) => {
-  const { token, patient, formData, signatures, declinedForms, clinicId, formContents, formFields } = req.body
+  const { token, patient, formData, signatures, declinedForms, clinicId, locationName, locationAddress, formContents, formFields } = req.body
 
   // For non-tablet mode, validate token and mark used
   let clinic = null
@@ -147,11 +144,9 @@ router.post('/submit', async (req, res) => {
     }
 
     clinic = { ...record.clinics }
-    console.log('[submit] token location_name:', record.location_name, '| location_address:', record.location_address)
     // Override with selected location if set
     if (record.location_name) clinic.name = record.location_name
     if (record.location_address) clinic.address = record.location_address
-    console.log('[submit] clinic name used:', clinic.name, '| address:', clinic.address)
     await supabase.from('intake_tokens').update({ used: true }).eq('token', token)
   } else {
     // Tablet mode: look up clinic by ID sent from client
@@ -166,7 +161,10 @@ router.post('/submit', async (req, res) => {
     if (error || !data) {
       return res.status(400).json({ message: 'Clinic not found' })
     }
-    clinic = data
+    clinic = { ...data }
+    // Override with selected location if set (tablet mode)
+    if (locationName) clinic.name = locationName
+    if (locationAddress) clinic.address = locationAddress
   }
 
   try {

@@ -105,6 +105,10 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
         ? JSON.parse(localStorage.getItem('bi_clinic') || '{}').clinicId
         : undefined
 
+      // For tablet mode, pass the selected location so the PDF header is correct
+      const locationName = isTablet ? (clinicInfo?.name || null) : undefined
+      const locationAddress = isTablet ? (clinicInfo?.address || null) : undefined
+
       // Collect form content texts for PDF generation — always English
       const formContents = {}
       const formFields = {}
@@ -140,6 +144,8 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
           signatures,
           declinedForms,
           clinicId,
+          locationName,
+          locationAddress,
           formContents,
           formFields,
         }),
