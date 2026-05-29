@@ -15,24 +15,6 @@ const TONE_LABELS = {
   friendly: 'warm and friendly — like a caring friend who happens to be a health expert',
 }
 
-// Pick the best available generateContent model for this API key
-async function getGeminiModel(apiKey) {
-  const PREFERRED = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.0-pro', 'gemini-pro']
-  try {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1/models?key=${apiKey}`)
-    const { models } = await r.json()
-    if (!models) return PREFERRED[0]
-    const supported = models
-      .filter((m) => m.supportedGenerationMethods?.includes('generateContent'))
-      .map((m) => m.name.replace('models/', ''))
-    for (const name of PREFERRED) {
-      if (supported.includes(name)) return name
-    }
-    return supported[0] || PREFERRED[0]
-  } catch {
-    return PREFERRED[0]
-  }
-}
 
 router.post('/caption', requireAuth, async (req, res) => {
   const { photoTypes, keywords, tone } = req.body
@@ -87,22 +69,25 @@ Requirements:
   try {
     if (!process.env.GEMINI_API_KEY) throw new Error('GEMINI_API_KEY not set in environment')
 
-    const model = await getGeminiModel(process.env.GEMINI_API_KEY)
-    console.log('[social/caption] using model:', model)
-    const apiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-      }
-    )
+    const apiRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.8,
+        max_tokens: 400,
+      }),
+    })
     const json = await apiRes.json()
     if (!apiRes.ok) {
-      console.error('[social/caption] Gemini HTTP', apiRes.status, JSON.stringify(json))
-      throw new Error(json.error?.message || `Gemini API error ${apiRes.status}`)
+      console.error('[social/caption] Groq HTTP', apiRes.status, JSON.stringify(json))
+      throw new Error(json.error?.message || `Groq API error ${apiRes.status}`)
     }
-    const caption = json.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+    const caption = json.choices?.[0]?.message?.content?.trim()
     if (!caption) {
       console.error('[social/caption] empty response:', JSON.stringify(json))
       throw new Error('Empty response from AI')
