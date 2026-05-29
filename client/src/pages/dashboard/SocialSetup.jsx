@@ -132,7 +132,7 @@ export function SocialSetup({ initial = [], initialTone = 'friendly', onSave, on
 
       <div className="flex flex-col items-center gap-3">
         <Button size="lg" onClick={handleSave} disabled={selected.length === 0 || saving} className="w-full">
-          {saving ? 'Saving...' : `Save & Continue (${selected.length} selected)`}
+          {saving ? 'Saving...' : initial.length > 0 ? `Save Changes (${selected.length} selected)` : `Save & Continue (${selected.length} selected)`}
         </Button>
         {onSkip && (
           <button onClick={onSkip} className="text-sm text-gray-400 hover:text-gray-600 underline">

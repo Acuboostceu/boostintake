@@ -62,17 +62,26 @@ export function SettingsPage() {
 
       {activeTab === 'social' && (
         socialLoaded ? (
-          socialSaved ? (
-            <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-700">
-              ✓ Social marketing preferences saved!
-            </div>
-          ) : (
+          <>
+            {socialSaved && (
+              <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-700 flex items-center gap-2">
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                Preferences saved!
+              </div>
+            )}
             <SocialSetup
               initial={socialInitial}
               initialTone={socialInitialTone}
-              onSave={() => setSocialSaved(true)}
+              onSave={(areas, tone) => {
+                setSocialInitial(areas)
+                setSocialInitialTone(tone)
+                setSocialSaved(true)
+                setTimeout(() => setSocialSaved(false), 3000)
+              }}
             />
-          )
+          </>
         ) : (
           <div className="flex items-center justify-center py-20">
             <p className="text-gray-400 text-sm">Loading...</p>
