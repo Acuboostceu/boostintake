@@ -5,10 +5,12 @@ import { API } from '../../lib/api'
 import { SocialSetup, FOCUS_AREAS } from './SocialSetup'
 
 const PHOTO_TYPES = [
-  { id: 'treatment', label: 'Patient Treatment / Procedure', emoji: '🫁', sub: 'Acupuncture, chiropractic, cupping...' },
-  { id: 'clinic', label: 'Clinic Vibe / Interior', emoji: '🏡', sub: 'Space, ambiance, behind the scenes' },
-  { id: 'health', label: 'Health Tips / Herbs', emoji: '🌿', sub: 'Wellness info, herbs, education' },
-  { id: 'review', label: 'Patient Review / Story', emoji: '⭐', sub: 'Testimonials, success stories' },
+  { id: 'before_after', label: '시술 전후 사진', emoji: '📷', sub: 'Before & after treatment results' },
+  { id: 'process', label: '시술 과정 영상', emoji: '🎥', sub: 'Treatment process video or reel' },
+  { id: 'review', label: '환자 후기 / 추천', emoji: '💬', sub: 'Patient testimonials and success stories' },
+  { id: 'health_tip', label: '건강 팁 / 교육', emoji: '📚', sub: 'Wellness info, herbs, education' },
+  { id: 'promo', label: '프로모션 / 이벤트', emoji: '🎉', sub: 'Special offers and upcoming events' },
+  { id: 'quote', label: '오늘의 명언', emoji: '🌿', sub: 'Inspiring health & wellness quotes' },
 ]
 
 const TONES = [
@@ -17,24 +19,24 @@ const TONES = [
 ]
 
 const NUDGE_IDEAS = {
-  pain_mgmt: ['허리 통증 완화에 침구 치료가 어떻게 도움이 되는지 소개해보세요', '만성 통증 환자 후기 포스팅을 해보세요'],
-  fertility: ['여성 건강과 침구 치료의 관계를 알려보세요', '불임 치료 성공 사례를 공유해보세요'],
-  digestive: ['소화 불량에 효과적인 혈자리를 소개해보세요'],
-  sleep: ['불면증 개선을 위한 자연 요법을 공유해보세요'],
-  stress: ['직장인 스트레스 해소에 침구 치료가 도움되는 이유를 설명해보세요'],
-  cosmetic: ['피부 미용 침에 대한 오해와 진실을 포스팅해보세요'],
-  disc: ['디스크 환자가 일상에서 주의할 점을 알려보세요'],
-  posture: ['재택근무자를 위한 자세 교정 팁을 공유해보세요'],
-  sports_injury: ['운동 후 빠른 회복을 위한 카이로 치료를 소개해보세요'],
-  headache: ['두통의 원인과 카이로 치료 효과를 설명해보세요'],
-  postpartum: ['산후 몸 회복에 카이로가 도움되는 이유를 공유해보세요'],
-  pediatric: ['아이들의 성장과 카이로프랙틱 효과를 소개해보세요'],
-  deep_tissue: ['딥티슈 마사지가 근육 회복에 미치는 효과를 설명해보세요'],
-  prenatal: ['임산부 마사지의 안전성과 효과를 알려보세요'],
-  sports_massage: ['운동 전후 스포츠 마사지 루틴을 소개해보세요'],
-  relaxation: ['스트레스 해소를 위한 릴렉세이션 마사지를 소개해보세요'],
-  lymphatic: ['림프 마사지로 붓기 관리하는 방법을 공유해보세요'],
-  hot_stone: ['핫스톤 마사지의 치유 효과를 소개해보세요'],
+  pain_mgmt: ['Share how acupuncture helps relieve chronic back pain', 'Post a patient success story about pain relief'],
+  fertility: ['Educate your audience on acupuncture and women\'s health', 'Share a fertility treatment success story'],
+  digestive: ['Post about acupuncture points that support digestive health', 'Share tips for managing bloating naturally'],
+  sleep: ['Share natural remedies for insomnia with acupuncture', 'Post about how acupuncture regulates sleep cycles'],
+  stress: ['Explain how acupuncture reduces cortisol and stress', 'Share a relaxation tip for busy professionals'],
+  cosmetic: ['Debunk myths about facial acupuncture', 'Show before & after results of cosmetic acupuncture'],
+  disc: ['Share daily habits that protect your spine', 'Post about how chiropractic helps herniated discs'],
+  posture: ['Share posture tips for remote workers', 'Post about the effects of poor posture on long-term health'],
+  sports_injury: ['Show how chiropractic speeds up sports recovery', 'Post about common sports injuries you treat'],
+  headache: ['Explain the link between neck alignment and headaches', 'Share natural headache relief tips'],
+  postpartum: ['Explain how chiropractic helps postpartum recovery', 'Share tips for new moms on back pain relief'],
+  pediatric: ['Share the benefits of chiropractic for kids\' development', 'Post about safe pediatric adjustments'],
+  deep_tissue: ['Explain the benefits of deep tissue massage for muscle recovery', 'Share who benefits most from deep tissue work'],
+  prenatal: ['Reassure expecting moms about the safety of prenatal massage', 'Share top benefits of massage during pregnancy'],
+  sports_massage: ['Post a pre/post workout massage routine', 'Share how sports massage prevents injury'],
+  relaxation: ['Share the stress-relief benefits of relaxation massage', 'Post a self-care reminder for your followers'],
+  lymphatic: ['Educate on how lymphatic drainage reduces swelling', 'Share who benefits most from lymphatic massage'],
+  hot_stone: ['Showcase the healing power of hot stone therapy', 'Post about the difference between hot stone and regular massage'],
 }
 
 function pickRandomNudge(areas) {
@@ -171,7 +173,7 @@ export function SocialMarketing() {
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl px-5 py-4 flex items-start gap-4">
           <span className="text-2xl flex-shrink-0">💡</span>
           <div className="flex-1">
-            <p className="text-xs font-semibold text-blue-600 mb-1">이번 주 추천 포스팅</p>
+            <p className="text-xs font-semibold text-blue-600 mb-1">💡 Post idea for this week</p>
             <p className="text-sm text-gray-800 font-medium">{nudge.text}</p>
             <button
               onClick={() => {
@@ -185,14 +187,14 @@ export function SocialMarketing() {
               }}
               className="mt-2 text-xs text-blue-600 font-medium hover:underline"
             >
-              이 주제로 캡션 만들기 →
+              Use this idea →
             </button>
           </div>
           <button
             onClick={() => setNudge(pickRandomNudge(focusAreas))}
             className="text-gray-400 hover:text-gray-600 text-xs flex-shrink-0"
           >
-            다른 추천 →
+            New idea →
           </button>
         </div>
       )}

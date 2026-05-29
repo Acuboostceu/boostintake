@@ -4,10 +4,12 @@ const { supabase } = require('../services/supabase')
 const router = express.Router()
 
 const PHOTO_TYPE_LABELS = {
-  treatment: 'acupuncture/chiropractic treatment or procedure',
-  clinic: 'clinic interior or ambiance',
-  health: 'health tips, herbs, or wellness information',
+  before_after: 'before and after treatment results',
+  process: 'treatment process or procedure video/reel',
   review: 'patient review or testimonial',
+  health_tip: 'health tips, education, or wellness information',
+  promo: 'promotion, special offer, or upcoming event',
+  quote: 'inspiring health and wellness quote',
 }
 
 const TONE_LABELS = {
