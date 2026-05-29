@@ -5,12 +5,12 @@ import { API } from '../../lib/api'
 import { SocialSetup, FOCUS_AREAS } from './SocialSetup'
 
 const PHOTO_TYPES = [
-  { id: 'before_after', label: '시술 전후 사진', emoji: '📷', sub: 'Before & after treatment results' },
-  { id: 'process', label: '시술 과정 영상', emoji: '🎥', sub: 'Treatment process video or reel' },
-  { id: 'review', label: '환자 후기 / 추천', emoji: '💬', sub: 'Patient testimonials and success stories' },
-  { id: 'health_tip', label: '건강 팁 / 교육', emoji: '📚', sub: 'Wellness info, herbs, education' },
-  { id: 'promo', label: '프로모션 / 이벤트', emoji: '🎉', sub: 'Special offers and upcoming events' },
-  { id: 'quote', label: '오늘의 명언', emoji: '🌿', sub: 'Inspiring health & wellness quotes' },
+  { id: 'before_after', label: 'Before & After', emoji: '📷', sub: 'Treatment results and transformations' },
+  { id: 'process', label: 'Treatment Process', emoji: '🎥', sub: 'Procedure video or reel' },
+  { id: 'review', label: 'Patient Review', emoji: '💬', sub: 'Testimonials and success stories' },
+  { id: 'health_tip', label: 'Health Tip / Education', emoji: '📚', sub: 'Wellness info, herbs, education' },
+  { id: 'promo', label: 'Promotion / Event', emoji: '🎉', sub: 'Special offers and upcoming events' },
+  { id: 'quote', label: 'Quote of the Day', emoji: '🌿', sub: 'Inspiring health & wellness quotes' },
 ]
 
 const TONES = [
