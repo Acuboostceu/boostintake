@@ -12,6 +12,7 @@ import { SendPatient } from './pages/dashboard/SendPatient'
 import { TabletMode } from './pages/dashboard/TabletMode'
 import { FormsPage } from './pages/dashboard/FormsPage'
 import { Billing } from './pages/dashboard/Billing'
+import { SocialMarketing } from './pages/dashboard/SocialMarketing'
 
 import { Login } from './pages/auth/Login'
 import { Register } from './pages/auth/Register'
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="settings" element={<ClinicSettings />} />
             <Route path="send" element={<SendPatient />} />
             <Route path="billing" element={<Billing />} />
+            <Route path="social" element={<SocialMarketing />} />
           </Route>
 
           <Route path="/" element={<Landing />} />

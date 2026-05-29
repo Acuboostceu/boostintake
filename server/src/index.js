@@ -8,6 +8,7 @@ const clinicRoutes = require('./routes/clinic')
 const patientRoutes = require('./routes/patient')
 const formsRoutes = require('./routes/forms')
 const billingRoutes = require('./routes/billing')
+const socialRoutes = require('./routes/social')
 
 const app = express()
 
@@ -43,6 +44,7 @@ app.use('/api/clinic', clinicRoutes)
 app.use('/api/patient', patientRoutes)
 app.use('/api/forms', formsRoutes)
 app.use('/api/billing', billingRoutes)
+app.use('/api/social', socialRoutes)
 
 app.get('/api/health', (_, res) => res.json({ ok: true }))
 
