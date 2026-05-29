@@ -169,9 +169,6 @@ export const CATEGORY_META = {
 
 export const DEFAULT_FORM_IDS = [
   'patient_info',
-  'acupuncture_consent',
-  'health_history',
-  'review_of_systems',
   'hipaa',
   'financial_policy',
   'assignment_of_benefits',
