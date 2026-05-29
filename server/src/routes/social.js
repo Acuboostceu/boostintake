@@ -1,11 +1,11 @@
 const express = require('express')
 const { requireAuth } = require('../middleware/auth')
 const { supabase } = require('../services/supabase')
-const { GoogleGenerativeAI } = require('@google/generative-ai')
+const { GoogleGenAI } = require('@google/genai')
 
 const router = express.Router()
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
 
 const PHOTO_TYPE_LABELS = {
   treatment: 'acupuncture/chiropractic treatment or procedure',
@@ -70,9 +70,11 @@ Requirements:
 - Output ONLY the caption text and hashtags, nothing else`
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' })
-    const result = await model.generateContent(prompt)
-    const caption = result.response.text()?.trim()
+    const result = await genAI.models.generateContent({
+      model: 'gemini-3-flash-preview',
+      contents: prompt,
+    })
+    const caption = result.text?.trim()
     if (!caption) throw new Error('Empty response from AI')
 
     res.json({ caption })
