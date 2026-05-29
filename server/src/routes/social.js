@@ -69,14 +69,14 @@ Requirements:
   try {
     if (!process.env.GEMINI_API_KEY) throw new Error('GEMINI_API_KEY not set in environment')
 
-    const apiRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const apiRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.8,
         max_tokens: 400,
@@ -84,8 +84,8 @@ Requirements:
     })
     const json = await apiRes.json()
     if (!apiRes.ok) {
-      console.error('[social/caption] Groq HTTP', apiRes.status, JSON.stringify(json))
-      throw new Error(json.error?.message || `Groq API error ${apiRes.status}`)
+      console.error('[social/caption] OpenAI HTTP', apiRes.status, JSON.stringify(json))
+      throw new Error(json.error?.message || `OpenAI API error ${apiRes.status}`)
     }
     const caption = json.choices?.[0]?.message?.content?.trim()
     if (!caption) {
