@@ -15,6 +15,59 @@ const TONE_LABELS = {
   friendly: 'warm and friendly — like a caring friend who happens to be a health expert',
 }
 
+const FOCUS_AREAS = {
+  acupuncture: {
+    areas: [
+      { id: 'pain_mgmt', en: 'pain management' },
+      { id: 'fertility', en: 'fertility and women\'s health' },
+      { id: 'digestive', en: 'digestive health' },
+      { id: 'sleep', en: 'sleep disorders' },
+      { id: 'stress', en: 'stress and anxiety' },
+      { id: 'cosmetic', en: 'cosmetic acupuncture' },
+    ],
+  },
+  chiropractic: {
+    areas: [
+      { id: 'disc', en: 'back and neck disc issues' },
+      { id: 'posture', en: 'posture correction' },
+      { id: 'sports_injury', en: 'sports injuries' },
+      { id: 'headache', en: 'headaches and migraines' },
+      { id: 'postpartum', en: 'postpartum chiropractic' },
+      { id: 'pediatric', en: 'pediatric chiropractic' },
+    ],
+  },
+  massage: {
+    areas: [
+      { id: 'deep_tissue', en: 'deep tissue massage' },
+      { id: 'prenatal', en: 'prenatal massage' },
+      { id: 'sports_massage', en: 'sports massage' },
+      { id: 'relaxation', en: 'relaxation massage' },
+      { id: 'lymphatic', en: 'lymphatic drainage' },
+      { id: 'hot_stone', en: 'hot stone massage' },
+    ],
+  },
+}
+
+// GET /api/social/settings — load social settings
+router.get('/settings', requireAuth, async (req, res) => {
+  const { data } = await supabase
+    .from('clinics')
+    .select('social_settings')
+    .eq('id', req.user.clinicId)
+    .single()
+  res.json(data?.social_settings || null)
+})
+
+// POST /api/social/settings — save social settings
+router.post('/settings', requireAuth, async (req, res) => {
+  const { focusAreas } = req.body
+  const { error } = await supabase
+    .from('clinics')
+    .update({ social_settings: { focusAreas } })
+    .eq('id', req.user.clinicId)
+  if (error) return res.status(500).json({ message: 'Failed to save' })
+  res.json({ ok: true })
+})
 
 router.post('/caption', requireAuth, async (req, res) => {
   const { photoTypes, keywords, tone } = req.body
@@ -26,7 +79,7 @@ router.post('/caption', requireAuth, async (req, res) => {
   // Get clinic info for personalization
   const { data: clinic } = await supabase
     .from('clinics')
-    .select('name, address, specialty')
+    .select('name, address, specialty, social_settings')
     .eq('id', req.user.clinicId)
     .single()
 
@@ -40,6 +93,18 @@ router.post('/caption', requireAuth, async (req, res) => {
     if (parts.length >= 2) city = parts[parts.length - 2].trim()
   }
 
+  // Get focus areas for personalized prompt
+  const focusAreaIds = clinic?.social_settings?.focusAreas || []
+  const focusHint = focusAreaIds.length > 0
+    ? `\nThis clinic specializes in: ${focusAreaIds.map(id => {
+        for (const spec of Object.values(FOCUS_AREAS)) {
+          const a = spec.areas.find(a => a.id === id)
+          if (a) return a.en
+        }
+        return id
+      }).filter(Boolean).join(', ')}.`
+    : ''
+
   const photoDesc = photoTypes
     .map((t) => PHOTO_TYPE_LABELS[t] || t)
     .join(' and ')
@@ -49,7 +114,7 @@ router.post('/caption', requireAuth, async (req, res) => {
   const locationHint = city ? ` in ${city}` : ''
   const keywordHint = keywords?.trim() ? `The caption should naturally weave in these themes: ${keywords}.` : ''
 
-  const prompt = `You are a social media expert for a ${specialty} clinic called "${clinicName}"${locationHint}.
+  const prompt = `You are a social media expert for a ${specialty} clinic called "${clinicName}"${locationHint}.${focusHint}
 
 Write a compelling Instagram caption for a photo showing: ${photoDesc}.
 ${keywordHint}
