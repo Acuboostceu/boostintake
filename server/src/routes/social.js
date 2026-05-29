@@ -1,11 +1,11 @@
 const express = require('express')
 const { requireAuth } = require('../middleware/auth')
 const { supabase } = require('../services/supabase')
-const OpenAI = require('openai')
+const { GoogleGenerativeAI } = require('@google/generative-ai')
 
 const router = express.Router()
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
 const PHOTO_TYPE_LABELS = {
   treatment: 'acupuncture/chiropractic treatment or procedure',
@@ -70,14 +70,9 @@ Requirements:
 - Output ONLY the caption text and hashtags, nothing else`
 
   try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 400,
-      temperature: 0.8,
-    })
-
-    const caption = response.choices[0]?.message?.content?.trim()
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+    const result = await model.generateContent(prompt)
+    const caption = result.response.text()?.trim()
     if (!caption) throw new Error('Empty response from AI')
 
     res.json({ caption })
