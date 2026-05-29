@@ -26,8 +26,24 @@ export function SendPatient() {
     const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
     setClinicInfo({ name: saved.name || '', template: saved.smsTemplate || '' })
 
-    // All catalog forms are available for per-send selection
-    setAvailableForms(FORM_CATALOG.filter((f) => !f.comingSoon))
+    // Load available forms for this clinic
+    fetch(`${API}/api/forms`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        const enabled = data?.enabled || []
+        const custom = data?.custom || []
+        const ids = new Set([
+          ...enabled.map((f) => f.form_id),
+          ...custom.map((f) => f.id),
+        ])
+        const forms = FORM_CATALOG.filter((f) => ids.has(f.id) && !f.comingSoon)
+        setAvailableForms(forms.length > 0 ? forms : FORM_CATALOG.filter((f) => !f.comingSoon))
+      })
+      .catch(() => {
+        setAvailableForms(FORM_CATALOG.filter((f) => !f.comingSoon))
+      })
   }, [])
 
   // Build live preview (link shown as placeholder until sent)
