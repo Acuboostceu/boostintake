@@ -152,35 +152,26 @@ export function SendPatient() {
         <form onSubmit={handleSend} className="flex flex-col gap-6">
           {/* Location selector — only shown if multi-location configured */}
           {clinicInfo.locations?.length > 0 && (
-            <Card>
-              <CardHeader title="Location" subtitle="Which office is this patient visiting?" />
-              <CardBody>
-                <div className="flex flex-col gap-2">
-                  {[{ name: clinicInfo.name, address: '' }, ...clinicInfo.locations].map((loc, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => setSelectedLocation(i === 0 ? null : loc)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-colors ${
-                        (i === 0 && selectedLocation === null) || (i > 0 && selectedLocation?.name === loc.name)
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-                        (i === 0 && selectedLocation === null) || (i > 0 && selectedLocation?.name === loc.name)
-                          ? 'border-blue-500' : 'border-gray-300'
-                      }`}>
-                        {((i === 0 && selectedLocation === null) || (i > 0 && selectedLocation?.name === loc.name)) && (
-                          <div className="w-2 h-2 rounded-full bg-blue-500" />
-                        )}
-                      </div>
-                      <span className="text-sm font-medium text-gray-900">{loc.name || `Location ${i + 1}`}</span>
-                    </button>
-                  ))}
-                </div>
-              </CardBody>
-            </Card>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm text-gray-500 mr-1">Location:</span>
+              {[{ name: clinicInfo.name }, ...clinicInfo.locations].map((loc, i) => {
+                const isSelected = (i === 0 && selectedLocation === null) || (i > 0 && selectedLocation?.name === loc.name)
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setSelectedLocation(i === 0 ? null : loc)}
+                    className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-colors ${
+                      isSelected
+                        ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                    }`}
+                  >
+                    {loc.name || `Location ${i + 1}`}
+                  </button>
+                )
+              })}
+            </div>
           )}
 
           <Card>
