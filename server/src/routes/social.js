@@ -15,6 +15,13 @@ const TONE_LABELS = {
   friendly: 'warm and friendly — like a caring friend who happens to be a health expert',
 }
 
+// Temporary: list available Gemini models for this API key
+router.get('/models', requireAuth, async (req, res) => {
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1/models?key=${process.env.GEMINI_API_KEY}`)
+  const json = await r.json()
+  res.json(json)
+})
+
 router.post('/caption', requireAuth, async (req, res) => {
   const { photoTypes, keywords, tone } = req.body
 
