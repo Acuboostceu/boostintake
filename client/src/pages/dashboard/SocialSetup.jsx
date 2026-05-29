@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardHeader, CardBody } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
@@ -48,6 +48,10 @@ export function SocialSetup({ initial = [], initialTone = 'friendly', onSave, on
   const [selected, setSelected] = useState(initial)
   const [tone, setTone] = useState(initialTone)
   const [saving, setSaving] = useState(false)
+
+  // Sync when saved data loads from server
+  useEffect(() => { if (initial.length > 0) setSelected(initial) }, [initial.join(',')])
+  useEffect(() => { setTone(initialTone) }, [initialTone])
 
   function toggle(id) {
     setSelected(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id])
