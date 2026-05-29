@@ -67,7 +67,7 @@ Requirements:
 - Output ONLY the caption text and hashtags, nothing else`
 
   try {
-    if (!process.env.GEMINI_API_KEY) throw new Error('GEMINI_API_KEY not set in environment')
+    if (!process.env.OPENAI_API_KEY) throw new Error('OPENAI_API_KEY not set in environment')
 
     const apiRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
