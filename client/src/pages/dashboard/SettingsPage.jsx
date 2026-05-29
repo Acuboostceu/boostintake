@@ -14,6 +14,7 @@ export function SettingsPage() {
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') === 'social' ? 'social' : 'clinic')
   const [socialSaved, setSocialSaved] = useState(false)
   const [socialInitial, setSocialInitial] = useState(null)
+  const [socialInitialTone, setSocialInitialTone] = useState('friendly')
   const [socialLoaded, setSocialLoaded] = useState(false)
 
   function loadSocialSettings() {
@@ -21,7 +22,11 @@ export function SettingsPage() {
       headers: { Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
     })
       .then(r => r.json())
-      .then(data => { setSocialInitial(data?.focusAreas || []); setSocialLoaded(true) })
+      .then(data => {
+        setSocialInitial(data?.focusAreas || [])
+        setSocialInitialTone(data?.tone || 'friendly')
+        setSocialLoaded(true)
+      })
       .catch(() => { setSocialInitial([]); setSocialLoaded(true) })
   }
 
@@ -64,6 +69,7 @@ export function SettingsPage() {
           ) : (
             <SocialSetup
               initial={socialInitial}
+              initialTone={socialInitialTone}
               onSave={() => setSocialSaved(true)}
             />
           )

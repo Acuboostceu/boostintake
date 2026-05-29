@@ -39,8 +39,14 @@ export const FOCUS_AREAS = {
   },
 }
 
-export function SocialSetup({ initial = [], onSave, onSkip }) {
+const TONES = [
+  { id: 'friendly', label: 'Warm & Friendly', sub: 'Approachable, caring, conversational' },
+  { id: 'professional', label: 'Professional & Trustworthy', sub: 'Expert, informative, confident' },
+]
+
+export function SocialSetup({ initial = [], initialTone = 'friendly', onSave, onSkip }) {
   const [selected, setSelected] = useState(initial)
+  const [tone, setTone] = useState(initialTone)
   const [saving, setSaving] = useState(false)
 
   function toggle(id) {
@@ -52,10 +58,10 @@ export function SocialSetup({ initial = [], onSave, onSkip }) {
     await fetch(`${API}/api/social/settings`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
-      body: JSON.stringify({ focusAreas: selected }),
+      body: JSON.stringify({ focusAreas: selected, tone }),
     })
     setSaving(false)
-    onSave(selected)
+    onSave(selected, tone)
   }
 
   return (
@@ -92,6 +98,37 @@ export function SocialSetup({ initial = [], onSave, onSkip }) {
           </CardBody>
         </Card>
       ))}
+
+      {/* Tone */}
+      <Card>
+        <CardHeader title="Default Caption Tone" subtitle="You can change this anytime per post" />
+        <CardBody>
+          <div className="flex flex-col sm:flex-row gap-3">
+            {TONES.map(t => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTone(t.id)}
+                className={`flex-1 flex items-start gap-3 p-4 rounded-xl border-2 text-left transition-all ${
+                  tone === t.id
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
+                }`}
+              >
+                <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${
+                  tone === t.id ? 'border-blue-500' : 'border-gray-300'
+                }`}>
+                  {tone === t.id && <div className="w-2 h-2 rounded-full bg-blue-500" />}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">{t.label}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{t.sub}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </CardBody>
+      </Card>
 
       <div className="flex flex-col items-center gap-3">
         <Button size="lg" onClick={handleSave} disabled={selected.length === 0 || saving} className="w-full">

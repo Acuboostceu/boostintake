@@ -14,10 +14,6 @@ const PHOTO_TYPES = [
   { id: 'quote', label: 'Quote of the Day', emoji: '🌿', sub: 'Inspiring health & wellness quotes' },
 ]
 
-const TONES = [
-  { id: 'professional', label: 'Professional & Trustworthy', sub: 'Expert, informative, confident' },
-  { id: 'friendly', label: 'Warm & Friendly', sub: 'Approachable, caring, conversational' },
-]
 
 const NUDGE_IDEAS = {
   pain_mgmt: ['Share how acupuncture helps relieve chronic back pain', 'Post a patient success story about pain relief'],
@@ -72,6 +68,7 @@ export function SocialMarketing() {
           setFocusAreas(data.focusAreas)
           setNudge(pickRandomNudge(data.focusAreas))
         }
+        if (data?.tone) setTone(data.tone)
       })
       .catch(() => {})
   }, [])
@@ -232,40 +229,6 @@ export function SocialMarketing() {
           <p className="text-xs text-gray-400 mt-1.5">
             {keywords.length}/120 — AI will weave these into the caption naturally
           </p>
-        </CardBody>
-      </Card>
-
-      {/* Step 3 — Tone */}
-      <Card>
-        <CardHeader title="Step 3 — Pick a tone" />
-        <CardBody>
-          <div className="flex flex-col sm:flex-row gap-3">
-            {TONES.map(({ id, label, sub }) => {
-              const selected = tone === id
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => { setTone(id); setCaption('') }}
-                  className={`flex-1 flex items-start gap-3 p-4 rounded-xl border-2 text-left transition-all ${
-                    selected
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300 bg-white'
-                  }`}
-                >
-                  <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-colors ${
-                    selected ? 'border-blue-500' : 'border-gray-300'
-                  }`}>
-                    {selected && <div className="w-2 h-2 rounded-full bg-blue-500" />}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{label}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
-                  </div>
-                </button>
-              )
-            })}
-          </div>
         </CardBody>
       </Card>
 

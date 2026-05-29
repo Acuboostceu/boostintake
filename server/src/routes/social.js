@@ -62,20 +62,20 @@ router.get('/settings', requireAuth, async (req, res) => {
 
 // POST /api/social/settings — save social settings
 router.post('/settings', requireAuth, async (req, res) => {
-  const { focusAreas } = req.body
+  const { focusAreas, tone } = req.body
   const { error } = await supabase
     .from('clinics')
-    .update({ social_settings: { focusAreas } })
+    .update({ social_settings: { focusAreas, tone: tone || 'friendly' } })
     .eq('id', req.user.clinicId)
   if (error) return res.status(500).json({ message: 'Failed to save' })
   res.json({ ok: true })
 })
 
 router.post('/caption', requireAuth, async (req, res) => {
-  const { photoTypes, keywords, tone } = req.body
+  const { photoTypes, keywords, tone: bodyTone } = req.body
 
-  if (!photoTypes?.length || !tone) {
-    return res.status(400).json({ message: 'Photo type and tone are required' })
+  if (!photoTypes?.length) {
+    return res.status(400).json({ message: 'Photo type is required' })
   }
 
   // Get clinic info for personalization
@@ -97,6 +97,7 @@ router.post('/caption', requireAuth, async (req, res) => {
 
   // Get focus areas for personalized prompt
   const focusAreaIds = clinic?.social_settings?.focusAreas || []
+  const tone = bodyTone || clinic?.social_settings?.tone || 'friendly'
   const focusHint = focusAreaIds.length > 0
     ? `\nThis clinic specializes in: ${focusAreaIds.map(id => {
         for (const spec of Object.values(FOCUS_AREAS)) {
