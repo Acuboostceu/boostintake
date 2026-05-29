@@ -70,7 +70,7 @@ Requirements:
 - Output ONLY the caption text and hashtags, nothing else`
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' })
     const result = await model.generateContent(prompt)
     const caption = result.response.text()?.trim()
     if (!caption) throw new Error('Empty response from AI')
