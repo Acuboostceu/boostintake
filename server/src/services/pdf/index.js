@@ -139,19 +139,21 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
           doc.fontSize(8).font('Helvetica-Bold').fillColor(GRAY).text(label.toUpperCase())
 
           if (isEmpty) {
-            // Draw blank underline
-            const y = doc.y + 2
-            doc.moveTo(PAGE_MARGIN, y).lineTo(PAGE_MARGIN + contentWidth, y)
-              .strokeColor('#9CA3AF').lineWidth(0.5).stroke()
-            doc.moveDown(0.9)
+            doc.moveDown(0.3)
           } else {
             let display
             if (typeof value === 'boolean') display = value ? '✓ Yes' : 'No'
             else if (Array.isArray(value)) display = value.join(', ')
             else display = String(value)
             pickFont(doc, display)
-            doc.fontSize(10).fillColor(DARK).text(display).moveDown(0.35)
+            doc.fontSize(10).fillColor(DARK).text(display, { width: contentWidth })
+            doc.moveDown(0.3)
           }
+          // Divider under every field
+          const y = doc.y
+          doc.moveTo(PAGE_MARGIN, y).lineTo(PAGE_MARGIN + contentWidth, y)
+            .strokeColor('#E5E7EB').lineWidth(0.5).stroke()
+          doc.moveDown(0.5)
         }
       } else if (Object.keys(data).length > 0) {
         // Consent/other forms: only show filled fields
@@ -167,7 +169,12 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
 
           doc.fontSize(8).font('Helvetica-Bold').fillColor(GRAY).text(label.toUpperCase())
           pickFont(doc, display)
-          doc.fontSize(10).fillColor(DARK).text(display).moveDown(0.35)
+          doc.fontSize(10).fillColor(DARK).text(display, { width: contentWidth })
+          doc.moveDown(0.3)
+          const y = doc.y
+          doc.moveTo(PAGE_MARGIN, y).lineTo(PAGE_MARGIN + contentWidth, y)
+            .strokeColor('#E5E7EB').lineWidth(0.5).stroke()
+          doc.moveDown(0.5)
         }
       }
 
