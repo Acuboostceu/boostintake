@@ -66,6 +66,8 @@ Requirements:
 - Output ONLY the caption text and hashtags, nothing else`
 
   try {
+    if (!process.env.GEMINI_API_KEY) throw new Error('GEMINI_API_KEY not set in environment')
+
     const apiRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
@@ -75,14 +77,20 @@ Requirements:
       }
     )
     const json = await apiRes.json()
-    if (!apiRes.ok) throw new Error(json.error?.message || 'Gemini API error')
+    if (!apiRes.ok) {
+      console.error('[social/caption] Gemini HTTP', apiRes.status, JSON.stringify(json))
+      throw new Error(json.error?.message || `Gemini API error ${apiRes.status}`)
+    }
     const caption = json.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
-    if (!caption) throw new Error('Empty response from AI')
+    if (!caption) {
+      console.error('[social/caption] empty response:', JSON.stringify(json))
+      throw new Error('Empty response from AI')
+    }
 
     res.json({ caption })
   } catch (err) {
     console.error('[social/caption] error:', err.message)
-    res.status(500).json({ message: 'Failed to generate caption. Please try again.' })
+    res.status(500).json({ message: err.message || 'Failed to generate caption. Please try again.' })
   }
 })
 
