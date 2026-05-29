@@ -115,6 +115,23 @@ export function DashboardHome() {
         )}
       </div>
 
+      {/* Social nudge */}
+      {nudge && (
+        <button
+          onClick={() => navigate('/dashboard/social')}
+          className="w-full text-left bg-gradient-to-r from-violet-50 to-fuchsia-50 border border-violet-200 rounded-2xl px-5 py-4 flex items-start gap-4 hover:border-violet-400 transition-colors"
+        >
+          <span className="text-2xl flex-shrink-0">💡</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-violet-600 mb-1">Post idea for this week</p>
+            <p className="text-sm text-gray-800 font-medium leading-snug">{nudge.text}</p>
+          </div>
+          <svg className="w-4 h-4 text-violet-400 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
+
       {/* Quick actions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link to="/dashboard/send">
@@ -187,23 +204,6 @@ export function DashboardHome() {
           </Card>
         </button>
       </div>
-
-      {/* Social nudge */}
-      {nudge && (
-        <button
-          onClick={() => navigate('/dashboard/social')}
-          className="w-full text-left bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl px-5 py-4 flex items-start gap-4 hover:border-blue-300 transition-colors"
-        >
-          <span className="text-2xl flex-shrink-0">💡</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-blue-600 mb-1">Post idea for this week</p>
-            <p className="text-sm text-gray-800 font-medium leading-snug">{nudge.text}</p>
-          </div>
-          <svg className="w-4 h-4 text-blue-400 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      )}
 
       {/* Setup checklist */}
       <Card>

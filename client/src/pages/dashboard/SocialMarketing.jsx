@@ -141,10 +141,10 @@ export function SocialMarketing() {
 
       {/* Nudge card */}
       {nudge && (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl px-5 py-4 flex items-start gap-4">
+        <div className="bg-gradient-to-r from-violet-50 to-fuchsia-50 border border-violet-200 rounded-2xl px-5 py-4 flex items-start gap-4">
           <span className="text-2xl flex-shrink-0">💡</span>
           <div className="flex-1">
-            <p className="text-xs font-semibold text-blue-600 mb-1">Post idea for this week</p>
+            <p className="text-xs font-semibold text-violet-600 mb-1">Post idea for this week</p>
             <p className="text-sm text-gray-800 font-medium">{nudge.text}</p>
             <button
               onClick={() => {
@@ -156,7 +156,7 @@ export function SocialMarketing() {
                 setKeywords(enLabel)
                 setCaption('')
               }}
-              className="mt-2 text-xs text-blue-600 font-medium hover:underline"
+              className="mt-2 text-xs text-violet-600 font-medium hover:underline"
             >
               Use this idea →
             </button>
