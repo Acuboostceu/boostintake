@@ -154,7 +154,7 @@ export function SendPatient() {
           {clinicInfo.locations?.length > 0 && (
             <Card>
               <CardBody className="py-3.5">
-                <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-6 flex-wrap">
                   <span className="text-xl font-bold text-gray-900">Location</span>
                   <div className="flex gap-2 flex-wrap">
                     {[{ name: clinicInfo.name }, ...clinicInfo.locations].map((loc, i) => {
