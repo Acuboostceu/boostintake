@@ -24,7 +24,7 @@ router.get('/clinic-info/:token', async (req, res) => {
 
 // Staff sends intake link to patient
 router.post('/send-link', requireAuth, async (req, res) => {
-  const { firstName, lastName, phone, dob, customMessage, formIds } = req.body
+  const { firstName, lastName, phone, dob, customMessage, formIds, locationName, locationAddress } = req.body
   if (!firstName || !lastName || !phone || !dob) {
     return res.status(400).json({ message: 'All fields required' })
   }
@@ -46,6 +46,8 @@ router.post('/send-link', requireAuth, async (req, res) => {
     expires_at: expiresAt,
     used: false,
     ...(formIds && formIds.length > 0 ? { form_ids: formIds } : {}),
+    ...(locationName ? { location_name: locationName } : {}),
+    ...(locationAddress ? { location_address: locationAddress } : {}),
   })
 
   if (error) return res.status(500).json({ message: 'Failed to create link' })
@@ -139,7 +141,10 @@ router.post('/submit', async (req, res) => {
       return res.status(400).json({ message: 'Invalid submission token' })
     }
 
-    clinic = record.clinics
+    clinic = { ...record.clinics }
+    // Override with selected location if set
+    if (record.location_name) clinic.name = record.location_name
+    if (record.location_address) clinic.address = record.location_address
     await supabase.from('intake_tokens').update({ used: true }).eq('token', token)
   } else {
     // Tablet mode: look up clinic by ID sent from client

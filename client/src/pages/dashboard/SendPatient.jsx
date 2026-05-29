@@ -76,6 +76,8 @@ export function SendPatient() {
           dob,
           customMessage: customMessage || template,
           formIds: selectedFormIds,
+          locationName: selectedLocation?.name || null,
+          locationAddress: selectedLocation?.address || null,
         }),
       })
       const data = await res.json()
