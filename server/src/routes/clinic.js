@@ -82,6 +82,56 @@ router.post('/settings', requireAuth, upload.single('logo'), async (req, res) =>
   res.json({ ok: true, logoUrl: logoUrl || null })
 })
 
+// Dashboard: all data in one request
+router.get('/dashboard', requireAuth, async (req, res) => {
+  const clinicId = req.user.clinicId
+  const now = new Date()
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString()
+  const weekStart = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString()
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+
+  const [clinicRow, sentToday, sentWeek, sentMonth, compToday, compWeek, compMonth] = await Promise.all([
+    supabase.from('clinics')
+      .select('name, address, phone, emails, cancel_hours, no_show_fee, logo_url, specialty, subscription_status, trial_ends_at, social_settings')
+      .eq('id', clinicId).single(),
+    supabase.from('intake_tokens').select('id', { count: 'exact', head: true }).eq('clinic_id', clinicId).gte('created_at', todayStart),
+    supabase.from('intake_tokens').select('id', { count: 'exact', head: true }).eq('clinic_id', clinicId).gte('created_at', weekStart),
+    supabase.from('intake_tokens').select('id', { count: 'exact', head: true }).eq('clinic_id', clinicId).gte('created_at', monthStart),
+    supabase.from('submission_logs').select('id', { count: 'exact', head: true }).eq('clinic_id', clinicId).gte('submitted_at', todayStart),
+    supabase.from('submission_logs').select('id', { count: 'exact', head: true }).eq('clinic_id', clinicId).gte('submitted_at', weekStart),
+    supabase.from('submission_logs').select('id', { count: 'exact', head: true }).eq('clinic_id', clinicId).gte('submitted_at', monthStart),
+  ])
+
+  const clinic = clinicRow.data || {}
+
+  // Billing
+  const trialEnd = clinic.trial_ends_at ? new Date(clinic.trial_ends_at) : null
+  const trialActive = clinic.subscription_status === 'trial' && trialEnd && trialEnd > now
+  const trialDaysLeft = trialActive ? Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24)) : 0
+
+  res.json({
+    clinic: {
+      name: clinic.name,
+      address: clinic.address,
+      phone: clinic.phone,
+      logo_url: clinic.logo_url,
+      cancel_hours: clinic.cancel_hours,
+      no_show_fee: clinic.no_show_fee,
+    },
+    billing: {
+      status: clinic.subscription_status,
+      trialActive,
+      trialDaysLeft,
+      isActive: clinic.subscription_status === 'active' || trialActive,
+    },
+    stats: {
+      sent: { today: sentToday.count || 0, week: sentWeek.count || 0, month: sentMonth.count || 0 },
+      completed: { today: compToday.count || 0, week: compWeek.count || 0, month: compMonth.count || 0 },
+    },
+    socialSettings: clinic.social_settings || null,
+  })
+})
+
 // Stats: sent + completed counts
 router.get('/stats', requireAuth, async (req, res) => {
   const now = new Date()
