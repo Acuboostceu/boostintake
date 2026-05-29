@@ -124,7 +124,7 @@ function buildChiroHistory(lang) {
     fields: section.fields.map((field) => {
       const label = chTr[field.id] || field.label
       const options = optionMap[field.id] || field.options
-      return { ...field, label, options }
+      return { ...field, label, englishOptions: field.options, options }
     }),
   }))
 
@@ -150,7 +150,7 @@ function buildChiroPainDiagram(lang) {
     fields: section.fields.map((field) => {
       const label = pdTr[field.id] || field.label
       const options = optionMap[field.id] || field.options
-      return { ...field, label, options }
+      return { ...field, label, englishOptions: field.options, options }
     }),
   }))
 

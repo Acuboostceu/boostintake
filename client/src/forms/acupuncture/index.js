@@ -101,7 +101,7 @@ function translateField(formId, field, tr) {
     options = optionMap[formId][field.id]
   }
 
-  return { ...field, label, options }
+  return { ...field, label, englishOptions: field.options, options }
 }
 
 function buildAcupunctureConsent(lang) {
@@ -158,6 +158,7 @@ function buildReviewOfSystems(lang) {
       title: trTitle,
       fields: section.fields.map(f => ({
         ...f,
+        englishOptions: f.options,
         options: trOptions || f.options,
       })),
     }

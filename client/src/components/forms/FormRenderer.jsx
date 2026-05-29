@@ -137,7 +137,8 @@ function FormField({ field, value, onChange }) {
         />
       )
 
-    case 'radio':
+    case 'radio': {
+      const enOpts = field.englishOptions || field.options || []
       return (
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-gray-700">
@@ -145,33 +146,39 @@ function FormField({ field, value, onChange }) {
             {field.required && <span className="text-red-400 ml-1">*</span>}
           </label>
           <div className={`flex flex-wrap gap-2 ${field.options?.length > 6 ? 'flex-col' : ''}`}>
-            {field.options?.map((opt) => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => onChange(opt)}
-                className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all
-                  ${value === opt
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300'
-                  }`}
-              >
-                {opt}
-              </button>
-            ))}
+            {field.options?.map((opt, i) => {
+              const storedVal = enOpts[i] ?? opt
+              return (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => onChange(storedVal)}
+                  className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all
+                    ${value === storedVal
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300'
+                    }`}
+                >
+                  {opt}
+                </button>
+              )
+            })}
           </div>
         </div>
       )
+    }
 
-    case 'multicheck':
+    case 'multicheck': {
+      const enOpts = field.englishOptions || field.options || []
       return (
         <div className="flex flex-col gap-2">
           {field.label && (
             <label className="text-sm font-medium text-gray-700">{field.label}</label>
           )}
           <div className="grid grid-cols-1 gap-2">
-            {field.options?.map((opt) => {
-              const checked = Array.isArray(value) ? value.includes(opt) : false
+            {field.options?.map((opt, i) => {
+              const storedVal = enOpts[i] ?? opt
+              const checked = Array.isArray(value) ? value.includes(storedVal) : false
               return (
                 <label
                   key={opt}
@@ -188,9 +195,9 @@ function FormField({ field, value, onChange }) {
                     onChange={(e) => {
                       const current = Array.isArray(value) ? value : []
                       if (e.target.checked) {
-                        onChange([...current, opt])
+                        onChange([...current, storedVal])
                       } else {
-                        onChange(current.filter((v) => v !== opt))
+                        onChange(current.filter((v) => v !== storedVal))
                       }
                     }}
                   />
@@ -201,6 +208,7 @@ function FormField({ field, value, onChange }) {
           </div>
         </div>
       )
+    }
 
     case 'checkbox':
       return (
