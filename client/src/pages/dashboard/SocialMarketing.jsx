@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { Card, CardHeader, CardBody } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
-import { SocialSetup, FOCUS_AREAS } from './SocialSetup'
+import { useNavigate } from 'react-router-dom'
+import { FOCUS_AREAS } from './SocialSetup'
 
 const PHOTO_TYPES = [
   { id: 'before_after', label: 'Before & After', emoji: '📷', sub: 'Treatment results and transformations' },
@@ -48,6 +49,7 @@ function pickRandomNudge(areas) {
 }
 
 export function SocialMarketing() {
+  const navigate = useNavigate()
   const [photoTypes, setPhotoTypes] = useState([])
   const [keywords, setKeywords] = useState('')
   const [tone, setTone] = useState('friendly')
@@ -57,9 +59,7 @@ export function SocialMarketing() {
   const [copied, setCopied] = useState(false)
   const [showInstagramTip, setShowInstagramTip] = useState(false)
 
-  const [setupDone, setSetupDone] = useState(null) // null=loading, false=needs setup, true=done
   const [focusAreas, setFocusAreas] = useState([])
-  const [showSetup, setShowSetup] = useState(false)
   const [nudge, setNudge] = useState(null)
 
   useEffect(() => {
@@ -70,13 +70,10 @@ export function SocialMarketing() {
       .then(data => {
         if (data?.focusAreas?.length) {
           setFocusAreas(data.focusAreas)
-          setSetupDone(true)
           setNudge(pickRandomNudge(data.focusAreas))
-        } else {
-          setSetupDone(false)
         }
       })
-      .catch(() => setSetupDone(true))
+      .catch(() => {})
   }, [])
 
   function togglePhotoType(id) {
@@ -125,46 +122,23 @@ export function SocialMarketing() {
 
   const canGenerate = photoTypes.length > 0 && !loading
 
-  if (setupDone === null) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-gray-400">Loading...</p>
-      </div>
-    )
-  }
-
-  if (setupDone === false || showSetup) {
-    return (
-      <SocialSetup
-        initial={focusAreas}
-        onSave={(areas) => {
-          setFocusAreas(areas)
-          setSetupDone(true)
-          setShowSetup(false)
-          setNudge(pickRandomNudge(areas))
-        }}
-        onSkip={setupDone === false ? () => setSetupDone(true) : undefined}
-      />
-    )
-  }
-
   return (
     <div className="flex flex-col gap-6">
-      {/* Header with settings link */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Social Marketing</h1>
           <p className="text-gray-500 mt-1">Generate an Instagram caption in seconds — tailored to your clinic.</p>
         </div>
         <button
-          onClick={() => setShowSetup(true)}
+          onClick={() => navigate('/dashboard/settings?tab=social')}
           className="text-sm text-gray-400 hover:text-gray-600 flex items-center gap-1 flex-shrink-0"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          설정
+          Settings
         </button>
       </div>
 

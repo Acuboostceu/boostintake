@@ -7,7 +7,7 @@ import { PatientComplete } from './pages/patient/PatientComplete'
 
 import { DashboardLayout } from './pages/dashboard/DashboardLayout'
 import { DashboardHome } from './pages/dashboard/DashboardHome'
-import { ClinicSettings } from './pages/dashboard/ClinicSettings'
+import { SettingsPage } from './pages/dashboard/SettingsPage'
 import { SendPatient } from './pages/dashboard/SendPatient'
 import { TabletMode } from './pages/dashboard/TabletMode'
 import { FormsPage } from './pages/dashboard/FormsPage'
@@ -41,7 +41,7 @@ export default function App() {
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="forms" element={<FormsPage />} />
-            <Route path="settings" element={<ClinicSettings />} />
+            <Route path="settings" element={<SettingsPage />} />
             <Route path="send" element={<SendPatient />} />
             <Route path="billing" element={<Billing />} />
             <Route path="social" element={<SocialMarketing />} />
