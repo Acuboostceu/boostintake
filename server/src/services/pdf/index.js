@@ -26,9 +26,6 @@ function pickFont(doc, text, bold = false) {
 const SHOW_BLANK_FIELDS = new Set(['patient_info', 'health_history', 'review_of_systems', 'chiro_history', 'chiro_pain_diagram', 'pi_auto_accident'])
 
 async function generatePDF({ patient, formData, signatures, declinedForms, clinic, formContents, formFields }) {
-  console.log('[PDF] formContents keys:', Object.keys(formContents || {}))
-  console.log('[PDF] formData keys:', Object.keys(formData || {}))
-  console.log('[PDF] signatures keys:', Object.keys(signatures || {}))
   return new Promise((resolve, reject) => {
     const chunks = []
     const doc = new PDFDocument({ margin: PAGE_MARGIN, size: 'A4', autoFirstPage: true })
@@ -144,7 +141,7 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
           if (isEmpty) {
             // Draw blank underline
             const y = doc.y + 2
-            doc.moveTo(PAGE_MARGIN, y).lineTo(PAGE_MARGIN + 200, y)
+            doc.moveTo(PAGE_MARGIN, y).lineTo(PAGE_MARGIN + contentWidth, y)
               .strokeColor('#9CA3AF').lineWidth(0.5).stroke()
             doc.moveDown(0.9)
           } else {
