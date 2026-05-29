@@ -3,6 +3,7 @@ import { Card, CardHeader, CardBody } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { API } from '../../lib/api'
 import { useNavigate } from 'react-router-dom'
+import { useRef } from 'react'
 import { FOCUS_AREAS } from './SocialSetup'
 
 const PHOTO_TYPES = [
@@ -57,6 +58,8 @@ export function SocialMarketing() {
 
   const [focusAreas, setFocusAreas] = useState([])
   const [nudge, setNudge] = useState(null)
+  const [nudgeApplied, setNudgeApplied] = useState(false)
+  const keywordsRef = useRef(null)
 
   useEffect(() => {
     fetch(`${API}/api/social/settings`, {
@@ -155,10 +158,13 @@ export function SocialMarketing() {
                 }
                 setKeywords(enLabel)
                 setCaption('')
+                setNudgeApplied(true)
+                setTimeout(() => setNudgeApplied(false), 2000)
+                setTimeout(() => keywordsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
               }}
               className="mt-2 text-xs text-violet-600 font-medium hover:underline"
             >
-              Use this idea →
+              {nudgeApplied ? '✓ Added to keywords!' : 'Use this idea →'}
             </button>
           </div>
           <button
@@ -219,6 +225,7 @@ export function SocialMarketing() {
         />
         <CardBody>
           <input
+            ref={keywordsRef}
             type="text"
             value={keywords}
             onChange={(e) => { setKeywords(e.target.value); setCaption('') }}
