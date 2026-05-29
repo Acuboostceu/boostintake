@@ -83,8 +83,10 @@ export function SocialMarketing() {
     setCaption('')
   }
 
-  async function handleGenerate() {
-    if (!photoTypes.length) {
+  async function handleGenerate(overrideKeywords, overridePhotoTypes) {
+    const kw = overrideKeywords !== undefined ? overrideKeywords : keywords
+    const pt = overridePhotoTypes || photoTypes
+    if (!pt.length) {
       setError('Please select at least one photo type.')
       return
     }
@@ -101,7 +103,7 @@ export function SocialMarketing() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('bi_token')}`,
         },
-        body: JSON.stringify({ photoTypes, keywords, tone }),
+        body: JSON.stringify({ photoTypes: pt, keywords: kw, tone }),
       })
       const data = await res.json()
       if (!res.ok) { setError(data.message || 'Something went wrong.'); return }
@@ -156,15 +158,16 @@ export function SocialMarketing() {
                   const a = spec.areas.find(a => a.id === nudge.id)
                   if (a) { enLabel = a.en; break }
                 }
+                const pt = photoTypes.length > 0 ? photoTypes : ['health_tip']
                 setKeywords(enLabel)
+                if (photoTypes.length === 0) setPhotoTypes(['health_tip'])
                 setCaption('')
-                setNudgeApplied(true)
-                setTimeout(() => setNudgeApplied(false), 2000)
-                setTimeout(() => keywordsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
+                handleGenerate(enLabel, pt)
+                setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 200)
               }}
               className="mt-2 text-xs text-violet-600 font-medium hover:underline"
             >
-              {nudgeApplied ? '✓ Added to keywords!' : 'Use this idea →'}
+              ✨ Generate caption →
             </button>
           </div>
           <button
