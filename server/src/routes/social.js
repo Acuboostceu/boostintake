@@ -15,12 +15,24 @@ const TONE_LABELS = {
   friendly: 'warm and friendly — like a caring friend who happens to be a health expert',
 }
 
-// Temporary: list available Gemini models for this API key
-router.get('/models', requireAuth, async (req, res) => {
-  const r = await fetch(`https://generativelanguage.googleapis.com/v1/models?key=${process.env.GEMINI_API_KEY}`)
-  const json = await r.json()
-  res.json(json)
-})
+// Pick the best available generateContent model for this API key
+async function getGeminiModel(apiKey) {
+  const PREFERRED = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.0-pro', 'gemini-pro']
+  try {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1/models?key=${apiKey}`)
+    const { models } = await r.json()
+    if (!models) return PREFERRED[0]
+    const supported = models
+      .filter((m) => m.supportedGenerationMethods?.includes('generateContent'))
+      .map((m) => m.name.replace('models/', ''))
+    for (const name of PREFERRED) {
+      if (supported.includes(name)) return name
+    }
+    return supported[0] || PREFERRED[0]
+  } catch {
+    return PREFERRED[0]
+  }
+}
 
 router.post('/caption', requireAuth, async (req, res) => {
   const { photoTypes, keywords, tone } = req.body
@@ -75,8 +87,10 @@ Requirements:
   try {
     if (!process.env.GEMINI_API_KEY) throw new Error('GEMINI_API_KEY not set in environment')
 
+    const model = await getGeminiModel(process.env.GEMINI_API_KEY)
+    console.log('[social/caption] using model:', model)
     const apiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
