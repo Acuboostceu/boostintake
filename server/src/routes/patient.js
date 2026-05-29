@@ -125,9 +125,6 @@ router.post('/verify', async (req, res) => {
 // Patient submits completed forms
 router.post('/submit', async (req, res) => {
   const { token, patient, formData, signatures, declinedForms, clinicId, formContents, formFields } = req.body
-  console.log('[submit] formData keys:', Object.keys(formData || {}))
-  console.log('[submit] signatures keys:', Object.keys(signatures || {}))
-  console.log('[submit] formFields keys:', Object.keys(formFields || {}))
 
   // For non-tablet mode, validate token and mark used
   let clinic = null
@@ -146,7 +143,6 @@ router.post('/submit', async (req, res) => {
     await supabase.from('intake_tokens').update({ used: true }).eq('token', token)
   } else {
     // Tablet mode: look up clinic by ID sent from client
-    console.log('[submit] tablet mode, clinicId:', clinicId)
     if (!clinicId) return res.status(400).json({ message: 'Missing clinic ID for tablet submission' })
 
     const { data, error } = await supabase
@@ -156,18 +152,13 @@ router.post('/submit', async (req, res) => {
       .single()
 
     if (error || !data) {
-      console.log('[submit] clinic not found:', error)
       return res.status(400).json({ message: 'Clinic not found' })
     }
     clinic = data
   }
 
-  console.log('[submit] clinic:', clinic?.name, '| emails:', clinic?.emails)
-
   try {
-    console.log('[submit] generating PDF...')
     const pdfBuffer = await generatePDF({ patient, formData, signatures, declinedForms, clinic, formContents, formFields })
-    console.log('[submit] PDF generated, size:', pdfBuffer?.length)
 
     const safeName = patient.name.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_')
     const dobStr = patient.dob.replace(/[-\/]/g, '')
@@ -175,7 +166,6 @@ router.post('/submit', async (req, res) => {
     const filename = `${safeName}_${dobStr}_${dateStr}.pdf`
 
     const emails = clinic.emails || []
-    console.log('[submit] sending email to:', emails)
     if (emails.length > 0) {
       await sendEmail({
         to: emails,
@@ -193,7 +183,6 @@ router.post('/submit', async (req, res) => {
       patient_name: patient.name || null,
     })
 
-    console.log('[submit] done ✓')
     res.json({ ok: true })
   } catch (err) {
     console.error('[submit] error:', err)
