@@ -152,26 +152,32 @@ export function SendPatient() {
         <form onSubmit={handleSend} className="flex flex-col gap-6">
           {/* Location selector — only shown if multi-location configured */}
           {clinicInfo.locations?.length > 0 && (
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-gray-500 mr-1">Location:</span>
-              {[{ name: clinicInfo.name }, ...clinicInfo.locations].map((loc, i) => {
-                const isSelected = (i === 0 && selectedLocation === null) || (i > 0 && selectedLocation?.name === loc.name)
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => setSelectedLocation(i === 0 ? null : loc)}
-                    className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-colors ${
-                      isSelected
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                    }`}
-                  >
-                    {loc.name || `Location ${i + 1}`}
-                  </button>
-                )
-              })}
-            </div>
+            <Card>
+              <CardBody className="py-3.5">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="text-sm font-semibold text-gray-900">Location</span>
+                  <div className="flex gap-2 flex-wrap">
+                    {[{ name: clinicInfo.name }, ...clinicInfo.locations].map((loc, i) => {
+                      const isSelected = (i === 0 && selectedLocation === null) || (i > 0 && selectedLocation?.name === loc.name)
+                      return (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => setSelectedLocation(i === 0 ? null : loc)}
+                          className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-colors ${
+                            isSelected
+                              ? 'border-blue-500 bg-blue-50 text-blue-700'
+                              : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                          }`}
+                        >
+                          {loc.name || `Location ${i + 1}`}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
           )}
 
           <Card>
