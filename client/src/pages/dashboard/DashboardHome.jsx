@@ -1,7 +1,37 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Card, CardBody } from '../../components/ui/Card'
 import { API } from '../../lib/api'
+import { FOCUS_AREAS } from './SocialSetup'
+
+const NUDGE_IDEAS = {
+  pain_mgmt: ['Share how acupuncture helps relieve chronic back pain', 'Post a patient success story about pain relief'],
+  fertility: ['Educate your audience on acupuncture and women\'s health', 'Share a fertility treatment success story'],
+  digestive: ['Post about acupuncture points that support digestive health'],
+  sleep: ['Share natural remedies for insomnia with acupuncture'],
+  stress: ['Explain how acupuncture reduces cortisol and stress'],
+  cosmetic: ['Debunk myths about facial acupuncture'],
+  disc: ['Share daily habits that protect your spine'],
+  posture: ['Share posture tips for remote workers'],
+  sports_injury: ['Show how chiropractic speeds up sports recovery'],
+  headache: ['Explain the link between neck alignment and headaches'],
+  postpartum: ['Explain how chiropractic helps postpartum recovery'],
+  pediatric: ['Share the benefits of chiropractic for kids\' development'],
+  deep_tissue: ['Explain the benefits of deep tissue massage for muscle recovery'],
+  prenatal: ['Reassure expecting moms about the safety of prenatal massage'],
+  sports_massage: ['Post a pre/post workout massage routine'],
+  relaxation: ['Share the stress-relief benefits of relaxation massage'],
+  lymphatic: ['Educate on how lymphatic drainage reduces swelling'],
+  hot_stone: ['Showcase the healing power of hot stone therapy'],
+}
+
+function pickNudge(areas) {
+  if (!areas?.length) return null
+  const id = areas[Math.floor(Math.random() * areas.length)]
+  const ideas = NUDGE_IDEAS[id]
+  if (!ideas) return null
+  return { id, text: ideas[Math.floor(Math.random() * ideas.length)] }
+}
 
 function timeAgo(dateStr) {
   const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000)
@@ -12,12 +42,14 @@ function timeAgo(dateStr) {
 }
 
 export function DashboardHome() {
+  const navigate = useNavigate()
   const [clinic, setClinic] = useState(null)
   const [billing, setBilling] = useState(null)
   const [stats, setStats] = useState(null)
-  const [panel, setPanel] = useState(null) // { type: 'sent'|'completed', range: 'today'|'week'|'month' }
+  const [panel, setPanel] = useState(null)
   const [list, setList] = useState([])
   const [listLoading, setListLoading] = useState(false)
+  const [nudge, setNudge] = useState(null)
 
   useEffect(() => {
     const token = localStorage.getItem('bi_token')
@@ -26,6 +58,10 @@ export function DashboardHome() {
     fetch(`${API}/api/clinic/settings`, { headers }).then((r) => r.json()).then(setClinic).catch(() => {})
     fetch(`${API}/api/billing/status`, { headers }).then((r) => r.json()).then(setBilling).catch(() => {})
     fetch(`${API}/api/clinic/stats`, { headers }).then((r) => r.json()).then(setStats).catch(() => {})
+    fetch(`${API}/api/social/settings`, { headers })
+      .then((r) => r.json())
+      .then((data) => { if (data?.focusAreas?.length) setNudge(pickNudge(data.focusAreas)) })
+      .catch(() => {})
   }, [])
 
   async function openPanel(type, range) {
@@ -151,6 +187,23 @@ export function DashboardHome() {
           </Card>
         </button>
       </div>
+
+      {/* Social nudge */}
+      {nudge && (
+        <button
+          onClick={() => navigate('/dashboard/social')}
+          className="w-full text-left bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl px-5 py-4 flex items-start gap-4 hover:border-blue-300 transition-colors"
+        >
+          <span className="text-2xl flex-shrink-0">💡</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-blue-600 mb-1">Post idea for this week</p>
+            <p className="text-sm text-gray-800 font-medium leading-snug">{nudge.text}</p>
+          </div>
+          <svg className="w-4 h-4 text-blue-400 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
 
       {/* Setup checklist */}
       <Card>
