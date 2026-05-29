@@ -125,6 +125,9 @@ router.post('/verify', async (req, res) => {
 // Patient submits completed forms
 router.post('/submit', async (req, res) => {
   const { token, patient, formData, signatures, declinedForms, clinicId, formContents, formFields } = req.body
+  console.log('[submit] formData keys:', Object.keys(formData || {}))
+  console.log('[submit] signatures keys:', Object.keys(signatures || {}))
+  console.log('[submit] formFields keys:', Object.keys(formFields || {}))
 
   // For non-tablet mode, validate token and mark used
   let clinic = null
