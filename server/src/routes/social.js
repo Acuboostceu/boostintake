@@ -1,11 +1,7 @@
 const express = require('express')
 const { requireAuth } = require('../middleware/auth')
 const { supabase } = require('../services/supabase')
-const { GoogleGenAI } = require('@google/genai')
-
 const router = express.Router()
-
-const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
 
 const PHOTO_TYPE_LABELS = {
   treatment: 'acupuncture/chiropractic treatment or procedure',
@@ -70,11 +66,17 @@ Requirements:
 - Output ONLY the caption text and hashtags, nothing else`
 
   try {
-    const result = await genAI.models.generateContent({
-      model: 'gemini-3-flash-preview',
-      contents: prompt,
-    })
-    const caption = result.text?.trim()
+    const apiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+      }
+    )
+    const json = await apiRes.json()
+    if (!apiRes.ok) throw new Error(json.error?.message || 'Gemini API error')
+    const caption = json.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
     if (!caption) throw new Error('Empty response from AI')
 
     res.json({ caption })
