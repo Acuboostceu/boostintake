@@ -36,6 +36,8 @@ router.post('/send-link', requireAuth, async (req, res) => {
   //   ALTER TABLE intake_tokens ADD COLUMN form_ids jsonb;
 
   // Store token with patient identity for verification
+  console.log('[send-link] locationName:', locationName, '| locationAddress:', locationAddress)
+
   const { error } = await supabase.from('intake_tokens').insert({
     token,
     clinic_id: req.user.clinicId,
@@ -50,7 +52,10 @@ router.post('/send-link', requireAuth, async (req, res) => {
     ...(locationAddress ? { location_address: locationAddress } : {}),
   })
 
-  if (error) return res.status(500).json({ message: 'Failed to create link' })
+  if (error) {
+    console.error('[send-link] insert error:', error)
+    return res.status(500).json({ message: 'Failed to create link' })
+  }
 
   const link = `${process.env.APP_URL}/p/${token}`
 
@@ -142,9 +147,11 @@ router.post('/submit', async (req, res) => {
     }
 
     clinic = { ...record.clinics }
+    console.log('[submit] token location_name:', record.location_name, '| location_address:', record.location_address)
     // Override with selected location if set
     if (record.location_name) clinic.name = record.location_name
     if (record.location_address) clinic.address = record.location_address
+    console.log('[submit] clinic name used:', clinic.name, '| address:', clinic.address)
     await supabase.from('intake_tokens').update({ used: true }).eq('token', token)
   } else {
     // Tablet mode: look up clinic by ID sent from client
