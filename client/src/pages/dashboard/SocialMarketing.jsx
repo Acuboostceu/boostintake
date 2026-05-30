@@ -59,7 +59,24 @@ export function SocialMarketing() {
   const [focusAreas, setFocusAreas] = useState([])
   const [nudge, setNudge] = useState(null)
   const [nudgeApplied, setNudgeApplied] = useState(false)
+  const [nudgeLoading, setNudgeLoading] = useState(false)
   const keywordsRef = useRef(null)
+
+  async function fetchNudge() {
+    setNudgeLoading(true)
+    try {
+      const res = await fetch(`${API}/api/social/nudge`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
+      })
+      const data = await res.json()
+      if (data?.idea) {
+        const entry = { text: data.idea, ts: Date.now() }
+        localStorage.setItem('bi_social_nudge', JSON.stringify(entry))
+        setNudge({ text: data.idea })
+      }
+    } catch {}
+    finally { setNudgeLoading(false) }
+  }
 
   useEffect(() => {
     fetch(`${API}/api/social/settings`, {
@@ -67,13 +84,19 @@ export function SocialMarketing() {
     })
       .then(r => r.json())
       .then(data => {
-        if (data?.focusAreas?.length) {
-          setFocusAreas(data.focusAreas)
-          setNudge(pickRandomNudge(data.focusAreas))
-        }
+        if (data?.focusAreas?.length) setFocusAreas(data.focusAreas)
         if (data?.tone) setTone(data.tone)
       })
       .catch(() => {})
+
+    // Load nudge from cache or fetch fresh if >24h old
+    const cached = JSON.parse(localStorage.getItem('bi_social_nudge') || 'null')
+    const AGE_24H = 24 * 60 * 60 * 1000
+    if (cached?.text && Date.now() - cached.ts < AGE_24H) {
+      setNudge({ text: cached.text })
+    } else {
+      fetchNudge()
+    }
   }, [])
 
   function togglePhotoType(id) {
@@ -145,34 +168,43 @@ export function SocialMarketing() {
       </div>
 
       {/* Nudge card */}
-      {nudge && (
+      {(nudge || nudgeLoading) && (
         <div className="bg-gradient-to-r from-violet-50 to-fuchsia-50 border border-violet-200 rounded-2xl px-5 py-4 flex items-start gap-4">
           <span className="text-2xl flex-shrink-0">💡</span>
           <div className="flex-1">
-            <p className="text-xs font-semibold text-violet-600 mb-1">Post idea for this week</p>
-            <p className="text-sm text-gray-800 font-medium">{nudge.text}</p>
-            <button
-              onClick={() => {
-                let enLabel = ''
-                for (const spec of Object.values(FOCUS_AREAS)) {
-                  const a = spec.areas.find(a => a.id === nudge.id)
-                  if (a) { enLabel = a.en; break }
-                }
-                const pt = photoTypes.length > 0 ? photoTypes : ['health_tip']
-                setKeywords(enLabel)
-                if (photoTypes.length === 0) setPhotoTypes(['health_tip'])
-                setCaption('')
-                handleGenerate(enLabel, pt)
-                setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 200)
-              }}
-              className="mt-2 text-xs text-violet-600 font-medium hover:underline"
-            >
-              ✨ Generate caption →
-            </button>
+            <p className="text-xs font-semibold text-violet-600 mb-1">Post idea for today</p>
+            {nudgeLoading ? (
+              <div className="flex items-center gap-2">
+                <svg className="animate-spin w-4 h-4 text-violet-400" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+                <span className="text-sm text-gray-400">Generating idea...</span>
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-gray-800 font-medium">{nudge.text}</p>
+                <button
+                  onClick={() => {
+                    const pt = photoTypes.length > 0 ? photoTypes : ['health_tip']
+                    const kw = nudge.text
+                    setKeywords(kw)
+                    if (photoTypes.length === 0) setPhotoTypes(['health_tip'])
+                    setCaption('')
+                    handleGenerate(kw, pt)
+                    setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 200)
+                  }}
+                  className="mt-2 text-xs text-violet-600 font-medium hover:underline"
+                >
+                  ✨ Generate caption →
+                </button>
+              </>
+            )}
           </div>
           <button
-            onClick={() => setNudge(pickRandomNudge(focusAreas))}
-            className="text-gray-400 hover:text-gray-600 text-xs flex-shrink-0"
+            onClick={fetchNudge}
+            disabled={nudgeLoading}
+            className="text-gray-400 hover:text-gray-600 text-xs flex-shrink-0 disabled:opacity-40"
           >
             New idea →
           </button>
