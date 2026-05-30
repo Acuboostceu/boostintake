@@ -13,13 +13,13 @@ const router = express.Router()
 router.get('/clinic-info/:token', async (req, res) => {
   const { data, error } = await supabase
     .from('intake_tokens')
-    .select('clinics(name, logo_url)')
+    .select('location_name, clinics(name, logo_url)')
     .eq('token', req.params.token)
     .single()
 
   if (error || !data) return res.status(404).json({ message: 'Not found' })
   const clinic = data.clinics
-  res.json({ clinicName: clinic?.name || null, logoUrl: clinic?.logo_url || null })
+  res.json({ clinicName: data.location_name || clinic?.name || null, logoUrl: clinic?.logo_url || null })
 })
 
 // Staff sends intake link to patient
