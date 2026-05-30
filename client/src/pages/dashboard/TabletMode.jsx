@@ -258,11 +258,11 @@ export function TabletMode() {
           const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
           return (
             <div className="text-center mb-5">
-              {saved.name && (
-                <p className="text-2xl font-bold text-gray-600 mb-3">{saved.name}</p>
+              {selectedLocation.name && (
+                <p className="text-2xl font-bold text-gray-600 mb-3">{selectedLocation.name}</p>
               )}
               {saved.logoUrl ? (
-                <img src={saved.logoUrl} alt={saved.name || 'Clinic'} className="w-20 h-20 object-contain rounded-2xl mx-auto mb-3" />
+                <img src={saved.logoUrl} alt={selectedLocation.name || 'Clinic'} className="w-20 h-20 object-contain rounded-2xl mx-auto mb-3" />
               ) : (
                 <img src="/logo.png" alt="BoostIntake" className="w-20 h-20 object-contain mx-auto mb-3" />
               )}
