@@ -135,10 +135,10 @@ export function Landing() {
       </section>
 
       {/* SNS Marketing teaser */}
-      <section className="px-6 py-20 bg-gradient-to-br from-indigo-50 to-blue-50">
+      <section className="px-6 py-20 bg-gradient-to-br from-violet-50 via-fuchsia-50 to-pink-50">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <span className="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-4 tracking-wide uppercase">
+            <span className="inline-block bg-violet-100 text-violet-700 text-xs font-semibold px-3 py-1 rounded-full mb-4 tracking-wide uppercase">
               Coming Soon
             </span>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">AI-powered social media — built for your clinic</h2>
@@ -159,14 +159,14 @@ export function Landing() {
                 desc: 'One click and your post is ready. AI writes the caption and picks the right hashtags so you can focus on patient care.',
               },
             ].map((f) => (
-              <div key={f.title} className="bg-white rounded-2xl p-6 border border-indigo-100 shadow-sm">
+              <div key={f.title} className="bg-white rounded-2xl p-6 border border-violet-200 shadow-sm">
                 <div className="text-3xl mb-3">{f.icon}</div>
                 <h3 className="font-semibold text-gray-900 mb-2">{f.title}</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
-          <p className="text-center text-sm text-indigo-500 font-medium mt-8">
+          <p className="text-center text-sm text-violet-500 font-medium mt-8">
             Marketing add-on launching soon — included free for early subscribers.
           </p>
         </div>
