@@ -119,6 +119,8 @@ export function Landing() {
               { icon: '💊', title: 'Intake-ready forms', desc: 'Health history, review of systems, HIPAA, financial policy and more — included.' },
               { icon: '🖥️', title: 'Tablet mode', desc: 'Patients fill out forms on an in-office tablet — same seamless experience.' },
               { icon: '🔒', title: 'Privacy first', desc: 'All patient data is deleted from our servers immediately after submission.' },
+              { icon: '🏥', title: 'Multi-location support', desc: 'Run up to 2 clinic locations from a single account. Each location gets its own branded forms and PDF header.' },
+              { icon: '🎨', title: 'Branded patient experience', desc: 'Patients see your clinic name and logo from the very first screen — a professional experience that builds trust.' },
             ].map((f) => (
               <div key={f.title} className="flex gap-4 p-5 rounded-2xl border border-gray-100 hover:border-blue-100 hover:bg-blue-50/30 transition-colors">
                 <div className="text-2xl flex-shrink-0">{f.icon}</div>
@@ -129,6 +131,49 @@ export function Landing() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* SNS Marketing teaser */}
+      <section className="px-6 py-20 bg-gradient-to-br from-indigo-50 to-blue-50">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-4 tracking-wide uppercase">
+              Coming Soon
+            </span>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Turn every new patient into a marketing win</h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+              After intake, automatically reach out — ask for a Google review, send a follow-up SMS, or grow your social following. Your clinic, always top of mind.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-5">
+            {[
+              {
+                icon: '⭐',
+                title: 'Google Review Requests',
+                desc: 'Automatically send a review request after each new patient completes intake. More 5-star reviews on autopilot.',
+              },
+              {
+                icon: '💬',
+                title: 'SMS Follow-Up Campaigns',
+                desc: 'Send personalized follow-up messages to new patients — reactivate lapsed patients and keep your schedule full.',
+              },
+              {
+                icon: '📣',
+                title: 'Social Media Growth',
+                desc: 'Invite new patients to follow your Instagram or Facebook with a single tap — right after they submit their forms.',
+              },
+            ].map((f) => (
+              <div key={f.title} className="bg-white rounded-2xl p-6 border border-indigo-100 shadow-sm">
+                <div className="text-3xl mb-3">{f.icon}</div>
+                <h3 className="font-semibold text-gray-900 mb-2">{f.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-sm text-indigo-500 font-medium mt-8">
+            Marketing add-on launching soon — included free for early subscribers.
+          </p>
         </div>
       </section>
 
@@ -158,6 +203,8 @@ export function Landing() {
                 'Instant PDF to your email',
                 'Digital signatures',
                 'Tablet mode',
+                'Up to 2 clinic locations',
+                'Branded patient verification screen',
                 'Customizable SMS message',
                 'Clinic logo & info on every PDF',
                 'Cancel anytime',
