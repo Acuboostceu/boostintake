@@ -2,36 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Card, CardBody } from '../../components/ui/Card'
 import { API } from '../../lib/api'
-import { FOCUS_AREAS } from './SocialSetup'
-
-const NUDGE_IDEAS = {
-  pain_mgmt: ['Share how acupuncture helps relieve chronic back pain', 'Post a patient success story about pain relief'],
-  fertility: ['Educate your audience on acupuncture and women\'s health', 'Share a fertility treatment success story'],
-  digestive: ['Post about acupuncture points that support digestive health'],
-  sleep: ['Share natural remedies for insomnia with acupuncture'],
-  stress: ['Explain how acupuncture reduces cortisol and stress'],
-  cosmetic: ['Debunk myths about facial acupuncture'],
-  disc: ['Share daily habits that protect your spine'],
-  posture: ['Share posture tips for remote workers'],
-  sports_injury: ['Show how chiropractic speeds up sports recovery'],
-  headache: ['Explain the link between neck alignment and headaches'],
-  postpartum: ['Explain how chiropractic helps postpartum recovery'],
-  pediatric: ['Share the benefits of chiropractic for kids\' development'],
-  deep_tissue: ['Explain the benefits of deep tissue massage for muscle recovery'],
-  prenatal: ['Reassure expecting moms about the safety of prenatal massage'],
-  sports_massage: ['Post a pre/post workout massage routine'],
-  relaxation: ['Share the stress-relief benefits of relaxation massage'],
-  lymphatic: ['Educate on how lymphatic drainage reduces swelling'],
-  hot_stone: ['Showcase the healing power of hot stone therapy'],
-}
-
-function pickNudge(areas) {
-  if (!areas?.length) return null
-  const id = areas[Math.floor(Math.random() * areas.length)]
-  const ideas = NUDGE_IDEAS[id]
-  if (!ideas) return null
-  return { id, text: ideas[Math.floor(Math.random() * ideas.length)] }
-}
 
 function timeAgo(dateStr) {
   const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000)
@@ -58,13 +28,12 @@ export function DashboardHome() {
       headers: { Authorization: `Bearer ${localStorage.getItem('bi_token')}` },
     })
       .then((r) => r.json())
-      .then((d) => {
-        setData(d)
-        if (d?.socialSettings?.focusAreas?.length) {
-          setNudge(pickNudge(d.socialSettings.focusAreas))
-        }
-      })
+      .then((d) => { setData(d) })
       .catch(() => {})
+
+    // Read nudge from localStorage cache (set by SocialMarketing page)
+    const cached = JSON.parse(localStorage.getItem('bi_social_nudge') || 'null')
+    if (cached?.text) setNudge({ text: cached.text })
   }, [])
 
   async function openPanel(type, range) {
@@ -145,7 +114,7 @@ export function DashboardHome() {
         >
           <span className="text-2xl flex-shrink-0">💡</span>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-violet-600 mb-1">Post idea for this week</p>
+            <p className="text-xs font-semibold text-violet-600 mb-1">Post idea for today</p>
             <p className="text-sm text-gray-800 font-medium leading-snug">{nudge.text}</p>
           </div>
           <svg className="w-4 h-4 text-violet-400 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
