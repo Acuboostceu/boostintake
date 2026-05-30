@@ -141,27 +141,22 @@ export function Landing() {
             <span className="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-4 tracking-wide uppercase">
               Coming Soon
             </span>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Turn every new patient into a marketing win</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">AI-powered social media — built for your clinic</h2>
             <p className="text-gray-500 text-lg max-w-2xl mx-auto">
-              After intake, automatically reach out — ask for a Google review, send a follow-up SMS, or grow your social following. Your clinic, always top of mind.
+              No more staring at a blank screen. BoostIntake knows your specialty and does the creative work for you.
             </p>
           </div>
-          <div className="grid sm:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {[
               {
-                icon: '⭐',
-                title: 'Google Review Requests',
-                desc: 'Automatically send a review request after each new patient completes intake. More 5-star reviews on autopilot.',
+                icon: '💡',
+                title: 'Smart content ideas',
+                desc: 'Based on your specialty — acupuncture, chiropractic, and more — AI nudges you with timely post ideas your patients actually care about.',
               },
               {
-                icon: '💬',
-                title: 'SMS Follow-Up Campaigns',
-                desc: 'Send personalized follow-up messages to new patients — reactivate lapsed patients and keep your schedule full.',
-              },
-              {
-                icon: '📣',
-                title: 'Social Media Growth',
-                desc: 'Invite new patients to follow your Instagram or Facebook with a single tap — right after they submit their forms.',
+                icon: '✨',
+                title: 'AI-generated captions & hashtags',
+                desc: 'One click and your post is ready. AI writes the caption and picks the right hashtags so you can focus on patient care.',
               },
             ].map((f) => (
               <div key={f.title} className="bg-white rounded-2xl p-6 border border-indigo-100 shadow-sm">
