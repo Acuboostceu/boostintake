@@ -19,6 +19,7 @@ export function PatientVerify() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [dob, setDob] = useState('')
+  const [dobError, setDobError] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [branding, setBranding] = useState({ clinicName: null, logoUrl: null })
@@ -31,9 +32,26 @@ export function PatientVerify() {
       .catch(() => {})
   }, [token])
 
+  function handleDobInput(raw) {
+    const digits = raw.replace(/\D/g, '').slice(0, 8)
+    let formatted = digits
+    if (digits.length > 4) formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`
+    else if (digits.length > 2) formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`
+    setDob(formatted)
+    setDobError('')
+  }
+
+  function isDobComplete(val) {
+    return /^\d{2}\/\d{2}\/\d{4}$/.test(val)
+  }
+
   async function handleVerify(e) {
     e.preventDefault()
     setError('')
+    if (!isDobComplete(dob)) {
+      setDobError('Please enter a valid date (MM/DD/YYYY)')
+      return
+    }
     setLoading(true)
 
     try {
@@ -124,13 +142,21 @@ export function PatientVerify() {
               className="flex-1"
             />
           </div>
-          <Input
-            label={tr.verify.dob}
-            type="date"
-            value={dob}
-            onChange={(e) => setDob(e.target.value)}
-            required
-          />
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">
+              {tr.verify.dob}<span className="text-red-400 ml-1">*</span>
+            </label>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={dob}
+              onChange={(e) => handleDobInput(e.target.value)}
+              placeholder="MM/DD/YYYY"
+              className={`w-full px-4 py-3 rounded-xl border text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent tracking-widest font-mono text-lg ${dobError ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white'}`}
+              required
+            />
+            {dobError && <p className="text-sm text-red-500">{dobError}</p>}
+          </div>
 
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">
@@ -138,7 +164,7 @@ export function PatientVerify() {
             </div>
           )}
 
-          <Button type="submit" size="lg" disabled={loading || !firstName || !lastName || !dob}>
+          <Button type="submit" size="lg" disabled={loading || !firstName || !lastName || !isDobComplete(dob)}>
             {loading ? tr.verify.submitting : tr.verify.submit}
           </Button>
         </form>
