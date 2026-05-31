@@ -186,54 +186,56 @@ export function ClinicSettings() {
           </CardBody>
         </Card>
 
-        {/* Locations — hidden until paid plan paywall is implemented */}
-        {/* TODO: unhide when multi-location paywall is ready
-        <Card>
-          <CardHeader title="Locations" subtitle="Add a second location if your clinic operates from multiple offices" />
-          <CardBody className="flex flex-col gap-4">
-            <div className="bg-gray-50 rounded-xl px-4 py-3">
-              <p className="text-xs font-medium text-gray-500 mb-0.5">LOCATION 1 (Primary)</p>
-              <p className="text-sm text-gray-800 font-medium">{settings.clinicName || '—'}</p>
-              {settings.address && <p className="text-xs text-gray-500">{settings.address}</p>}
-            </div>
-
-            {settings.locations.length > 0 ? (
-              <div className="flex flex-col gap-3 border border-gray-200 rounded-xl p-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-medium text-gray-500">LOCATION 2</p>
-                  <button
-                    type="button"
-                    onClick={() => update('locations', [])}
-                    className="text-xs text-red-400 hover:text-red-600"
-                  >
-                    Remove
-                  </button>
-                </div>
-                <Input
-                  label="Location Name"
-                  value={settings.locations[0]?.name || ''}
-                  onChange={(e) => update('locations', [{ ...settings.locations[0], name: e.target.value }])}
-                  placeholder="Beverly Hills Branch"
-                />
-                <Input
-                  label="Address"
-                  value={settings.locations[0]?.address || ''}
-                  onChange={(e) => update('locations', [{ ...settings.locations[0], address: e.target.value }])}
-                  placeholder="456 Rodeo Dr, Beverly Hills, CA 90210"
-                />
+        {/* Locations — hidden until paid plan paywall is ready; TODO: replace false with plan check */}
+        {false && (
+          <Card>
+            <CardHeader title="Locations" subtitle="Add a second location if your clinic operates from multiple offices" />
+            <CardBody className="flex flex-col gap-4">
+              {/* Primary location — read from main fields */}
+              <div className="bg-gray-50 rounded-xl px-4 py-3">
+                <p className="text-xs font-medium text-gray-500 mb-0.5">LOCATION 1 (Primary)</p>
+                <p className="text-sm text-gray-800 font-medium">{settings.clinicName || '—'}</p>
+                {settings.address && <p className="text-xs text-gray-500">{settings.address}</p>}
               </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => update('locations', [{ name: '', address: '' }])}
-                className="text-sm text-blue-600 font-medium hover:underline self-start"
-              >
-                + Add second location
-              </button>
-            )}
-          </CardBody>
-        </Card>
-        */}
+
+              {/* Secondary location */}
+              {settings.locations.length > 0 ? (
+                <div className="flex flex-col gap-3 border border-gray-200 rounded-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-medium text-gray-500">LOCATION 2</p>
+                    <button
+                      type="button"
+                      onClick={() => update('locations', [])}
+                      className="text-xs text-red-400 hover:text-red-600"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <Input
+                    label="Location Name"
+                    value={settings.locations[0]?.name || ''}
+                    onChange={(e) => update('locations', [{ ...settings.locations[0], name: e.target.value }])}
+                    placeholder="Beverly Hills Branch"
+                  />
+                  <Input
+                    label="Address"
+                    value={settings.locations[0]?.address || ''}
+                    onChange={(e) => update('locations', [{ ...settings.locations[0], address: e.target.value }])}
+                    placeholder="456 Rodeo Dr, Beverly Hills, CA 90210"
+                  />
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => update('locations', [{ name: '', address: '' }])}
+                  className="text-sm text-blue-600 font-medium hover:underline self-start"
+                >
+                  + Add second location
+                </button>
+              )}
+            </CardBody>
+          </Card>
+        )}
 
         {/* SMS Template */}
         <Card>
