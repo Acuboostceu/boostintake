@@ -186,18 +186,17 @@ export function ClinicSettings() {
           </CardBody>
         </Card>
 
-        {/* Locations */}
+        {/* Locations — hidden until paid plan paywall is implemented */}
+        {/* TODO: unhide when multi-location paywall is ready
         <Card>
           <CardHeader title="Locations" subtitle="Add a second location if your clinic operates from multiple offices" />
           <CardBody className="flex flex-col gap-4">
-            {/* Primary location — read from main fields */}
             <div className="bg-gray-50 rounded-xl px-4 py-3">
               <p className="text-xs font-medium text-gray-500 mb-0.5">LOCATION 1 (Primary)</p>
               <p className="text-sm text-gray-800 font-medium">{settings.clinicName || '—'}</p>
               {settings.address && <p className="text-xs text-gray-500">{settings.address}</p>}
             </div>
 
-            {/* Secondary location */}
             {settings.locations.length > 0 ? (
               <div className="flex flex-col gap-3 border border-gray-200 rounded-xl p-4">
                 <div className="flex items-center justify-between">
@@ -234,6 +233,7 @@ export function ClinicSettings() {
             )}
           </CardBody>
         </Card>
+        */}
 
         {/* SMS Template */}
         <Card>
