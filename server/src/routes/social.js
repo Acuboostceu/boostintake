@@ -1,5 +1,5 @@
 const express = require('express')
-const { requireAuth } = require('../middleware/auth')
+const { requireAuth, requireSubscription } = require('../middleware/auth')
 const { supabase } = require('../services/supabase')
 const router = express.Router()
 
@@ -72,7 +72,7 @@ router.post('/settings', requireAuth, async (req, res) => {
 })
 
 // GET /api/social/nudge — AI-generated post idea based on clinic specialty
-router.get('/nudge', requireAuth, async (req, res) => {
+router.get('/nudge', requireAuth, requireSubscription, async (req, res) => {
   const { data: clinic } = await supabase
     .from('clinics')
     .select('name, specialty, social_settings')
@@ -127,7 +127,7 @@ Generate ONE specific, actionable Instagram post idea for this clinic. It should
   }
 })
 
-router.post('/caption', requireAuth, async (req, res) => {
+router.post('/caption', requireAuth, requireSubscription, async (req, res) => {
   const { photoTypes, keywords, tone: bodyTone } = req.body
 
   if (!photoTypes?.length) {
