@@ -37,39 +37,48 @@ router.get('/status', requireAuth, async (req, res) => {
 
 // Create Stripe Checkout session
 router.post('/create-checkout', requireAuth, async (req, res) => {
-  const { plan = 'monthly' } = req.body
-  const priceId = PRICES[plan]
-  if (!priceId) return res.status(400).json({ message: 'Invalid plan' })
+  try {
+    const { plan = 'monthly' } = req.body
+    const priceId = PRICES[plan]
+    if (!priceId) return res.status(400).json({ message: `Invalid plan or missing price ID for: ${plan}` })
 
-  const { data: clinic } = await supabase
-    .from('clinics')
-    .select('email, name, stripe_customer_id')
-    .eq('id', req.user.clinicId)
-    .single()
+    const { data: clinic, error: clinicError } = await supabase
+      .from('clinics')
+      .select('email, name, stripe_customer_id')
+      .eq('id', req.user.clinicId)
+      .single()
 
-  // Create or reuse Stripe customer
-  let customerId = clinic.stripe_customer_id
-  if (!customerId) {
-    const customer = await stripe.customers.create({
-      email: clinic.email,
-      name: clinic.name,
+    if (clinicError || !clinic) {
+      return res.status(500).json({ message: 'Failed to load clinic info' })
+    }
+
+    // Create or reuse Stripe customer
+    let customerId = clinic.stripe_customer_id
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: clinic.email,
+        name: clinic.name,
+        metadata: { clinicId: req.user.clinicId },
+      })
+      customerId = customer.id
+      await supabase.from('clinics').update({ stripe_customer_id: customerId }).eq('id', req.user.clinicId)
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${process.env.APP_URL}/dashboard?subscribed=1`,
+      cancel_url: `${process.env.APP_URL}/dashboard/billing`,
       metadata: { clinicId: req.user.clinicId },
     })
-    customerId = customer.id
-    await supabase.from('clinics').update({ stripe_customer_id: customerId }).eq('id', req.user.clinicId)
+
+    res.json({ url: session.url })
+  } catch (err) {
+    console.error('[create-checkout] error:', err.message)
+    res.status(500).json({ message: err.message || 'Failed to create checkout session' })
   }
-
-  const session = await stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: 'subscription',
-    payment_method_types: ['card'],
-    line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${process.env.APP_URL}/dashboard?subscribed=1`,
-    cancel_url: `${process.env.APP_URL}/dashboard/billing`,
-    metadata: { clinicId: req.user.clinicId },
-  })
-
-  res.json({ url: session.url })
 })
 
 // Create Stripe Customer Portal session (manage billing)

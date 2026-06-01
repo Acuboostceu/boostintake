@@ -30,9 +30,13 @@ export function Billing() {
         body: JSON.stringify({ plan }),
       })
       const data = await res.json()
-      if (data.url) window.location.href = data.url
-    } catch {
-      alert('Failed to start checkout. Please try again.')
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        alert(data.message || 'Checkout failed — no redirect URL returned.')
+      }
+    } catch (e) {
+      alert('Failed to start checkout: ' + (e.message || 'Connection error'))
     } finally {
       setCheckoutLoading('')
     }
