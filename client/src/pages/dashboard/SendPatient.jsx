@@ -28,7 +28,7 @@ export function SendPatient({ embedPrefill = null }) {
     if (embedPrefill) {
       if (embedPrefill.firstName) setFirstName(embedPrefill.firstName)
       if (embedPrefill.lastName)  setLastName(embedPrefill.lastName)
-      if (embedPrefill.phone)     setPhone(embedPrefill.phone)
+      if (embedPrefill.phone)     setPhone(formatPhone(embedPrefill.phone))
       if (embedPrefill.dob)       setDob(embedPrefill.dob)
     }
   }, [embedPrefill])
