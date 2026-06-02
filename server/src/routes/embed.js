@@ -4,6 +4,9 @@ const { supabase } = require('../services/supabase')
 
 const router = express.Router()
 
+// GET /api/embed/ping — connectivity test
+router.get('/ping', (req, res) => res.json({ ok: true, secret: !!process.env.EMBED_SECRET }))
+
 // POST /api/embed/verify
 // Called by EmbedSend / EmbedTablet on mount to exchange EHR token → BoostIntake session
 router.post('/verify', async (req, res) => {
