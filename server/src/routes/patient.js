@@ -198,9 +198,9 @@ router.post('/submit', async (req, res) => {
     })
 
     // Auto-save PDF to Glow EHR patient files if ehrPatientId is known
-    if (resolvedEhrPatientId && process.env.GLOW_EHR_URL && process.env.EMBED_SECRET) {
+    if (resolvedEhrPatientId && process.env.EHR_URL && process.env.EMBED_SECRET) {
       try {
-        const webhookRes = await fetch(`${process.env.GLOW_EHR_URL}/api/webhook/intake-pdf`, {
+        const webhookRes = await fetch(`${process.env.EHR_URL}/api/webhook/intake-pdf`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
