@@ -103,7 +103,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
     setSubmitting(true)
     try {
       const clinicId = isTablet
-        ? JSON.parse(localStorage.getItem('bi_clinic') || '{}').clinicId
+        ? JSON.parse(localStorage.getItem('bi_clinic') || '{}').id
         : undefined
 
       // For tablet mode, pass the selected location so the PDF header is correct
