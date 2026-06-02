@@ -24,7 +24,7 @@ router.get('/clinic-info/:token', async (req, res) => {
 
 // Staff sends intake link to patient
 router.post('/send-link', requireAuth, requireSubscription, async (req, res) => {
-  const { firstName, lastName, phone, dob, customMessage, formIds, locationName, locationAddress } = req.body
+  const { firstName, lastName, phone, dob, customMessage, formIds, locationName, locationAddress, ehrPatientId } = req.body
   if (!firstName || !lastName || !phone || !dob) {
     return res.status(400).json({ message: 'All fields required' })
   }
@@ -47,6 +47,7 @@ router.post('/send-link', requireAuth, requireSubscription, async (req, res) => 
     ...(formIds && formIds.length > 0 ? { form_ids: formIds } : {}),
     ...(locationName ? { location_name: locationName } : {}),
     ...(locationAddress ? { location_address: locationAddress } : {}),
+    ...(ehrPatientId ? { ehr_patient_id: String(ehrPatientId) } : {}),
   })
 
   if (error) {
@@ -128,10 +129,11 @@ router.post('/verify', async (req, res) => {
 
 // Patient submits completed forms
 router.post('/submit', async (req, res) => {
-  const { token, patient, formData, signatures, declinedForms, clinicId, locationName, locationAddress, formContents, formFields } = req.body
+  const { token, patient, formData, signatures, declinedForms, clinicId, locationName, locationAddress, formContents, formFields, ehrPatientId } = req.body
 
   // For non-tablet mode, validate token and mark used
   let clinic = null
+  let resolvedEhrPatientId = ehrPatientId || null
   if (token !== 'tablet') {
     const { data: record, error } = await supabase
       .from('intake_tokens')
@@ -147,6 +149,8 @@ router.post('/submit', async (req, res) => {
     // Override with selected location if set
     if (record.location_name) clinic.name = record.location_name
     if (record.location_address) clinic.address = record.location_address
+    // Use ehrPatientId stored at send-link time if not sent directly
+    if (!resolvedEhrPatientId && record.ehr_patient_id) resolvedEhrPatientId = record.ehr_patient_id
     await supabase.from('intake_tokens').update({ used: true }).eq('token', token)
   } else {
     // Tablet mode: look up clinic by ID sent from client
@@ -192,6 +196,30 @@ router.post('/submit', async (req, res) => {
       source: token === 'tablet' ? 'tablet' : 'link',
       patient_name: patient.name || null,
     })
+
+    // Auto-save PDF to Glow EHR patient files if ehrPatientId is known
+    if (resolvedEhrPatientId && process.env.GLOW_EHR_URL && process.env.EMBED_SECRET) {
+      try {
+        const webhookRes = await fetch(`${process.env.GLOW_EHR_URL}/api/webhook/intake-pdf`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            secret: process.env.EMBED_SECRET,
+            patientId: resolvedEhrPatientId,
+            filename,
+            pdf: pdfBuffer.toString('base64'),
+          }),
+        })
+        if (!webhookRes.ok) {
+          const msg = await webhookRes.text()
+          console.error('[submit] EHR webhook failed:', webhookRes.status, msg)
+        } else {
+          console.log('[submit] PDF saved to EHR for patient', resolvedEhrPatientId)
+        }
+      } catch (webhookErr) {
+        console.error('[submit] EHR webhook error:', webhookErr.message)
+      }
+    }
 
     res.json({ ok: true })
   } catch (err) {
