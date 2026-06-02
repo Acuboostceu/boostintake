@@ -14,7 +14,8 @@ router.post('/verify', async (req, res) => {
   try {
     payload = jwt.verify(token, process.env.EMBED_SECRET)
   } catch (e) {
-    return res.status(401).json({ message: 'Invalid or expired embed token' })
+    console.error('[embed/verify] JWT error:', e.message, '| secret set:', !!process.env.EMBED_SECRET, '| token prefix:', token.slice(0, 20))
+    return res.status(401).json({ message: 'Invalid or expired embed token', detail: e.message })
   }
 
   const { data: clinic, error } = await supabase
