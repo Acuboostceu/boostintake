@@ -37,7 +37,7 @@ router.post('/verify', async (req, res) => {
 
   const { data: clinic, error } = await supabase
     .from('clinics')
-    .select('id, name, email, sms_template, phone_number, locations, subscription_status, trial_ends_at')
+    .select('id, name, email, sms_template, phone, locations, subscription_status, trial_ends_at')
     .eq('id', clinicId)
     .single()
 
@@ -58,7 +58,7 @@ router.post('/verify', async (req, res) => {
       id: clinic.id,
       name: clinic.name,
       smsTemplate: clinic.sms_template,
-      phone: clinic.phone_number,
+      phone: clinic.phone,
       locations: clinic.locations || [],
     },
     patient: payload.patient || null,
