@@ -1,7 +1,8 @@
 // Shared hook: verifies EHR embed token → sets localStorage → returns { ready, patient, error }
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { API } from '../../lib/api'
+// Use direct server URL to avoid Vercel rewrite stripping POST method
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || import.meta.env.VITE_API_URL || 'https://boostintake-w6o5.vercel.app'
 
 export function useEmbedAuth() {
   const [searchParams] = useSearchParams()
@@ -13,7 +14,7 @@ export function useEmbedAuth() {
     const token = searchParams.get('token')
     if (!token) { setError('No embed token provided.'); return }
 
-    fetch(`${API}/api/embed/verify`, {
+    fetch(`${SERVER_URL}/api/embed/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
