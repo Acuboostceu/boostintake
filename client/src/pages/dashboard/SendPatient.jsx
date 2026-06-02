@@ -88,6 +88,7 @@ export function SendPatient({ embedPrefill = null }) {
           formIds: selectedFormIds,
           locationName: selectedLocation?.name || null,
           locationAddress: selectedLocation?.address || null,
+          ehrPatientId: localStorage.getItem('bi_ehr_patient_id') || undefined,
         }),
       })
       const data = await res.json()

@@ -48,6 +48,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
   const form = forms[currentFormIndex]
   const [submitting, setSubmitting] = useState(false)
   const [validationError, setValidationError] = useState('')
+  const ehrPatientId = localStorage.getItem('bi_ehr_patient_id') || ''
 
   // Redirect if no patient identity (only for non-tablet flows)
   useEffect(() => {
@@ -148,6 +149,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
           locationAddress,
           formContents,
           formFields,
+          ehrPatientId: ehrPatientId || undefined,
         }),
       })
       if (!res.ok) throw new Error('Submit failed')

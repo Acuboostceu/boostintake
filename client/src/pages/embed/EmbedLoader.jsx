@@ -31,6 +31,8 @@ export function useEmbedAuth() {
           phone: data.clinic.phone,
           locations: data.clinic.locations,
         }))
+        // Store EHR patient ID so PatientForms can include it in submit for auto-file-save
+        localStorage.setItem('bi_ehr_patient_id', data.patient?.ehrId || '')
 
         setPatient(data.patient || null)
         setReady(true)
