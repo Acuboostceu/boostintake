@@ -201,7 +201,7 @@ router.post('/submit', async (req, res) => {
     console.log('[submit] resolvedEhrPatientId:', resolvedEhrPatientId, '| EHR_URL set:', !!process.env.EHR_URL, '| EMBED_SECRET set:', !!process.env.EMBED_SECRET)
     if (resolvedEhrPatientId && process.env.EHR_URL && process.env.EMBED_SECRET) {
       try {
-        const webhookRes = await fetch(`${process.env.EHR_URL}/api/webhook/intake-pdf`, {
+        const webhookRes = await fetch(`${process.env.EHR_URL.replace(/\/$/, '')}/api/webhook/intake-pdf`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
