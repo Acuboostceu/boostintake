@@ -9,7 +9,7 @@ import { API } from '../../lib/api'
 const DEFAULT_TEMPLATE = `Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link} (Link expires in 24 hours)`
 
 
-export function SendPatient() {
+export function SendPatient({ embedPrefill = null }) {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [phone, setPhone] = useState('')
@@ -22,6 +22,16 @@ export function SendPatient() {
   const [selectedFormIds, setSelectedFormIds] = useState(DEFAULT_FORM_IDS)
   const [availableForms, setAvailableForms] = useState([])
   const [selectedLocation, setSelectedLocation] = useState(null) // null = primary
+
+  // Pre-fill patient info when opened from EHR embed
+  useEffect(() => {
+    if (embedPrefill) {
+      if (embedPrefill.firstName) setFirstName(embedPrefill.firstName)
+      if (embedPrefill.lastName)  setLastName(embedPrefill.lastName)
+      if (embedPrefill.phone)     setPhone(embedPrefill.phone)
+      if (embedPrefill.dob)       setDob(embedPrefill.dob)
+    }
+  }, [embedPrefill])
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('bi_clinic') || '{}')

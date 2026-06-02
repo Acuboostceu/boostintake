@@ -14,6 +14,9 @@ import { FormsPage } from './pages/dashboard/FormsPage'
 import { Billing } from './pages/dashboard/Billing'
 import { SocialMarketing } from './pages/dashboard/SocialMarketing'
 
+import { EmbedSend } from './pages/embed/EmbedSend'
+import { EmbedTablet } from './pages/embed/EmbedTablet'
+
 import { Login } from './pages/auth/Login'
 import { Register } from './pages/auth/Register'
 import { Landing } from './pages/Landing'
@@ -34,6 +37,8 @@ export default function App() {
           <Route path="/p/:token/complete" element={<PatientComplete />} />
 
           <Route path="/tablet" element={<TabletMode />} />
+          <Route path="/embed/send" element={<EmbedSend />} />
+          <Route path="/embed/tablet" element={<EmbedTablet />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

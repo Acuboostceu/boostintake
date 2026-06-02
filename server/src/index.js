@@ -9,6 +9,7 @@ const patientRoutes = require('./routes/patient')
 const formsRoutes = require('./routes/forms')
 const billingRoutes = require('./routes/billing')
 const socialRoutes = require('./routes/social')
+const embedRoutes = require('./routes/embed')
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(cors({
       process.env.CLIENT_URL || 'http://localhost:5173',
       'https://boostintake.com',
       'https://www.boostintake.com',
+      process.env.EHR_URL, // Glow EHR on Railway
       /^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
       /^http:\/\/10\.\d+\.\d+\.\d+(:\d+)?$/,
       /^http:\/\/172\.(1[6-9]|2\d|3[01])\.\d+\.\d+(:\d+)?$/,
@@ -45,6 +47,7 @@ app.use('/api/patient', patientRoutes)
 app.use('/api/forms', formsRoutes)
 app.use('/api/billing', billingRoutes)
 app.use('/api/social', socialRoutes)
+app.use('/api/embed', embedRoutes)
 
 app.get('/api/health', (_, res) => res.json({ ok: true }))
 
