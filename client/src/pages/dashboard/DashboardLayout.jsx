@@ -73,7 +73,7 @@ export function DashboardLayout() {
   const showExpiredBanner = billing && !billing.isActive
 
   return (
-    <div className="min-h-dvh bg-gray-50 flex flex-col">
+    <div className="h-dvh bg-gray-50 flex flex-col overflow-hidden">
       {/* Trial expiring banner */}
       {showTrialBanner && (
         <div className="bg-blue-600 text-white text-center text-sm py-2 px-4">
@@ -109,9 +109,9 @@ export function DashboardLayout() {
       </header>
 
       {/* Main + sidebar */}
-      <div className="flex flex-1">
+      <div className="flex flex-1 min-h-0">
         {/* Sidebar nav (desktop) */}
-        <nav className="hidden md:flex flex-col w-56 bg-white border-r border-gray-200 p-4 gap-1">
+        <nav className="hidden md:flex flex-col w-56 shrink-0 bg-white border-r border-gray-200 p-4 gap-1 overflow-y-auto">
           {navItems.map(({ to, label, end, icon }) => (
             <NavLink
               key={to}
@@ -153,8 +153,10 @@ export function DashboardLayout() {
         </nav>
 
         {/* Content */}
-        <main className="flex-1 p-4 md:p-6 max-w-3xl mx-auto w-full">
-          <Outlet />
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 min-w-0">
+          <div className="max-w-3xl mx-auto w-full">
+            <Outlet />
+          </div>
         </main>
       </div>
 
