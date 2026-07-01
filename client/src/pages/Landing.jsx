@@ -113,13 +113,13 @@ export function Landing() {
           </div>
           <div className="grid sm:grid-cols-2 gap-5">
             {[
-              { icon: '📱', title: 'SMS delivery', desc: 'Patients receive a secure link via text — no app download needed.' },
-              { icon: '✍️', title: 'Digital signatures', desc: 'HIPAA consent, financial policy, arbitration — all signed on their phone.' },
+              { icon: '🔗', title: 'SMS-ready link generation', desc: 'Generate a secure intake link in seconds — copy it and text it to your patient from your own phone. No extra setup needed.' },
+              { icon: '✍️', title: 'Digital signatures', desc: 'HIPAA consent, financial policy, arbitration — all signed on their phone or tablet.' },
               { icon: '📄', title: 'Instant PDF', desc: 'Auto-generated PDF emailed to your clinic the moment forms are submitted.' },
-              { icon: '💊', title: 'Intake-ready forms', desc: 'Health history, review of systems, HIPAA, financial policy and more — included.' },
-              { icon: '🖥️', title: 'Tablet mode', desc: 'Patients fill out forms on an in-office tablet — same seamless experience.' },
+              { icon: '💊', title: 'Intake-ready forms included', desc: 'Health history, review of systems, HIPAA, financial policy, and more — ready to use from day one.' },
+              { icon: '🖥️', title: 'Tablet mode', desc: 'Patients fill out forms on an in-office tablet — same seamless experience, no paper.' },
+              { icon: '✏️', title: 'Build your own consent forms', desc: "Need a form that doesn't exist yet? Build custom consent forms from scratch — no coding, no limits." },
               { icon: '🔒', title: 'Privacy first', desc: 'All patient data is deleted from our servers immediately after submission.' },
-              { icon: '🏥', title: 'Multi-location support', desc: 'Run up to 2 clinic locations from a single account. Each location gets its own branded forms and PDF header.' },
               { icon: '🎨', title: 'Branded patient experience', desc: 'Patients see your clinic name and logo from the very first screen — a professional experience that builds trust.' },
             ].map((f) => (
               <div key={f.title} className="flex gap-4 p-5 rounded-2xl border border-gray-100 hover:border-blue-100 hover:bg-blue-50/30 transition-colors">
@@ -134,29 +134,29 @@ export function Landing() {
         </div>
       </section>
 
-      {/* SNS Marketing teaser */}
+      {/* Free tips */}
       <section className="px-6 py-20 bg-gradient-to-br from-violet-50 via-fuchsia-50 to-pink-50">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <span className="inline-block bg-violet-100 text-violet-700 text-xs font-semibold px-3 py-1 rounded-full mb-4 tracking-wide uppercase">
-              Coming Soon
+              Free · Included with your plan
             </span>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">AI-powered social media — built for your clinic</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Clinic marketing tips — on us</h2>
             <p className="text-gray-500 text-lg max-w-2xl mx-auto">
-              No more staring at a blank screen. BoostIntake knows your specialty and does the creative work for you.
+              We know running a small clinic means wearing every hat. That's why BoostIntake gives you practical social media tips built around your specialty — no extra charge.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {[
               {
                 icon: '💡',
-                title: 'Smart content ideas',
-                desc: 'Based on your specialty — acupuncture, chiropractic, and more — AI nudges you with timely post ideas your patients actually care about.',
+                title: 'Specialty-matched content ideas',
+                desc: 'Get post ideas tailored to acupuncture, chiropractic, and more — things your patients actually want to read.',
               },
               {
                 icon: '✨',
-                title: 'AI-generated captions & hashtags',
-                desc: 'One click and your post is ready. AI writes the caption and picks the right hashtags so you can focus on patient care.',
+                title: 'Ready-to-use captions',
+                desc: 'Copy, post, done. No staring at a blank screen — just practical content your clinic can use today.',
               },
             ].map((f) => (
               <div key={f.title} className="bg-white rounded-2xl p-6 border border-violet-200 shadow-sm">
@@ -167,7 +167,7 @@ export function Landing() {
             ))}
           </div>
           <p className="text-center text-sm text-violet-500 font-medium mt-8">
-            Marketing add-on launching soon — included free for early subscribers.
+            Included free with every BoostIntake plan.
           </p>
         </div>
       </section>
@@ -193,7 +193,6 @@ export function Landing() {
                 'All form types included',
                 'Instant PDF to your email',
                 'Digital signatures',
-                'Up to 2 clinic locations',
                 'Branded patient verification screen',
                 'Clinic logo & info on every PDF',
               ].map((item) => (
