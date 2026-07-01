@@ -25,15 +25,13 @@ router.get('/clinic-info/:token', async (req, res) => {
 // Staff sends intake link to patient
 router.post('/send-link', requireAuth, requireSubscription, async (req, res) => {
   const { firstName, lastName, phone, dob, customMessage, formIds, locationName, locationAddress, ehrPatientId } = req.body
-  if (!firstName || !lastName || !phone || !dob) {
+  if (!firstName || !lastName || !dob) {
     return res.status(400).json({ message: 'All fields required' })
   }
 
   const token = nanoid(10)
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-
-  // NOTE: the intake_tokens table needs a form_ids jsonb column:
-  //   ALTER TABLE intake_tokens ADD COLUMN form_ids jsonb;
+  const cleanPhone = phone ? phone.replace(/\D/g, '') : null
 
   const { error } = await supabase.from('intake_tokens').insert({
     token,
@@ -41,7 +39,7 @@ router.post('/send-link', requireAuth, requireSubscription, async (req, res) => 
     first_name: firstName.trim(),
     last_name: lastName.trim(),
     dob,
-    phone: phone.replace(/\D/g, ''),
+    ...(cleanPhone ? { phone: cleanPhone } : {}),
     expires_at: expiresAt,
     used: false,
     ...(formIds && formIds.length > 0 ? { form_ids: formIds } : {}),
@@ -57,30 +55,31 @@ router.post('/send-link', requireAuth, requireSubscription, async (req, res) => 
 
   const link = `${process.env.APP_URL}/p/${token}`
 
-  // Get clinic info for SMS fallback
-  const { data: clinic } = await supabase
-    .from('clinics')
-    .select('name, sms_template')
-    .eq('id', req.user.clinicId)
-    .single()
+  // Send SMS only if phone provided
+  if (cleanPhone) {
+    const { data: clinic } = await supabase
+      .from('clinics')
+      .select('name, sms_template')
+      .eq('id', req.user.clinicId)
+      .single()
 
-  // Build SMS body — always replace {link} on server since token is generated here
-  const rawTemplate = customMessage
-    || clinic?.sms_template
-    || 'Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link}'
+    const rawTemplate = customMessage
+      || clinic?.sms_template
+      || 'Hi {firstName}! This is {clinicName}. Please complete your intake forms before your appointment: {link}'
 
-  const smsBody = rawTemplate
-    .replace('{firstName}', firstName)
-    .replace('{clinicName}', clinic?.name || 'your clinic')
-    .replace('{link}', link)
+    const smsBody = rawTemplate
+      .replace('{firstName}', firstName)
+      .replace('{clinicName}', clinic?.name || 'your clinic')
+      .replace('{link}', link)
 
-  try {
-    await sendSMS(phone.replace(/\D/g, ''), smsBody)
-  } catch (smsErr) {
-    console.error('[send-link] SMS failed:', smsErr?.message)
+    try {
+      await sendSMS(cleanPhone, smsBody)
+    } catch (smsErr) {
+      console.error('[send-link] SMS failed:', smsErr?.message)
+    }
   }
 
-  res.json({ link, phone: phone.replace(/\D/g, '') })
+  res.json({ link, ...(cleanPhone ? { phone: cleanPhone } : {}) })
 })
 
 // Patient verifies identity before accessing forms
