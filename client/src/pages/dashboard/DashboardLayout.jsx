@@ -163,7 +163,7 @@ export function DashboardLayout() {
             <Outlet />
           </div>
           {isExpired && (
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4 z-10">
+            <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] flex flex-col items-center justify-center gap-4 z-10">
               <div className="text-4xl">🔒</div>
               <p className="font-semibold text-gray-900 text-lg">Your trial has expired</p>
               <p className="text-gray-500 text-sm">Subscribe to continue using BoostIntake.</p>
