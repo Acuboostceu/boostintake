@@ -10,7 +10,7 @@ async function sendSMS(toNumber, message) {
   }
 
   const telnyx = Telnyx(apiKey)
-  await telnyx.messages.create({
+  await telnyx.messages.send({
     from,
     to: `+1${toNumber}`,
     text: message,
