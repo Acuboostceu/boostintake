@@ -9,6 +9,23 @@ const { sendEmail } = require('../services/email')
 
 const router = express.Router()
 
+// Normalize DOB to MM/DD/YYYY for comparison
+// Handles: MM/DD/YYYY, YYYY-MM-DD, MM-DD-YYYY
+function normalizeDob(dob) {
+  if (!dob) return ''
+  const s = dob.trim()
+  // YYYY-MM-DD → MM/DD/YYYY
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    const [y, m, d] = s.split('-')
+    return `${m}/${d}/${y}`
+  }
+  // MM-DD-YYYY → MM/DD/YYYY
+  if (/^\d{2}-\d{2}-\d{4}$/.test(s)) {
+    return s.replace(/-/g, '/')
+  }
+  return s
+}
+
 // Get clinic branding from token (public — no PHI exposed)
 router.get('/clinic-info/:token', async (req, res) => {
   const { data, error } = await supabase
@@ -104,7 +121,7 @@ router.post('/verify', async (req, res) => {
   const nameMatch =
     record.first_name.toLowerCase() === firstName.trim().toLowerCase() &&
     record.last_name.toLowerCase() === lastName.trim().toLowerCase()
-  const dobMatch = record.dob === dob
+  const dobMatch = normalizeDob(record.dob) === normalizeDob(dob)
 
   if (!nameMatch || !dobMatch) {
     return res.status(401).json({ message: 'Name or date of birth does not match our records.' })
