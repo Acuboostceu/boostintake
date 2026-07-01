@@ -7,8 +7,7 @@ const router = express.Router()
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
 const PRICES = {
-  monthly: process.env.STRIPE_PRICE_MONTHLY,
-  yearly: process.env.STRIPE_PRICE_YEARLY,
+  tablet: process.env.STRIPE_PRICE_TABLET,
 }
 
 // Get subscription status
@@ -38,7 +37,7 @@ router.get('/status', requireAuth, async (req, res) => {
 // Create Stripe Checkout session
 router.post('/create-checkout', requireAuth, async (req, res) => {
   try {
-    const { plan = 'monthly' } = req.body
+    const { plan = 'tablet' } = req.body
     const priceId = PRICES[plan]
     if (!priceId) return res.status(400).json({ message: `Invalid plan or missing price ID for: ${plan}` })
 

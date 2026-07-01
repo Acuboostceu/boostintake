@@ -25,7 +25,6 @@
     "noto-sans-kr": "^0.1.1",
     "pdfkit": "^0.18.0",
     "stripe": "^22.1.1",
-    "twilio": "^6.0.2",
     "uuid": "^14.0.0"
   },
   "devDependencies": {

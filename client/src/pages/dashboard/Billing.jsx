@@ -6,7 +6,7 @@ import { API } from '../../lib/api'
 export function Billing() {
   const [status, setStatus] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [checkoutLoading, setCheckoutLoading] = useState('')
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
   const [portalLoading, setPortalLoading] = useState(false)
 
   useEffect(() => {
@@ -18,8 +18,8 @@ export function Billing() {
       .finally(() => setLoading(false))
   }, [])
 
-  async function handleCheckout(plan) {
-    setCheckoutLoading(plan)
+  async function handleCheckout() {
+    setCheckoutLoading(true)
     try {
       const res = await fetch(`${API}/api/billing/create-checkout`, {
         method: 'POST',
@@ -27,7 +27,7 @@ export function Billing() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('bi_token')}`,
         },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan: 'tablet' }),
       })
       const data = await res.json()
       if (data.url) {
@@ -38,7 +38,7 @@ export function Billing() {
     } catch (e) {
       alert('Failed to start checkout: ' + (e.message || 'Connection error'))
     } finally {
-      setCheckoutLoading('')
+      setCheckoutLoading(false)
     }
   }
 
@@ -115,62 +115,42 @@ export function Billing() {
         </CardBody>
       </Card>
 
-      {/* Plans — show when not active */}
+      {/* Plan — show when not active */}
       {!isActive && (
-        <div className="grid sm:grid-cols-2 gap-4">
-          {/* Monthly */}
-          <Card className="border-gray-200">
-            <CardBody>
-              <p className="text-sm font-medium text-gray-500 mb-1">Monthly</p>
-              <div className="mb-4">
-                <span className="text-4xl font-extrabold text-gray-900">$19</span>
-                <span className="text-xl font-bold text-gray-900">.99</span>
-                <span className="text-gray-400 text-sm"> /month</span>
-              </div>
-              <ul className="flex flex-col gap-2 mb-6 text-sm text-gray-600">
-                {['Unlimited form sends', 'Instant PDF delivery', 'Digital signatures', 'Tablet mode', 'Cancel anytime'].map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Button size="md" onClick={() => handleCheckout('monthly')} disabled={!!checkoutLoading} className="w-full">
-                {checkoutLoading === 'monthly' ? 'Loading...' : 'Subscribe Monthly'}
-              </Button>
-            </CardBody>
-          </Card>
-
-          {/* Yearly */}
-          <Card className="border-blue-300 bg-blue-50/30">
-            <CardBody>
-              <div className="flex items-center justify-between mb-1">
-                <p className="text-sm font-medium text-gray-500">Annual</p>
-                <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-semibold">Save 25%</span>
-              </div>
-              <div className="mb-1">
-                <span className="text-4xl font-extrabold text-gray-900">$179</span>
-                <span className="text-gray-400 text-sm"> /year</span>
-              </div>
-              <p className="text-xs text-gray-400 mb-4">~$14.99/month</p>
-              <ul className="flex flex-col gap-2 mb-6 text-sm text-gray-600">
-                {['Everything in Monthly', 'Best value', 'Priority support'].map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Button size="md" onClick={() => handleCheckout('yearly')} disabled={!!checkoutLoading} className="w-full">
-                {checkoutLoading === 'yearly' ? 'Loading...' : 'Subscribe Annually'}
-              </Button>
-            </CardBody>
-          </Card>
-        </div>
+        <Card className="border-blue-200">
+          <CardBody>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-sm font-medium text-gray-500">Monthly</p>
+              <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-semibold">Cancel anytime</span>
+            </div>
+            <div className="mb-4">
+              <span className="text-4xl font-extrabold text-gray-900">$9</span>
+              <span className="text-xl font-bold text-gray-900">.99</span>
+              <span className="text-gray-400 text-sm"> /month</span>
+            </div>
+            <ul className="flex flex-col gap-2 mb-6 text-sm text-gray-600">
+              {[
+                'Tablet mode — patients fill out forms in-office',
+                'Intake link generation — send via your own phone',
+                'All form types included',
+                'Instant PDF to your email',
+                'Digital signatures',
+                'Up to 2 clinic locations',
+                'Clinic logo & branding on every PDF',
+              ].map((f) => (
+                <li key={f} className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <Button size="md" onClick={handleCheckout} disabled={checkoutLoading} className="w-full">
+              {checkoutLoading ? 'Loading...' : 'Subscribe — $9.99/mo'}
+            </Button>
+          </CardBody>
+        </Card>
       )}
     </div>
   )

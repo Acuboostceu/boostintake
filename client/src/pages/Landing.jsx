@@ -40,7 +40,7 @@ export function Landing() {
             <span className="text-blue-600">before patients walk in.</span>
           </h1>
           <p className="text-xl text-gray-500 mb-10 max-w-xl mx-auto leading-relaxed">
-            Send a secure link via SMS — patients sign everything at home, you get the PDF instantly.
+            Patients fill out intake forms on a tablet or via a secure link — everything signed digitally, PDF delivered instantly.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
@@ -88,8 +88,8 @@ export function Landing() {
           <p className="text-gray-500 mb-14 text-lg">Three steps. That's it.</p>
           <div className="grid sm:grid-cols-3 gap-8">
             {[
-              { step: '1', title: 'You send a link', desc: 'Enter the patient\'s name and phone number. They get a secure SMS link in seconds.' },
-              { step: '2', title: 'Patient completes forms', desc: 'On their phone, before the appointment. All forms signed digitally.' },
+              { step: '1', title: 'Send or hand off a link', desc: 'Generate a secure intake link in seconds — text it from your phone or hand a tablet directly to the patient.' },
+              { step: '2', title: 'Patient completes forms', desc: 'On their phone or on your tablet, before the appointment. All forms signed digitally.' },
               { step: '3', title: 'PDF lands in your inbox', desc: 'The moment they submit, a complete PDF is emailed to your clinic automatically.' },
             ].map((item) => (
               <div key={item.step} className="flex flex-col items-center text-center">
@@ -179,30 +179,23 @@ export function Landing() {
           <p className="text-gray-500 mb-10 text-lg">One plan. Everything included. No surprises.</p>
 
           <div className="bg-white rounded-3xl shadow-xl p-8 border border-blue-100">
-            <div className="flex justify-center gap-2 mb-8">
-              <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full">Monthly</span>
-              <span className="bg-gray-100 text-gray-500 text-xs font-semibold px-3 py-1 rounded-full">Annual — save 25%</span>
-            </div>
-
             <div className="mb-2">
-              <span className="text-5xl font-extrabold text-gray-900">$19</span>
+              <span className="text-5xl font-extrabold text-gray-900">$9</span>
               <span className="text-2xl font-bold text-gray-900">.99</span>
               <span className="text-gray-400 ml-1">/month</span>
             </div>
-            <p className="text-gray-400 text-sm mb-8">or $179/year (~$14.99/mo)</p>
+            <p className="text-gray-400 text-sm mb-8">Cancel anytime</p>
 
             <ul className="text-left flex flex-col gap-3 mb-8">
               {[
-                'Unlimited intake form sends',
+                'Tablet mode — patients fill out forms in-office',
+                'Intake link generation — send via your own phone',
                 'All form types included',
                 'Instant PDF to your email',
                 'Digital signatures',
-                'Tablet mode',
                 'Up to 2 clinic locations',
                 'Branded patient verification screen',
-                'Customizable SMS message',
                 'Clinic logo & info on every PDF',
-                'Cancel anytime',
               ].map((item) => (
                 <li key={item} className="flex items-center gap-3 text-sm text-gray-700">
                   <svg className="w-5 h-5 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

@@ -1,6 +1,6 @@
 const express = require('express')
 const multer = require('multer')
-const { requireAuth } = require('../middleware/auth')
+const { requireAuth, requireSubscription } = require('../middleware/auth')
 const { supabase } = require('../services/supabase')
 const { uploadLogo } = require('../services/storage')
 
@@ -25,7 +25,7 @@ router.post('/tablet-verify-pin', async (req, res) => {
   res.json({ ok: match })
 })
 
-router.get('/settings', requireAuth, async (req, res) => {
+router.get('/settings', requireAuth, requireSubscription, async (req, res) => {
   const { data, error } = await supabase
     .from('clinics')
     .select('name, address, phone, emails, cancel_hours, no_show_fee, check_fee, pin_hash, logo_url, sms_template, specialty, locations')
@@ -36,7 +36,7 @@ router.get('/settings', requireAuth, async (req, res) => {
   res.json(data)
 })
 
-router.post('/settings', requireAuth, upload.single('logo'), async (req, res) => {
+router.post('/settings', requireAuth, requireSubscription, upload.single('logo'), async (req, res) => {
   const { clinicName, address, phone, emails, cancelHours, noShowFee, checkFee, pin, smsTemplate, specialty, locations } = req.body
 
   let logoUrl
@@ -83,7 +83,7 @@ router.post('/settings', requireAuth, upload.single('logo'), async (req, res) =>
 })
 
 // Dashboard: all data in one request
-router.get('/dashboard', requireAuth, async (req, res) => {
+router.get('/dashboard', requireAuth, requireSubscription, async (req, res) => {
   const clinicId = req.user.clinicId
   const now = new Date()
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString()
@@ -133,7 +133,7 @@ router.get('/dashboard', requireAuth, async (req, res) => {
 })
 
 // Stats: sent + completed counts
-router.get('/stats', requireAuth, async (req, res) => {
+router.get('/stats', requireAuth, requireSubscription, async (req, res) => {
   const now = new Date()
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString()
   const weekStart = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString()
@@ -155,7 +155,7 @@ router.get('/stats', requireAuth, async (req, res) => {
 })
 
 // List: sent or completed
-router.get('/list/:type', requireAuth, async (req, res) => {
+router.get('/list/:type', requireAuth, requireSubscription, async (req, res) => {
   const { type } = req.params
   const { range = 'today' } = req.query
 
