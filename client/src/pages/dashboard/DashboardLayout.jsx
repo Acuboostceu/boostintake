@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { API } from '../../lib/api'
 
@@ -33,6 +33,7 @@ const navItems = [
 
 export function DashboardLayout() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [billing, setBilling] = useState(null)
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export function DashboardLayout() {
       .catch(() => {})
   }, [])
 
-  const isExpired = billing && !billing.isActive
+  const isExpired = billing && !billing.isActive && location.pathname !== '/dashboard/billing'
 
   const showTrialBanner = billing?.trialActive && billing?.trialDaysLeft <= 7
   const showExpiredBanner = isExpired
@@ -157,10 +158,23 @@ export function DashboardLayout() {
         </nav>
 
         {/* Content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 min-w-0">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 min-w-0 relative">
           <div className="max-w-3xl mx-auto w-full">
             <Outlet />
           </div>
+          {isExpired && (
+            <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4 z-10">
+              <div className="text-4xl">🔒</div>
+              <p className="font-semibold text-gray-900 text-lg">Your trial has expired</p>
+              <p className="text-gray-500 text-sm">Subscribe to continue using BoostIntake.</p>
+              <button
+                onClick={() => navigate('/dashboard/billing')}
+                className="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Subscribe — $9.99/mo →
+              </button>
+            </div>
+          )}
         </main>
       </div>
 
