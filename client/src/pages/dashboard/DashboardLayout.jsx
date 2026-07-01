@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { API } from '../../lib/api'
 
@@ -33,7 +33,6 @@ const navItems = [
 
 export function DashboardLayout() {
   const navigate = useNavigate()
-  const location = useLocation()
   const [billing, setBilling] = useState(null)
 
   useEffect(() => {
@@ -71,13 +70,6 @@ export function DashboardLayout() {
   }, [])
 
   const isExpired = billing && !billing.isActive
-  const onBillingPage = location.pathname === '/dashboard/billing'
-
-  useEffect(() => {
-    if (isExpired && !onBillingPage) {
-      navigate('/dashboard/billing', { replace: true })
-    }
-  }, [isExpired, onBillingPage])
 
   const showTrialBanner = billing?.trialActive && billing?.trialDaysLeft <= 7
   const showExpiredBanner = isExpired

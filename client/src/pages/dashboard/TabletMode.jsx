@@ -108,14 +108,17 @@ export function TabletMode() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clinicId, pin }),
       })
-      const { ok } = await res.json()
-      if (ok) {
+      const data = await res.json()
+      if (data.ok) {
         reset()
         setFirstName(''); setLastName(''); setDob(''); setPin('')
         setPinError('')
         setSelectedFormIdsLocal(DEFAULT_FORM_IDS)
         setSelectedLocation(allLocations[0])
         setState(hasMultipleLocations ? TABLET_STATES.LOCATION : TABLET_STATES.SETUP)
+      } else if (data.code === 'SUBSCRIPTION_EXPIRED') {
+        setPinError('Subscription expired. Please log in to dashboard to subscribe.')
+        setPin('')
       } else {
         setPinError('Incorrect PIN')
         setPin('')
