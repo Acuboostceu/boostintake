@@ -14,11 +14,19 @@ router.post('/tablet-verify-pin', async (req, res) => {
 
   const { data, error } = await supabase
     .from('clinics')
-    .select('pin_hash')
+    .select('pin_hash, subscription_status, trial_ends_at')
     .eq('id', clinicId)
     .single()
 
   if (error || !data?.pin_hash) return res.json({ ok: false })
+
+  const now = new Date()
+  const trialEnd = data.trial_ends_at ? new Date(data.trial_ends_at) : null
+  const isActive =
+    data.subscription_status === 'active' ||
+    (data.subscription_status === 'trial' && trialEnd && trialEnd > now)
+
+  if (!isActive) return res.status(403).json({ ok: false, code: 'SUBSCRIPTION_EXPIRED' })
 
   const bcrypt = require('bcryptjs')
   const match = await bcrypt.compare(pin, data.pin_hash)

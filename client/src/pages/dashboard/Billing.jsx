@@ -135,7 +135,6 @@ export function Billing() {
                 'All form types included',
                 'Instant PDF to your email',
                 'Digital signatures',
-                'Up to 2 clinic locations',
                 'Clinic logo & branding on every PDF',
               ].map((f) => (
                 <li key={f} className="flex items-center gap-2">
