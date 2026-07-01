@@ -25,6 +25,7 @@
     "noto-sans-kr": "^0.1.1",
     "pdfkit": "^0.18.0",
     "stripe": "^22.1.1",
+    "telnyx": "^7.2.0",
     "uuid": "^14.0.0"
   },
   "devDependencies": {
