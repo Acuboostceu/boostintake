@@ -1,6 +1,5 @@
-import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { API } from '../../lib/api'
+import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const navItems = [
   { to: '/dashboard', label: 'Home', end: true, icon: (
@@ -33,15 +32,12 @@ const navItems = [
 
 export function DashboardLayout() {
   const navigate = useNavigate()
-  const location = useLocation()
-  const [billing, setBilling] = useState(null)
 
   useEffect(() => {
     const token = localStorage.getItem('bi_token')
     if (!token) { navigate('/login', { replace: true }); return }
 
-    // Cache clinic info for tablet mode
-    fetch(`${API}/api/clinic/settings`, { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`/api/clinic/settings`, { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.ok ? r.json() : null)
       .then((data) => {
         if (!data) return
@@ -62,41 +58,10 @@ export function DashboardLayout() {
         }))
       })
       .catch(() => {})
-
-    // Load billing status for trial banner
-    fetch(`${API}/api/billing/status`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => r.ok ? r.json() : null)
-      .then(setBilling)
-      .catch(() => {})
   }, [])
-
-  const isExpired = billing && !billing.isActive && location.pathname !== '/dashboard/billing'
-
-  const showTrialBanner = billing?.trialActive && billing?.trialDaysLeft <= 7
-  const showExpiredBanner = isExpired
 
   return (
     <div className="h-dvh bg-gray-50 flex flex-col overflow-hidden">
-      {/* Trial expiring banner */}
-      {showTrialBanner && (
-        <div className="bg-blue-600 text-white text-center text-sm py-2 px-4">
-          ⏳ Your free trial ends in <strong>{billing.trialDaysLeft} day{billing.trialDaysLeft !== 1 ? 's' : ''}</strong>.{' '}
-          <button onClick={() => navigate('/dashboard/billing')} className="underline font-semibold hover:text-blue-200">
-            Subscribe now →
-          </button>
-        </div>
-      )}
-
-      {/* Expired banner */}
-      {showExpiredBanner && (
-        <div className="bg-red-500 text-white text-center text-sm py-2 px-4">
-          🔒 Your trial has expired.{' '}
-          <button onClick={() => navigate('/dashboard/billing')} className="underline font-semibold hover:text-red-200">
-            Subscribe to continue →
-          </button>
-        </div>
-      )}
-
       {/* Top nav */}
       <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -130,51 +95,24 @@ export function DashboardLayout() {
             </NavLink>
           ))}
 
-          <div className="mt-auto pt-4 border-t border-gray-100 flex flex-col gap-1">
+          <div className="mt-auto pt-4 border-t border-gray-100">
             <NavLink
-              to="/dashboard/billing"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
-                ${isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`
-              }
+              to="/tablet"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
-              Billing
+              Tablet Mode
             </NavLink>
-            {!isExpired && (
-              <NavLink
-                to="/tablet"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-                Tablet Mode
-              </NavLink>
-            )}
           </div>
         </nav>
 
         {/* Content */}
-        <main className={`flex-1 min-w-0 relative ${isExpired ? 'overflow-hidden' : 'overflow-y-auto'} p-4 md:p-6`}>
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 min-w-0">
           <div className="max-w-3xl mx-auto w-full">
             <Outlet />
           </div>
-          {isExpired && (
-            <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] flex flex-col items-center justify-center gap-4 z-10">
-              <div className="text-4xl">🔒</div>
-              <p className="font-semibold text-gray-900 text-lg">Your trial has expired</p>
-              <p className="text-gray-500 text-sm">Subscribe to continue using BoostIntake.</p>
-              <button
-                onClick={() => navigate('/dashboard/billing')}
-                className="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Subscribe — $9.99/mo →
-              </button>
-            </div>
-          )}
         </main>
       </div>
 

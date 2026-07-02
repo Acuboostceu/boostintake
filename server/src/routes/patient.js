@@ -1,7 +1,7 @@
 const express = require('express')
 const { randomBytes } = require('crypto')
 const nanoid = (size = 10) => randomBytes(size).toString('base64url').slice(0, size)
-const { requireAuth, requireSubscription } = require('../middleware/auth')
+const { requireAuth } = require('../middleware/auth')
 const { supabase } = require('../services/supabase')
 const { sendSMS } = require('../services/sms')
 const { generatePDF } = require('../services/pdf')
@@ -40,7 +40,7 @@ router.get('/clinic-info/:token', async (req, res) => {
 })
 
 // Staff sends intake link to patient
-router.post('/send-link', requireAuth, requireSubscription, async (req, res) => {
+router.post('/send-link', requireAuth, async (req, res) => {
   const { firstName, lastName, phone, dob, customMessage, formIds, locationName, locationAddress, ehrPatientId } = req.body
   if (!firstName || !lastName || !dob) {
     return res.status(400).json({ message: 'All fields required' })

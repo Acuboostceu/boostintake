@@ -1,5 +1,5 @@
 const express = require('express')
-const { requireAuth, requireSubscription } = require('../middleware/auth')
+const { requireAuth } = require('../middleware/auth')
 const { supabase } = require('../services/supabase')
 
 const router = express.Router()
@@ -14,7 +14,7 @@ router.get('/', requireAuth, async (req, res) => {
 })
 
 // Save enabled forms selection
-router.post('/selection', requireAuth, requireSubscription, async (req, res) => {
+router.post('/selection', requireAuth, async (req, res) => {
   const { formIds } = req.body // array of form_id strings in order
   if (!Array.isArray(formIds)) return res.status(400).json({ message: 'formIds must be an array' })
 
@@ -37,7 +37,7 @@ router.post('/selection', requireAuth, requireSubscription, async (req, res) => 
 })
 
 // Create custom form
-router.post('/custom', requireAuth, requireSubscription, async (req, res) => {
+router.post('/custom', requireAuth, async (req, res) => {
   const { title, sections, requiresSignature, signatureLabel } = req.body
   if (!title) return res.status(400).json({ message: 'Title required' })
 

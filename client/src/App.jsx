@@ -12,7 +12,6 @@ import { SendPatient } from './pages/dashboard/SendPatient'
 import { GenerateLink } from './pages/dashboard/GenerateLink'
 import { TabletMode } from './pages/dashboard/TabletMode'
 import { FormsPage } from './pages/dashboard/FormsPage'
-import { Billing } from './pages/dashboard/Billing'
 import { SocialMarketing } from './pages/dashboard/SocialMarketing'
 
 import { EmbedSend } from './pages/embed/EmbedSend'
@@ -50,7 +49,6 @@ export default function App() {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="send" element={<GenerateLink />} />
             <Route path="send-sms" element={<SendPatient />} />
-            <Route path="billing" element={<Billing />} />
             <Route path="social" element={<SocialMarketing />} />
           </Route>
 
