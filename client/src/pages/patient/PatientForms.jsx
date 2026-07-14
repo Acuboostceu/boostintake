@@ -48,12 +48,22 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
   const form = forms[currentFormIndex]
   const [submitting, setSubmitting] = useState(false)
   const [validationError, setValidationError] = useState('')
+  const [invalidFieldId, setInvalidFieldId] = useState('')
   const ehrPatientId = localStorage.getItem('bi_ehr_patient_id') || ''
 
   // Redirect if no patient identity (only for non-tablet flows)
   useEffect(() => {
     if (!patient && !isTablet) navigate(`/p/${token}`, { replace: true })
   }, [patient])
+
+  // Scroll/focus the field that failed validation so it's actually visible
+  useEffect(() => {
+    if (!invalidFieldId) return
+    const el = document.getElementById(`field-${invalidFieldId}`)
+    if (!el) return
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    el.querySelector('input, textarea')?.focus({ preventScroll: true })
+  }, [invalidFieldId, validationError])
 
   if (!patient || !form) return null
 
@@ -66,7 +76,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
   }
 
   function validateCurrentForm() {
-    if (!form.sections && !form.fields) return true
+    if (!form.sections && !form.fields) return null
 
     const allFields = [
       ...(form.sections?.flatMap((s) => s.fields || []) || []),
@@ -75,12 +85,12 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
 
     for (const field of allFields) {
       if (field.required && !formData[form.id]?.[field.id]) {
-        return `${tr.forms.fieldRequired}"${field.label}"`
+        return { message: `${tr.forms.fieldRequired}"${field.label}"`, fieldId: field.id }
       }
     }
 
     if (form.requiresSignature && !currentSig && !isDeclined) {
-      return tr.forms.signatureRequired
+      return { message: tr.forms.signatureRequired, fieldId: 'signature' }
     }
 
     return null
@@ -88,8 +98,9 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
 
   function handleNext() {
     const err = validateCurrentForm()
-    if (err) { setValidationError(err); return }
+    if (err) { setValidationError(err.message); setInvalidFieldId(err.fieldId); return }
     setValidationError('')
+    setInvalidFieldId('')
 
     if (isLastForm) {
       handleSubmit()
@@ -218,11 +229,15 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
                 form={form}
                 data={formData[form.id]}
                 onChange={handleFieldChange}
+                invalidFieldId={invalidFieldId}
               />
 
               {/* Signature section */}
               {form.requiresSignature && !isDeclined && (
-                <div className="mt-6 pt-6 border-t border-gray-100">
+                <div
+                  id="field-signature"
+                  className={`mt-6 pt-6 border-t border-gray-100 ${invalidFieldId === 'signature' ? 'ring-2 ring-red-400 rounded-xl' : ''}`}
+                >
                   <SignaturePad
                     key={form.id}
                     label={form.signatureLabel || 'Signature'}
@@ -265,7 +280,7 @@ export function PatientForms({ isTablet = false, onTabletComplete }) {
               <Button
                 variant="outline"
                 size="md"
-                onClick={() => { setValidationError(''); prevForm(); window.scrollTo({ top: 0 }) }}
+                onClick={() => { setValidationError(''); setInvalidFieldId(''); prevForm(); window.scrollTo({ top: 0 }) }}
                 className="flex-1"
               >
                 {tr.forms.back}

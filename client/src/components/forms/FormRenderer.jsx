@@ -1,7 +1,7 @@
 import { Input, Textarea } from '../ui/Input'
 import { Checkbox } from '../ui/Checkbox'
 
-export function FormRenderer({ form, data, onChange }) {
+export function FormRenderer({ form, data, onChange, invalidFieldId }) {
   const sections = form.sections || []
 
   return (
@@ -25,12 +25,17 @@ export function FormRenderer({ form, data, onChange }) {
           {section.fields && (
             <div className="flex flex-col gap-5">
               {section.fields.map((field) => (
-                <FormField
+                <div
                   key={field.id}
-                  field={field}
-                  value={data?.[field.id]}
-                  onChange={(val) => onChange(field.id, val)}
-                />
+                  id={`field-${field.id}`}
+                  className={field.id === invalidFieldId ? 'ring-2 ring-red-400 rounded-xl' : ''}
+                >
+                  <FormField
+                    field={field}
+                    value={data?.[field.id]}
+                    onChange={(val) => onChange(field.id, val)}
+                  />
+                </div>
               ))}
             </div>
           )}
@@ -41,12 +46,17 @@ export function FormRenderer({ form, data, onChange }) {
       {form.fields && (
         <div className="flex flex-col gap-5">
           {form.fields.map((field) => (
-            <FormField
+            <div
               key={field.id}
-              field={field}
-              value={data?.[field.id]}
-              onChange={(val) => onChange(field.id, val)}
-            />
+              id={`field-${field.id}`}
+              className={field.id === invalidFieldId ? 'ring-2 ring-red-400 rounded-xl' : ''}
+            >
+              <FormField
+                field={field}
+                value={data?.[field.id]}
+                onChange={(val) => onChange(field.id, val)}
+              />
+            </div>
           ))}
         </div>
       )}
