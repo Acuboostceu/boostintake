@@ -81,7 +81,9 @@ export function TabletMode() {
 
   function handleStart(e) {
     e.preventDefault()
+    const savedFormIds = selectedFormIds
     reset()
+    setSelectedFormIds(savedFormIds)
     setPatient({ name: `${firstName} ${lastName}`, dob, token: 'tablet' })
     const clinicBase = JSON.parse(localStorage.getItem('bi_clinic') || '{}')
     setClinicInfo({ ...clinicBase, name: selectedLocation.name, address: selectedLocation.address })
