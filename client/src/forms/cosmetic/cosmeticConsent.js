@@ -26,11 +26,7 @@ Microneedling creates controlled micro-injuries in the skin to stimulate collage
 
 Absolute contraindications for microneedling: Accutane within 6 months, scleroderma, collagen vascular disease, active bacterial or fungal infection, blood clotting disorders, pregnancy or nursing, facial cancer, chemotherapy, dermatological diseases affecting the face, immune suppression, scars less than 6 months old, or Botox/fillers within the past 2–4 weeks.
 
-Precautions: keloid or raised scarring, eczema, psoriasis, actinic keratosis, herpes simplex (cold sores).
-
-**Privacy**
-
-In accordance with HIPAA, Glow Wellness Acupuncture & Eastern Medicine protects your personal and health information and does not disclose it to third parties without your consent.`,
+Precautions: keloid or raised scarring, eczema, psoriasis, actinic keratosis, herpes simplex (cold sores).`,
     },
   ],
   fields: [
