@@ -165,6 +165,16 @@ export const FORM_CATALOG = [
     requiresSignature: false,
     required: false,
   },
+  {
+    id: 'cosmetic_photo_release',
+    title: 'Photo & Media Release',
+    category: 'cosmetic',
+    categoryLabel: 'Cosmetic Acupuncture',
+    description: 'Optional authorization for before-and-after photos to be used in marketing or educational materials, with blurring and anonymity options.',
+    requiresSignature: true,
+    required: false,
+    optional: true,
+  },
 ]
 
 export const CATEGORY_ORDER = ['common', 'acupuncture', 'cosmetic', 'chiropractic', 'pi', 'massage']
