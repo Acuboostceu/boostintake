@@ -4,6 +4,7 @@ import { useFormStore } from '../../store/formStore'
 import { getAcupunctureForms } from '../../forms/acupuncture'
 import { getChiropracticForms } from '../../forms/chiropractic'
 import { getPIForms } from '../../forms/pi'
+import { getCosmeticForms } from '../../forms/cosmetic'
 import { FormRenderer } from '../../components/forms/FormRenderer'
 import { SignaturePad } from '../../components/forms/SignaturePad'
 import { ProgressBar } from '../../components/ui/ProgressBar'
@@ -15,8 +16,9 @@ function buildAllForms(clinicInfo, lang) {
   const acu = getAcupunctureForms(clinicInfo || {}, lang)
   const chiro = getChiropracticForms(clinicInfo || {}, lang)
   const pi = getPIForms(lang)
+  const cosmetic = getCosmeticForms()
   const byId = new Map()
-  for (const f of [...acu, ...chiro, ...pi]) {
+  for (const f of [...acu, ...chiro, ...pi, ...cosmetic]) {
     if (!byId.has(f.id)) byId.set(f.id, f)
   }
   return Array.from(byId.values())

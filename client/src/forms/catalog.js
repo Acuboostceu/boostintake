@@ -147,12 +147,31 @@ export const FORM_CATALOG = [
     requiresSignature: true,
     required: false,
   },
+  {
+    id: 'cosmetic_consent',
+    title: 'Cosmetic Acupuncture Informed Consent',
+    category: 'cosmetic',
+    categoryLabel: 'Cosmetic Acupuncture',
+    description: 'Informed consent covering risks, limitations, and HIPAA for cosmetic acupuncture and microneedling.',
+    requiresSignature: true,
+    required: false,
+  },
+  {
+    id: 'cosmetic_intake',
+    title: 'Cosmetic Acupuncture Intake',
+    category: 'cosmetic',
+    categoryLabel: 'Cosmetic Acupuncture',
+    description: 'Areas of concern, skin history, previous treatments, contraindications, sensitivity, and photo consent.',
+    requiresSignature: false,
+    required: false,
+  },
 ]
 
-export const CATEGORY_ORDER = ['common', 'acupuncture', 'chiropractic', 'pi', 'massage']
+export const CATEGORY_ORDER = ['common', 'acupuncture', 'cosmetic', 'chiropractic', 'pi', 'massage']
 export const CATEGORY_COLORS = {
   common: 'bg-blue-50 text-blue-700 border-blue-200',
   acupuncture: 'bg-blue-50 text-blue-700 border-blue-200',
+  cosmetic: 'bg-pink-50 text-pink-700 border-pink-200',
   chiropractic: 'bg-orange-50 text-orange-700 border-orange-200',
   pi: 'bg-amber-50 text-amber-700 border-amber-200',
   massage: 'bg-pink-50 text-pink-700 border-pink-200',
@@ -160,11 +179,12 @@ export const CATEGORY_COLORS = {
 }
 
 export const CATEGORY_META = {
-  common:        { label: 'Common — All Clinics', collapsible: false, comingSoon: false },
-  acupuncture:   { label: 'Acupuncture',          collapsible: true,  comingSoon: false },
-  chiropractic:  { label: 'Chiropractic',         collapsible: true,  comingSoon: false },
-  pi:            { label: 'Personal Injury',      collapsible: true,  comingSoon: false },
-  massage:       { label: 'Massage Therapy',      collapsible: true,  comingSoon: true  },
+  common:        { label: 'Common — All Clinics',    collapsible: false, comingSoon: false },
+  acupuncture:   { label: 'Acupuncture',             collapsible: true,  comingSoon: false },
+  cosmetic:      { label: 'Cosmetic Acupuncture',    collapsible: true,  comingSoon: false },
+  chiropractic:  { label: 'Chiropractic',            collapsible: true,  comingSoon: false },
+  pi:            { label: 'Personal Injury',         collapsible: true,  comingSoon: false },
+  massage:       { label: 'Massage Therapy',         collapsible: true,  comingSoon: true  },
 }
 
 export const DEFAULT_FORM_IDS = [

@@ -1,0 +1,115 @@
+export const COSMETIC_INTAKE_FORM = {
+  id: 'cosmetic_intake',
+  title: 'Cosmetic Acupuncture Intake',
+  requiresSignature: false,
+  sections: [
+    {
+      title: 'Areas of Concern',
+      fields: [
+        {
+          id: 'cosmeticGoals',
+          label: 'What would you like to improve? (check all that apply)',
+          type: 'multicheck',
+          required: true,
+          options: [
+            'Forehead lines (이마 주름)',
+            'Eye lid / Brow lift (눈꺼풀)',
+            'Crows feet (눈가 주름)',
+            'Under eye / Eye bags (눈 밑)',
+            'Cheeks / Volume (볼)',
+            'Nasolabial folds / Mouth lines (팔자주름)',
+            'Jaw / Neck / Sagging (턱선/목)',
+            'Acne / Breakouts (여드름)',
+            'Pigmentation / Dark spots (색소침착)',
+            'Overall skin tone & brightness (전체적인 피부톤)',
+            'Skin texture / Pore size (피부결/모공)',
+          ],
+        },
+        { id: 'cosmeticOtherGoals', label: 'Any other areas or concerns?', type: 'textarea', required: false, placeholder: 'Describe any additional areas you would like to address...' },
+      ],
+    },
+    {
+      title: 'Skin History',
+      fields: [
+        {
+          id: 'skinType',
+          label: 'How would you describe your skin type?',
+          type: 'radio',
+          required: false,
+          options: ['Dry', 'Normal', 'Combination', 'Oily', 'Sensitive', 'Not sure'],
+        },
+        {
+          id: 'skinConcerns',
+          label: 'Current skin concerns (check all that apply)',
+          type: 'multicheck',
+          required: false,
+          options: ['Dryness', 'Oiliness', 'Redness / Rosacea', 'Acne / Breakouts', 'Hyperpigmentation', 'Fine lines / Wrinkles', 'Loss of firmness', 'Uneven texture', 'Enlarged pores', 'Sensitivity / Reactivity'],
+        },
+        {
+          id: 'previousCosmeticTreatments',
+          label: 'Previous cosmetic treatments (check all that apply)',
+          type: 'multicheck',
+          required: false,
+          options: ['Botox / Dysport', 'Dermal fillers', 'Laser / IPL', 'Chemical peel', 'Microneedling', 'Microdermabrasion', 'Facial acupuncture', 'None'],
+        },
+        { id: 'lastCosmeticTreatmentDate', label: 'Most recent cosmetic treatment — when was it?', type: 'text', required: false, placeholder: 'e.g., 3 months ago, January 2025' },
+        { id: 'currentSkincareRoutine', label: 'Current skincare routine / products', type: 'textarea', required: false, placeholder: 'List any serums, retinol, acids, or prescription products you use regularly...' },
+      ],
+    },
+    {
+      title: 'Medical Considerations',
+      fields: [
+        {
+          id: 'cosmeticContraindications',
+          label: 'Do any of the following apply to you? (check all that apply)',
+          type: 'multicheck',
+          required: false,
+          options: [
+            'Currently pregnant or nursing',
+            'History of keloid or raised scarring',
+            'Active skin infection or open wounds in treatment area',
+            'Blood clotting disorder or taking blood thinners (Warfarin, aspirin, etc.)',
+            'Accutane within the last 6 months',
+            'Botox or fillers within the last 2–4 weeks',
+            'Eczema or psoriasis in treatment area',
+            'Pacemaker',
+            'None of the above',
+          ],
+        },
+        { id: 'cosmeticAllergies', label: 'Allergies (medications, skincare ingredients, metals, latex)', type: 'textarea', required: false, placeholder: 'List any known allergies or sensitivities...' },
+        { id: 'cosmeticMedications', label: 'Current medications or supplements', type: 'textarea', required: false, placeholder: 'Include any blood thinners, retinoids, or photosensitizing medications...' },
+        {
+          id: 'bruiseEasily',
+          label: 'Do you bruise easily?',
+          type: 'radio',
+          required: false,
+          options: ['Yes', 'No', 'Sometimes'],
+        },
+      ],
+    },
+    {
+      title: 'Treatment Preferences',
+      fields: [
+        {
+          id: 'sensitivityLevel',
+          label: 'How sensitive would you like your treatment? (1 = near sensationless, 10 = maximum stimulation)',
+          type: 'pain-slider',
+          required: false,
+        },
+        {
+          id: 'cosmeticExpectations',
+          label: 'What results are you hoping to see and in what timeframe?',
+          type: 'textarea',
+          required: false,
+          placeholder: 'e.g., Reduce fine lines around eyes over 6–8 sessions...',
+        },
+        {
+          id: 'photoConsent',
+          label: 'I consent to before-and-after photos being taken for clinical documentation purposes.',
+          type: 'checkbox',
+          required: false,
+        },
+      ],
+    },
+  ],
+}
