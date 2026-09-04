@@ -23,7 +23,7 @@ function pickFont(doc, text, bold = false) {
   }
 }
 
-const SHOW_BLANK_FIELDS = new Set(['patient_info', 'health_history', 'review_of_systems', 'chiro_history', 'chiro_pain_diagram', 'pi_auto_accident'])
+const SHOW_BLANK_FIELDS = new Set(['patient_info', 'health_history', 'review_of_systems', 'chiro_history', 'chiro_pain_diagram', 'pi_auto_accident', 'cosmetic_intake'])
 
 async function generatePDF({ patient, formData, signatures, declinedForms, clinic, formContents, formFields }) {
   return new Promise((resolve, reject) => {
@@ -43,6 +43,10 @@ async function generatePDF({ patient, formData, signatures, declinedForms, clini
       'acupuncture_consent',
       'health_history',
       'review_of_systems',
+      // Cosmetic
+      'cosmetic_consent',
+      'cosmetic_intake',
+      'cosmetic_photo_release',
       // Chiropractic
       'chiro_consent',
       'chiro_history',
