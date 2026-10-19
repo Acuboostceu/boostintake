@@ -169,13 +169,14 @@ router.post('/submit', async (req, res) => {
     if (!resolvedEhrPatientId && record.ehr_patient_id) resolvedEhrPatientId = record.ehr_patient_id
     await supabase.from('intake_tokens').update({ used: true }).eq('token', token)
   } else {
-    // Tablet mode: look up clinic by ID sent from client
-    if (!clinicId) return res.status(400).json({ message: 'Missing clinic ID for tablet submission' })
+    // Tablet mode: look up clinic by ID sent from client (older clients may omit it)
+    const tabletClinicId = clinicId || process.env.BOOSTINTAKE_CLINIC_ID
+    if (!tabletClinicId) return res.status(400).json({ message: 'Missing clinic ID for tablet submission' })
 
     const { data, error } = await supabase
       .from('clinics')
       .select('*')
-      .eq('id', clinicId)
+      .eq('id', tabletClinicId)
       .single()
 
     if (error || !data) {
