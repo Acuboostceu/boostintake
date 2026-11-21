@@ -22,6 +22,8 @@ We are required by law to maintain the privacy of your protected health informat
 
 **Appointment Reminders:** We may contact you by phone, text, or mail to remind you of scheduled appointments or to follow up on care.
 
+**Text Messaging:** You may text our office at the number we use to contact you. Text messages are not encrypted and may not be fully private, so please do not send sensitive information by text. Photos you send (such as supplements or tongue photos) will be saved in your record.
+
 **Treatment Alternatives:** We may use your PHI to tell you about possible treatment options or alternatives that may be of interest to you.`,
     },
     {
