@@ -186,8 +186,9 @@ export function ClinicSettings() {
           </CardBody>
         </Card>
 
-        {/* Locations — hidden until paid plan paywall is ready; TODO: replace false with plan check */}
-        {false && (
+        {/* Locations — new-location UI hidden until paid plan paywall is ready (TODO: plan check).
+            Shown only when a clinic already has a secondary location, so it can be edited/removed. */}
+        {settings.locations.length > 0 && (
           <Card>
             <CardHeader title="Locations" subtitle="Add a second location if your clinic operates from multiple offices" />
             <CardBody className="flex flex-col gap-4">
